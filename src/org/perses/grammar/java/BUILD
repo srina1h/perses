@@ -21,9 +21,10 @@ pnf_parser_facade_library(
     name = "parser_facade_java8",
     java_package_name = "org.perses.grammar.java",
     language_kind_full_name = "org.perses.grammar.java.LanguageJava",
+    lexer_file_name = "Java8Lexer.g4",
     output_jar_file_name = "parser_facade_java8.jar",
     parser_facade_class_simple_name = "Java8ParserFacade",
-    parser_file_name = "OrigJava8.g4",
+    parser_file_name = "Java8Parser.g4",
     start_rule_name = "compilationUnit",
     token_names_of_identifiers = ["Identifier"],
     deps = [
@@ -35,9 +36,10 @@ orig_parser_facade_library(
     name = "orig_parser_facade_java8",
     java_package_name = "org.perses.grammar.java",
     language_kind_full_name = "org.perses.grammar.java.LanguageJava",
+    lexer_file_name = "Java8Lexer.g4",
     output_jar_file_name = "orig_parser_facade_java8.jar",
     parser_facade_class_simple_name = "OrigJava8ParserFacade",
-    parser_file_name = "OrigJava8.g4",
+    parser_file_name = "Java8Parser.g4",
     start_rule_name = "compilationUnit",
     token_names_of_identifiers = ["Identifier"],
     deps = [

@@ -38,7 +38,7 @@ object SparTreeSimplifier {
   /** Remove empty rule nodes and deleted sub-trees from the given tree.  */
   fun removeEmptyAndDeletedRuleNodes(root: AbstractSparTreeNode) {
     root.postOrderVisit { node: AbstractSparTreeNode ->
-      if (node.isPermanentlyDeleted || node.isTokenNode) {
+      if (node.isPermanentlyDeleted || node.isTokenNode()) {
         return@postOrderVisit
       }
       node.cleanDeletedImmediateChildren()
@@ -99,7 +99,7 @@ object SparTreeSimplifier {
       node.childCount > 1 -> false // a fork node, the end of an SESE path
       node.childCount == 0 -> {
         // A token node, the end of an SESE path.
-        check(node.isTokenNode) { node }
+        check(node.isTokenNode()) { node }
         false
       }
       node.childCount == 1 -> true
@@ -117,7 +117,7 @@ object SparTreeSimplifier {
           return@preOrderVisit result
         }
         if (node.childCount == 0) {
-          check(node.isTokenNode)
+          check(node.isTokenNode())
         }
         check(node.childCount != 1) {
           "count=${node.childCount}, node=$node, " +

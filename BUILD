@@ -134,3 +134,11 @@ define_kt_toolchain(
 )
 
 exports_files(["README.md"])
+
+load("//test/org/perses:test.bzl", "copy", "golden_test")
+
+golden_test(
+    name = "readme_golden_test",
+    golden_file = "README.md",
+    test_file = "//readme_generator:readme",
+)

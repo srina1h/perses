@@ -59,7 +59,7 @@ abstract class AbstractTokenizedProgramCustomizer protected constructor(
     val result = HashSet<AbstractSparTreeNode>()
     for (target in targets) {
       var parent = target!!.parent
-      while (parent != null) {
+      while (parent != null && parent.isParserRuleNode()) {
         val node = parent.asParserRule()
         parent = if (result.add(node)) {
           node.parent

@@ -20,15 +20,33 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.perses.antlr.AntlrGrammarUtil
 import org.perses.grammar.AbstractParserFacade
 
 @RunWith(JUnit4::class)
 class JavaParserFacadeTest {
 
+  val pnfFacade: AbstractParserFacade = Java8ParserFacade()
+
+  @Test
+  fun testUsingThisAsMethodParameter() {
+    val result = pnfFacade.parseString(
+      """
+      class Test {
+        void test(String this) {}
+      }
+      """,
+      filename = "Test.java",
+    )
+    assertThat(
+      AntlrGrammarUtil.convertParseTreeToProgram(result.tree, LanguageJava)
+        .tokens.joinToString(separator = " ") { it.text },
+    ).contains("this")
+  }
+
   @Test
   fun test() {
     val origFacade: AbstractParserFacade = OrigJava8ParserFacade()
-    val pnfFacade: AbstractParserFacade = Java8ParserFacade()
 
     val origMethods = origFacade.parserClass.declaredMethods
       .map { it.name }

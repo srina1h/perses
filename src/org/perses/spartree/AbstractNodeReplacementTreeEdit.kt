@@ -21,7 +21,7 @@ import org.perses.util.Util.lazyAssert
 
 abstract class AbstractNodeReplacementTreeEdit internal constructor(
   tree: SparTree,
-  actionSet: ChildHoistingActionSet,
+  actionSet: NodeReplacementActionSet,
 ) : AbstractSparTreeEdit<NodeReplacementAction>(actionSet, tree) {
 
   val onlyReplacementNode: AbstractSparTreeNode

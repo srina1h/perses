@@ -25,6 +25,7 @@ kt_jvm_library(
         "ProfilingFlagGroup.kt",
         "ReductionAlgorithmControlFlagGroup.kt",
         "ReductionControlFlagGroup.kt",
+        "TRecFlagGroup.kt",
         "VulcanFlagGroup.kt",
     ],
     exports = [

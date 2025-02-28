@@ -70,6 +70,14 @@ def reduce(
 
     if verbosity:
         args.append("--verbosity %s" % verbosity)
+
+    if other_flags:
+        for (key, value) in other_flags.items():
+            args.append(key)
+            args.append(value)
+    if extra_output_files:
+        outs += extra_output_files
+
     if log_file:
         args.append("&>")
         args.append("$(location %s)" % log_file)
@@ -79,14 +87,8 @@ def reduce(
         args.append("$(location %s)" % stdout_file)
         outs.append(stdout_file)
 
-    if other_flags:
-        for (key, value) in other_flags.items():
-            args.append(key)
-            args.append(value)
-    if extra_output_files:
-        outs += extra_output_files
-
     srcs = [source_file, test_script]
+
     if cmd_deps:  # The flags --deps
         srcs.append(cmd_deps)
         args.append("--deps $(location %s)" % cmd_deps)

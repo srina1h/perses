@@ -23,7 +23,7 @@ import java.io.Closeable
 class GlobalContext : Closeable {
 
   private val closer = Closer.create()
-  val fileStreamPool = closer.register(FileStreamPool())
+  val fileStreamPool: FileStreamPool = closer.register(FileStreamPool())
 
   override fun close() {
     closer.close()

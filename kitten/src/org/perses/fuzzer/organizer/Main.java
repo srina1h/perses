@@ -30,7 +30,7 @@ public class Main {
     final AbstractCommandOptions.CmdUsagePrinter usagePrinter =
         cmd.parseArguments(Main.class.getCanonicalName(), args);
 
-    if (cmd.help) {
+    if (cmd.helpFlags.getHelp()) {
       usagePrinter.printUsage();
       return;
     }

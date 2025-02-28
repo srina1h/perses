@@ -1,18 +1,4 @@
 Usage: org.perses.Main [options]
-  Options:
-    --help, -h
-      print help message
-
-[Verbosity]  Options:
-    --verbosity
-      verbosity of logging
-      Default: INFO
-    --list-verbosity-levels
-      list all verbosity levels
-
-[Version]  Options:
-    --version
-      print the version
 
 [Inputs]  Options:
   * --test-script, --test, -t
@@ -79,45 +65,6 @@ Usage: org.perses.Main [options]
       The default delta debugger algorithm to reduce kleene nodes.
       Default: DFS
       Possible Values: [PRISTINE, PERSES_VARIANT_OF_PRISTINE, DFS, BFS, CDD, PROBDD, WDD, WPROBDD]
-    --enable-trec
-      enable T-Rec (a lexical-syntax guided fine-grained reduction process to 
-      reduce and canonicalize each token)
-      Default: false
-
-[Cache Control]  Options:
-    --query-caching
-      Enable query caching for test script executions.
-      Default: AUTO
-      Possible Values: [TRUE, FALSE, AUTO]
-    --enable-lightweight-refreshing
-      Whether to enable lightweight refreshing
-      Default: true
-
-[Profiling]  Options:
-    --progress-dump-file
-      The file to record the reduction process. The dump file can be large..
-    --append-to-progress-dump-file
-      Whether to append the reduction progress to the progress dump file
-      Default: true
-    --stat-dump-file
-      The file to save the statistics collected during reduction.
-    --profile-query-cache-time
-      The file to save the profiling data of the query cache.
-    --profile-query-cache-time-csv
-      The file to save the profiling data of the query cache in the CSV 
-      format. 
-    --profile-query-cache-memory
-      The file to save the profiling data of the query cache.
-    --profile-actionset
-      The file to save information of all the created edit action sets.
-    --profile-delta-debugger
-      The file to save the reduction process of the delta debugger.
-
-[Experiment Control]  Options:
-    --query-cache-type
-      the algorithm of the query cache
-      Default: COMPACT_QUERY_CACHE
-      Possible Values: [AUTO, COMPACT_QUERY_CACHE, COMPACT_QUERY_CACHE_FORMAT_SENSITIVE, PERSES_FAST_LINEAR_SCAN_NO_COMPRESSION, PERSES_LEXEME_ID, CONFIG_BASED, ORIG_CONTENT_STRING_BASED, CONTENT_LEXEME_LIST_BASE, CONTENT_SHA512, CONTENT_SHA512_FORMAT, CONTENT_ZIP, RCC_MEM_LIT]
 
 [Language Control]  Options:
     --list-langs
@@ -149,4 +96,60 @@ Usage: org.perses.Main [options]
       Enable vulcan fixpoint iteratively using auxiliary reducers until no 
       progress can be made
       Default: false
+
+[T-Rec Reducer Control]  Options:
+    --enable-trec
+      enable T-Rec (a lexical-syntax guided fine-grained reduction process to 
+      reduce and canonicalize each token)
+      Default: false
+
+[Profiling]  Options:
+    --progress-dump-file
+      The file to record the reduction process. The dump file can be large..
+    --append-to-progress-dump-file
+      Whether to append the reduction progress to the progress dump file
+      Default: true
+    --stat-dump-file
+      The file to save the statistics collected during reduction.
+    --profile-query-cache-time
+      The file to save the profiling data of the query cache.
+    --profile-query-cache-time-csv
+      The file to save the profiling data of the query cache in the CSV 
+      format. 
+    --profile-query-cache-memory
+      The file to save the profiling data of the query cache.
+    --profile-actionset
+      The file to save information of all the created edit action sets.
+    --profile-delta-debugger
+      The file to save the reduction process of the delta debugger.
+
+[Cache Control]  Options:
+    --query-caching
+      Enable query caching for test script executions.
+      Default: AUTO
+      Possible Values: [TRUE, FALSE, AUTO]
+    --enable-lightweight-refreshing
+      Whether to enable lightweight refreshing
+      Default: true
+
+[Experiment Control]  Options:
+    --query-cache-type
+      the algorithm of the query cache
+      Default: COMPACT_QUERY_CACHE
+      Possible Values: [AUTO, COMPACT_QUERY_CACHE, COMPACT_QUERY_CACHE_FORMAT_SENSITIVE, PERSES_FAST_LINEAR_SCAN_NO_COMPRESSION, PERSES_LEXEME_ID, CONFIG_BASED, ORIG_CONTENT_STRING_BASED, CONTENT_LEXEME_LIST_BASE, CONTENT_SHA512, CONTENT_SHA512_FORMAT, CONTENT_ZIP, RCC_MEM_LIT]
+
+[Verbosity]  Options:
+    --verbosity
+      verbosity of logging
+      Default: INFO
+    --list-verbosity-levels
+      list all verbosity levels
+
+[Version]  Options:
+    --version
+      print the version
+
+[Help]  Options:
+    -h, --help
+      print help message
 

@@ -23,10 +23,10 @@ import org.perses.reduction.ReducerAnnotation
 import org.perses.reduction.ReducerContext
 import org.perses.spartree.AbstractSparTreeEdit
 import org.perses.spartree.AbstractSparTreeNode
-import org.perses.spartree.ChildHoistingActionSet
 import org.perses.spartree.DescendantHoistingTreeEdit
 import org.perses.spartree.NodeDeletionActionSet
 import org.perses.spartree.NodeDeletionTreeEdit
+import org.perses.spartree.NodeReplacementActionSet
 import org.perses.spartree.SparTree
 import org.perses.spartree.SparTreeSimplifier
 import org.perses.util.FileNameContentPair
@@ -117,7 +117,7 @@ abstract class AbstractNodeReducer(
   }
 
   protected fun optionallyCreateReplacementEditAndLog(
-    actionSet: ChildHoistingActionSet,
+    actionSet: NodeReplacementActionSet,
     tree: SparTree,
   ): DescendantHoistingTreeEdit? {
     return if (reducerContext.nodeActionSetCache.isCachedOrCacheIt(actionSet)) {

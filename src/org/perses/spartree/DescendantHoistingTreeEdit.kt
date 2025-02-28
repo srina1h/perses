@@ -18,7 +18,7 @@ package org.perses.spartree
 
 class DescendantHoistingTreeEdit internal constructor(
   tree: SparTree,
-  actionSet: ChildHoistingActionSet,
+  actionSet: NodeReplacementActionSet,
 ) : AbstractNodeReplacementTreeEdit(tree, actionSet) {
 
   init {

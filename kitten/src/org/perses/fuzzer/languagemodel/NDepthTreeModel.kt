@@ -76,7 +76,7 @@ class NDepthTreeModel(
     changeStatusOfGuidance()
     val encodingResult = FeatureOfSparTree()
     tree.root.preOrderVisit {
-      if (!it.isTokenNode && it.updateLeafTokenCount() != 0) {
+      if (!it.isTokenNode() && it.updateLeafTokenCount() != 0) {
         val rule = it.antlrRule!!.ruleDef
         if (rule.body is AbstractPersesQuantifiedAst || rule.body is PersesAlternativeBlockAst) {
           val ruleOfRoot = rule.ruleNameHandle
@@ -187,7 +187,7 @@ class NDepthTreeModel(
     node: AbstractSparTreeNode,
     featureOfSparTree: FeatureOfSparTree,
   ): Double {
-    return if (node.isTokenNode) {
+    return if (node.isTokenNode()) {
       Double.MAX_VALUE
     } else if (featureOfSparTree.containsKey(node)) {
       val ruleNameHandle = node.antlrRule!!.ruleDef.ruleNameHandle

@@ -59,8 +59,6 @@ class CommandOptionTest {
       """
       |Usage: program_name [options]
       |  Options:
-      |    --help, -h
-      |      print help message
       |    --a
       |      Default: <empty string>
       |
@@ -74,6 +72,10 @@ class CommandOptionTest {
       |[Version]  Options:
       |    --version
       |      print the version
+      |
+      |[Help]  Options:
+      |    -h, --help
+      |      print help message
       """.trimMargin(),
     )
   }

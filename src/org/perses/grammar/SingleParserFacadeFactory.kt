@@ -35,6 +35,8 @@ import org.perses.grammar.javascript.JavaScriptParserFacade
 import org.perses.grammar.javascript.LanguageJavaScript
 import org.perses.grammar.line.LanguageLine
 import org.perses.grammar.line.LineParserFacade
+import org.perses.grammar.onetoken.LanguageOneToken
+import org.perses.grammar.onetoken.OneTokenParserFacade
 import org.perses.grammar.php.LanguagePhp
 import org.perses.grammar.php.PhpParserFacade
 import org.perses.grammar.python3.LanguagePython3
@@ -119,6 +121,7 @@ class SingleParserFacadeFactory private constructor(
       builder.add(LanguagePython3, Python3ParserFacade::class)
       builder.add(LanguageRuby, PnfRubyParserFacade::class)
       builder.add(LanguageLine, LineParserFacade::class)
+      builder.add(LanguageOneToken, OneTokenParserFacade::class)
       tryToDynamicallyLoadParserFacades(builder)
       return builder
     }

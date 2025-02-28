@@ -18,7 +18,7 @@ package org.perses.spartree
 
 class AnyNodeReplacementTreeEdit internal constructor(
   tree: SparTree,
-  actionSet: ChildHoistingActionSet,
+  actionSet: NodeReplacementActionSet,
 ) : AbstractNodeReplacementTreeEdit(tree, actionSet) {
 
   override fun internalApplyToTree() {

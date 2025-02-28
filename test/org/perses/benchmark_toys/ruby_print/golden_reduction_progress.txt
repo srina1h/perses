@@ -3,7 +3,9 @@
 The initial program size is 27
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "FALSE"
-  nodeActionSetCaching: false
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "reduction_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "reduction_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "FALSE"
+  nodeActionSetCaching: false
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.ruby.PnfRubyParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-compilation_unit {id=1}
+compilation_unit {id=1,slot_type=compilation_unit}
 |___statement_list_terms {id=2,slot_type=statement_list_terms}
     |___aux_rule__statement_list_terms_3 {id=3,slot_type=aux_rule__statement_list_terms_3}
     |   |___(?) {id=61,slot_type=optional__statement_list_terms_4}
@@ -666,28 +670,28 @@ Failed to reduce node 107
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-compilation_unit {id=160}
-|___statement_list_terms {id=161,slot_type=statement_list_terms}
-    |___(+) {id=190,slot_type=[aux_rule__statement_list_terms_3,terms]}
+compilation_unit {id=161,slot_type=compilation_unit}
+|___statement_list_terms {id=162,slot_type=statement_list_terms}
+    |___(+) {id=191,slot_type=[aux_rule__statement_list_terms_3,terms]}
+    |   |___Token:
+ {id=195,slot_type=[term,CRLF]}
     |   |___Token:
  {id=194,slot_type=[term,CRLF]}
-    |   |___Token:
- {id=193,slot_type=[term,CRLF]}
-    |___(*) {id=163,slot_type=kleene_star__statement_list_terms_1}
-        |___aux_rule__statement_list_terms_2 {id=164,slot_type=aux_rule__statement_list_terms_2}
-            |___aux_rule__expr_45 {id=173,slot_type=[statement,expr,aux_rule__expr_16,aux_rule__expr_45]}
-            |   |___Token:puts {id=189,slot_type=[function_name,aux_rule__function_name_3,cpath,identifier,Identifier]}
-            |   |___(+) {id=184,slot_type=[altnt_block__expr_27,aux_rule__expr_47,func_call_parameters_no_bracket,function_call_param,expr,aux_rule__expr_16,variable_path,aux_rule__variable_path_3,literal,string]}
-            |       |___Token:"hello world" {id=185,slot_type=String}
-            |___(+) {id=166,slot_type=terms}
+    |___(*) {id=164,slot_type=kleene_star__statement_list_terms_1}
+        |___aux_rule__statement_list_terms_2 {id=165,slot_type=aux_rule__statement_list_terms_2}
+            |___aux_rule__expr_45 {id=174,slot_type=[statement,expr,aux_rule__expr_16,aux_rule__expr_45]}
+            |   |___Token:puts {id=190,slot_type=[function_name,aux_rule__function_name_3,cpath,identifier,Identifier]}
+            |   |___(+) {id=185,slot_type=[altnt_block__expr_27,aux_rule__expr_47,func_call_parameters_no_bracket,function_call_param,expr,aux_rule__expr_16,variable_path,aux_rule__variable_path_3,literal,string]}
+            |       |___Token:"hello world" {id=186,slot_type=String}
+            |___(+) {id=167,slot_type=terms}
+                |___Token:
+ {id=171,slot_type=[term,CRLF]}
                 |___Token:
  {id=170,slot_type=[term,CRLF]}
-                |___Token:
- {id=169,slot_type=[term,CRLF]}
 ------------------------------------------------------------
 
 
-=================Reducing node 161, size=6==================
+=================Reducing node 162, size=6==================
 
 The current best program is the following
 
@@ -746,11 +750,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 161
+Failed to reduce node 162
 ------------------------------------------------------------
 
 
-=================Reducing node 163, size=6==================
+=================Reducing node 164, size=6==================
 
 The current best program is the following
 
@@ -769,11 +773,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 163
+Failed to reduce node 164
 ------------------------------------------------------------
 
 
-=================Reducing node 164, size=6==================
+=================Reducing node 165, size=6==================
 
 The current best program is the following
 
@@ -792,11 +796,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 164
+Failed to reduce node 165
 ------------------------------------------------------------
 
 
-=================Reducing node 190, size=6==================
+=================Reducing node 191, size=6==================
 
 The current best program is the following
 
@@ -829,11 +833,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Succeeded to reduce node 190 from 6 to 5
+Succeeded to reduce node 191 from 6 to 5
 ------------------------------------------------------------
 
 
-=================Reducing node 173, size=5==================
+=================Reducing node 174, size=5==================
 
 The current best program is the following
 
@@ -874,11 +878,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 173
+Failed to reduce node 174
 ------------------------------------------------------------
 
 
-=================Reducing node 166, size=5==================
+=================Reducing node 167, size=5==================
 
 The current best program is the following
 
@@ -911,11 +915,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Succeeded to reduce node 166 from 5 to 4
+Succeeded to reduce node 167 from 5 to 4
 ------------------------------------------------------------
 
 
-=================Reducing node 194, size=4==================
+=================Reducing node 195, size=4==================
 
 The current best program is the following
 
@@ -926,11 +930,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 194
+Failed to reduce node 195
 ------------------------------------------------------------
 
 
-=================Reducing node 189, size=4==================
+=================Reducing node 190, size=4==================
 
 The current best program is the following
 
@@ -941,22 +945,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 189
-------------------------------------------------------------
-
-
-=================Reducing node 184, size=4==================
-
-The current best program is the following
-
-    --file: hello.rb--
-        puts "hello world"
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 184
+Failed to reduce node 190
 ------------------------------------------------------------
 
 
@@ -975,7 +964,7 @@ Failed to reduce node 185
 ------------------------------------------------------------
 
 
-=================Reducing node 170, size=4==================
+=================Reducing node 186, size=4==================
 
 The current best program is the following
 
@@ -986,7 +975,22 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 170
+Failed to reduce node 186
+------------------------------------------------------------
+
+
+=================Reducing node 171, size=4==================
+
+The current best program is the following
+
+    --file: hello.rb--
+        puts "hello world"
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 171
 ------------------------------------------------------------
 
 

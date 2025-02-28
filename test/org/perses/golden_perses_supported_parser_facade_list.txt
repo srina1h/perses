@@ -20,6 +20,8 @@ LanguageLine{name=line, extensions=[line], defaultCodeFormatControl=COMPACT_ORIG
     default: org.perses.grammar.line.LineParserFacade
 LanguageMySQL{name=mysql, extensions=[mysql], defaultCodeFormatControl=SINGLE_TOKEN_PER_LINE} (1 parser facades):
     default: org.perses.grammar.sql.mysql.MySQLParserFacade
+LanguageOneToken{name=onetoken, extensions=[onetoken], defaultCodeFormatControl=SINGLE_TOKEN_PER_LINE} (1 parser facades):
+    default: org.perses.grammar.onetoken.OneTokenParserFacade
 LanguagePhp{name=php, extensions=[php], defaultCodeFormatControl=COMPACT_ORIG_FORMAT} (1 parser facades):
     default: org.perses.grammar.php.PhpParserFacade
 LanguagePython3{name=python3, extensions=[py, py3], defaultCodeFormatControl=COMPACT_PYTHON3_FORMAT} (1 parser facades):

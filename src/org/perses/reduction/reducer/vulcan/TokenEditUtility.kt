@@ -17,8 +17,8 @@
 package org.perses.reduction.reducer.vulcan
 
 import org.perses.spartree.AnyNodeReplacementTreeEdit
-import org.perses.spartree.ChildHoistingActionSet
 import org.perses.spartree.LexerRuleSparTreeNode
+import org.perses.spartree.NodeReplacementActionSet
 import org.perses.spartree.SparTree
 import org.perses.util.Util.lazyAssert
 
@@ -56,7 +56,7 @@ object TokenEditUtility {
   ): AnyNodeReplacementTreeEdit {
     check(nodesToBeReplaced.isNotEmpty())
     val sparTreeNodeFactory = tree.sparTreeNodeFactory
-    val builder = ChildHoistingActionSet
+    val builder = NodeReplacementActionSet
       .Builder("replace ${nodesToBeReplaced.size} lexer nodes with new lexeme '$newLexeme'")
     val tokenFactory = tree.tokenizedProgramFactory.tokenFactory
     nodesToBeReplaced.forEach { targetNode ->

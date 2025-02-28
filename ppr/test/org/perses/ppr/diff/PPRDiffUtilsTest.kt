@@ -437,7 +437,7 @@ class PPRDiffUtilsTest {
     val resultListOnSeed = mutableListOf<String>()
     diffNodeOnSeed.postOrderVisit {
         node ->
-      if (node.isTokenNode) {
+      if (node.isTokenNode()) {
         resultListOnSeed.add(node.asLexerRule().token.text)
       }
     }
@@ -447,7 +447,7 @@ class PPRDiffUtilsTest {
     val resultListOnVariant = mutableListOf<String>()
     diffNodeOnVariant.postOrderVisit {
         node ->
-      if (node.isTokenNode) {
+      if (node.isTokenNode()) {
         resultListOnVariant.add(node.asLexerRule().token.text)
       }
     }

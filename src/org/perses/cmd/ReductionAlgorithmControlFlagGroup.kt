@@ -110,16 +110,6 @@ class ReductionAlgorithmControlFlagGroup :
   )
   var stopAtFirstCompatibleChildForRegularRuleNode = false
 
-  @JvmField
-  @Parameter(
-    names = ["--enable-trec"],
-    description = "enable T-Rec (a lexical-syntax guided fine-grained reduction process to " +
-      "reduce and canonicalize each token)",
-    arity = 1,
-    order = 12,
-  )
-  var enableTrec = false
-
   override fun validate() {
   }
 }

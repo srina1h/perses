@@ -17,7 +17,11 @@
 
 public class Hello {
   public static void main(String[] args) {
-    System.out.println("hello");
-    System.out.println("world");
+    String a = "hello";
+    String b = a;
+    String c = "world";
+    String d = c;
+    System.out.println(b);
+    System.out.println(d);
   }
 }

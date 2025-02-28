@@ -1,5 +1,7 @@
        class Hello {
   public static void main(String[] args) {
-    System.out.println("world");
+    String c = "world";
+    String d = c;
+    System.out.println(d);
   }
 }

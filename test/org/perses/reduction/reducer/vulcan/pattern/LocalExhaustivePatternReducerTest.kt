@@ -203,11 +203,11 @@ class LocalExhaustivePatternReducerTest {
     assertThat(nodeSequences.first().size).isAtLeast(granularity)
     assertThat(nodeSequences.last().size).isEqualTo(tree.tokenCount)
     nodeSequences.zipWithNext { first, second ->
-      assertThat(first.any { !it.isTokenNode })
+      assertThat(first.any { !it.isTokenNode() })
       assertThat(first.size).isLessThan(second.size)
     }
     val firstLevel = nodeSequences.first()
-    firstLevel.filter { !it.isTokenNode }
+    firstLevel.filter { !it.isTokenNode() }
       .forEach { it.delete() }
     assertThat(nodeSequences.count()).isEqualTo(1)
   }

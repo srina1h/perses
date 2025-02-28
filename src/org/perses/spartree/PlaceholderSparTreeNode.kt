@@ -41,7 +41,10 @@ class PlaceholderSparTreeNode internal constructor(
     // do nothing
   }
 
-  @Deprecated("Should not be called on a placeholder node.")
+  @Deprecated(
+    "Should not be called on a placeholder node.",
+    ReplaceWith("None"),
+  )
   override fun onChildRemoved(index: Int, child: AbstractSparTreeNode) {
     error("Cannot call this method on a token node.")
   }

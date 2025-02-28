@@ -47,7 +47,7 @@ class CommandLineProcessor<Cmd : AbstractCommandOptions>(
 
   private fun printCommonHelpMessageIfRequested(): HelpRequestProcessingDecision {
     when {
-      cmd.help -> {
+      cmd.helpFlags.help -> {
         commander.printUsage()
         return HelpRequestProcessingDecision.EXIT
       }

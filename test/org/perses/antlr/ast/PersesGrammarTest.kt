@@ -39,8 +39,8 @@ class PersesGrammarTest {
       .map { it.ruleNameHandle.ruleName }
       .collect(ImmutableList.toImmutableList())
     assertThat(ruleNames).containsExactlyElementsIn(TestUtility.OPT_C_PARSER_RULE_NAMES)
-    val javaGrammar = Java8ParserFacade().antlrGrammar.asCombined().grammar
-    assertThat(javaGrammar.grammarName).isEqualTo("PnfOrigJava8")
+    val javaGrammar = Java8ParserFacade().antlrGrammar.asSeparate().parserGrammar
+    assertThat(javaGrammar.grammarName).isEqualTo("PnfJava8Parser")
   }
 
   @Test

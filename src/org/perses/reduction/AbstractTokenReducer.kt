@@ -260,13 +260,19 @@ abstract class AbstractTokenReducer protected constructor(
   }
 
   protected fun canBeEpsilon(nodeForTest: AbstractSparTreeNode): Boolean {
+    require(nodeForTest.isParserRuleNode() || nodeForTest.isTokenNode())
     var node: AbstractSparTreeNode? = nodeForTest
     while (node != null) {
+      check(node.antlrRule != null) { node!! }
       if (node.antlrRule!!.canRuleBeEpsilon()) {
         // If the rule of the current node can be epsilon.
         return true
       }
-      val parent = node.parent ?: return false
+      val parent = node.parent
+      if (parent == null || parent.isSentinelRoot()) {
+        // The root node.
+        return false
+      }
       val payload = node.payload!!
       val antlrRuleForTheChild = payload.expectedAntlrRuleType!!
       if (antlrRuleForTheChild.canRuleBeEpsilon()) {
@@ -282,14 +288,13 @@ abstract class AbstractTokenReducer protected constructor(
         check(parent is ParserRuleSparTreeNode)
         when (parent.ruleType) {
           RuleType.KLEENE_PLUS, RuleType.KLEENE_STAR -> true
-          RuleType.OPTIONAL -> throw RuntimeException(
+          RuleType.OPTIONAL -> error(
             "Optional should have a single child. " + node.printTreeStructure(),
           )
-
           else -> false
         }
       } else {
-        throw RuntimeException("Unreachable. " + node.printTreeStructure())
+        error("Unreachable. " + node.printTreeStructure())
       }
     }
     return false

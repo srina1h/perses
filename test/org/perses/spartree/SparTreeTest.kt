@@ -97,6 +97,32 @@ class SparTreeTest {
   }
 
   @Test
+  fun testReplaceRootNode() {
+    assertThat(
+      tree.programSnapshot.tokens.joinToString(separator = "") {
+        it.text
+      },
+    ).isNotEqualTo("inta;")
+    val newRootNode = TestUtility.createSparTreeFromString(
+      sourceCode = "int a;",
+      languageKind = LanguageC,
+      simplifyTree = true,
+    ).detachRootFromTree()
+    tree.createAnyNodeReplacementEdit(
+      NodeReplacementActionSet.createByReplacingSingleNode(
+        tree.root,
+        newRootNode,
+        "replacement",
+      ),
+    ).let {
+      tree.applyEdit(it)
+    }
+    assertThat(
+      tree.programSnapshot.tokens.map { it.text },
+    ).containsExactly("int", "a", ";").inOrder()
+  }
+
+  @Test
   fun testChildHoisting() {
     val node1Key = ImmutableList.of(
       "{",
@@ -123,7 +149,7 @@ class SparTreeTest {
     )
     val node2 = nodeToTokensMap.getNode(node2Key, "compoundStatement")
     val edit = tree.createNodeReplacementEdit(
-      ChildHoistingActionSet.createByReplacingSingleNode(
+      NodeReplacementActionSet.createByReplacingSingleNode(
         node1,
         node2,
         "[test]replacement",
@@ -186,7 +212,7 @@ class SparTreeTest {
     tree.applyEdit(edit1)
 
     val edit = tree.createAnyNodeReplacementEdit(
-      ChildHoistingActionSet.createByReplacingSingleNode(
+      NodeReplacementActionSet.createByReplacingSingleNode(
         node1,
         replacingNode,
         "[test]replacement",

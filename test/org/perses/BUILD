@@ -69,19 +69,10 @@ golden_test(
     test_file = "token_count.txt",
 )
 
-genrule(
-    name = "get_perses_cmd_usage",
-    outs = ["perses_cmd_usage.txt"],
-    cmd = "$(location //src/org/perses:perses) --help > \"$@\"",
-    tools = [
-        "//src/org/perses",
-    ],
-)
-
 golden_test(
     name = "golden_perses_cmd_usage",
     golden_file = "golden_perses_cmd_usage.txt",
-    test_file = "perses_cmd_usage.txt",
+    test_file = "//readme_generator:perses_cmd_usage.txt",
 )
 
 genrule(
@@ -176,6 +167,7 @@ kt_jvm_test(
     deps = [
         "//:guava",
         "//:truth",
+        "//readme_generator/org/pluverse/perses:SupportedLanguageDumpMain_lib",
     ],
 )
 

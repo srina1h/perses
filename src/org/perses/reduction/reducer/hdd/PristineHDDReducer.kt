@@ -81,7 +81,7 @@ class PristineHDDReducer(
           val candidate = candidates.pollFirst()
           when (candidate.childCount) {
             0 ->
-              if (candidate.isTokenNode) {
+              if (candidate.isTokenNode()) {
                 builder.add(candidate)
               } else {
                 continue

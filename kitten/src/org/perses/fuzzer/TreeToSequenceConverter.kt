@@ -67,7 +67,7 @@ object TreeToSequenceConverter {
     node: AbstractSparTreeNode,
   ): NodeRepresentationList {
     val builder = NodeRepresentationList.Builder()
-    if (node.isTokenNode) {
+    if (node.isTokenNode()) {
       builder.addAll(encodeTokenNode(node))
       return builder.build()
     }
@@ -98,7 +98,7 @@ object TreeToSequenceConverter {
     if (node.childCount > 1) {
       throw AssertionError("a AltBlock should not have more than one child")
     }
-    val child = if (node.getChild(0).isTokenNode) {
+    val child = if (node.getChild(0).isTokenNode()) {
       "token_${node.getChild(0).asLexerRule().token.type}"
     } else {
       "rule_${
@@ -132,7 +132,7 @@ object TreeToSequenceConverter {
   private fun encodeTokenNode(
     node: AbstractSparTreeNode,
   ): NodeRepresentationList {
-    assert(node.isTokenNode)
+    assert(node.isTokenNode())
     val builder = NodeRepresentationList.Builder()
     val payloadList = node.payload?.asSinglePayloadList ?: return builder.build()
     if (payloadList.size > 2) {

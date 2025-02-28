@@ -223,7 +223,7 @@ abstract class AbstractProgramReductionDriver(
       )
     } finally {
       // Just to make sure the onReductionEnd() can be called even in case of exceptions.
-      val finalTokenCount = tree.updatetokenCountAndGet()
+      val finalTokenCount = tree.updateTokenCountAndGet()
       val reductionEndEvent = reductionStartEvent.createEndEvent(
         programSize = finalTokenCount,
         testScriptStatistics = executorService.statistics.createSnapshot(),
@@ -328,7 +328,7 @@ abstract class AbstractProgramReductionDriver(
 
   private fun computeStatistics(): StatsOfFilesBeingReduced {
     return StatsOfFilesBeingReduced(
-      tree.updatetokenCountAndGet(),
+      tree.updateTokenCountAndGet(),
       ioManager.readAndTrimAllBestFiles().transformToImmutableList {
         StatsOfFilesBeingReduced.FileNameAndContentDigestPair(
           it.fileName,
@@ -439,7 +439,7 @@ abstract class AbstractProgramReductionDriver(
     }
 
   private val vulcanEnabled = cmd.vulcanFlags.enableVulcan
-  private val trecEnabled = cmd.algorithmControlFlags.enableTrec
+  private val trecEnabled = cmd.trecFlags.enableTrec
 
   private fun callReducer(
     reductionStartEvent: ReductionStartEvent,
@@ -457,7 +457,7 @@ abstract class AbstractProgramReductionDriver(
       return
     }
     simplifySparTree()
-    val preSize = tree.updatetokenCountAndGet()
+    val preSize = tree.updateTokenCountAndGet()
     logger.ktInfo {
       val time = TimeUtil.formatDateForDisplay(System.currentTimeMillis())
       "$reducerName started at $time. #tokens=$preSize"
@@ -476,7 +476,7 @@ abstract class AbstractProgramReductionDriver(
     reducer.reduce(FixpointReductionState(fixpointIterationStartEvent, tree))
     logger.ktInfo {
       val time = TimeUtil.formatDateForDisplay(System.currentTimeMillis())
-      "$reducerName ended at $time. #old=$preSize, #new=${tree.updatetokenCountAndGet()}"
+      "$reducerName ended at $time. #old=$preSize, #new=${tree.updateTokenCountAndGet()}"
     }
     listenerManager.onFixpointIterationEnd(
       fixpointIterationStartEvent.createEndEvent(
@@ -726,6 +726,7 @@ abstract class AbstractProgramReductionDriver(
         enableTestScriptExecutionCaching = computeWhetherToEnableQueryCaching(
           cmd.cacheControlFlags.queryCaching,
           defaultProgramFormat,
+          vulcanEnabled = cmd.vulcanFlags.enableVulcan,
         ),
         defaultDeltaDebuggerTypeForKleene =
         cmd.algorithmControlFlags.defaultDeltaDebuggerTypeForKleene,
@@ -747,14 +748,17 @@ abstract class AbstractProgramReductionDriver(
 
     fun boolToString(value: Boolean) = if (value) "enabled" else "disabled"
 
-    private fun computeWhetherToEnableQueryCaching(
+    // We should enable SHA512 by default, as it is compatible with every algorithm.
+    internal fun computeWhetherToEnableQueryCaching(
       userSpecified: EnumQueryCachingControl,
       programFormatControl: EnumFormatControl,
+      vulcanEnabled: Boolean,
     ) = when (userSpecified) {
       EnumQueryCachingControl.TRUE -> true
       EnumQueryCachingControl.FALSE -> false
       EnumQueryCachingControl.AUTO ->
-        programFormatControl == EnumFormatControl.SINGLE_TOKEN_PER_LINE
+        programFormatControl == EnumFormatControl.SINGLE_TOKEN_PER_LINE &&
+          !vulcanEnabled // Vulcan reducers are not compatible with query caching RCC.
     }
 
     private fun createTokenizedProgramFactory(

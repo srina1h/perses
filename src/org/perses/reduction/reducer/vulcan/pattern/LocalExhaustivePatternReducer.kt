@@ -100,12 +100,12 @@ class LocalExhaustivePatternReducer internal constructor(
         if (nodesInCurrentLevel.size > slicingGranularity) {
           yield(nodesInCurrentLevel)
         }
-        while (nodesInCurrentLevel.any { !it.isTokenNode && !it.isPermanentlyDeleted }) {
+        while (nodesInCurrentLevel.any { !it.isTokenNode() && !it.isPermanentlyDeleted }) {
           val remainNodes = nodesInCurrentLevel.filter { !it.isPermanentlyDeleted }
           val previousNodeCount = remainNodes.size
           nodesInCurrentLevel = ImmutableList.builder<AbstractSparTreeNode>().apply {
             remainNodes.forEach {
-              if (it.isTokenNode) {
+              if (it.isTokenNode()) {
                 add(it)
               } else {
                 addAll(it.immutableChildView)

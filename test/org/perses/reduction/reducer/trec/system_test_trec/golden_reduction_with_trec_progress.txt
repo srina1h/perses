@@ -3,7 +3,9 @@
 The initial program size is 13
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: true
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "AUTO"
-  nodeActionSetCaching: true
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "progress_dump_trec.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: true
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "progress_dump_trec.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "AUTO"
+  nodeActionSetCaching: true
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___functionDefinition {id=4,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
         |___(?) {id=5,slot_type=optional__functionDefinition_2}
@@ -955,7 +959,7 @@ Failed to reduce node 84
 =====Fixpoint iteration 2. Reducer: token_canonicalizer=====
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___functionDefinition {id=4,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
         |___(?) {id=5,slot_type=optional__functionDefinition_2}
@@ -1810,42 +1814,42 @@ It took less than 1 second to cancel the task.
 =Fixpoint iteration 3. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-translationUnit {id=133}
-|___(+) {id=134,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=136,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___(?) {id=137,slot_type=optional__functionDefinition_2}
-        |   |___(+) {id=212,slot_type=declarationSpecifiers}
-        |       |___Token:int {id=216,slot_type=[declarationSpecifier,typeSpecifierWithAttrList,typeSpecifier,Int]}
-        |___directDeclarator {id=203,slot_type=[declarator,directDeclarator]}
-        |   |___Token:main {id=211,slot_type=[aux_rule__directDeclarator_9,Identifier]}
-        |   |___(*) {id=205,slot_type=kleene_star__directDeclarator_7}
-        |       |___aux_rule__directDeclarator_15 {id=207,slot_type=[aux_rule__directDeclarator_8,aux_rule__directDeclarator_15]}
-        |           |___Token:( {id=208,slot_type=LeftParen}
-        |           |___Token:) {id=210,slot_type=RightParen}
-        |___compoundStatement {id=139,slot_type=compoundStatement}
-            |___Token:{ {id=140,slot_type=LeftBrace}
-            |___(?) {id=141,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=144,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=176,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |       |   |___(?) {id=177,slot_type=optional__postfixExpression_1}
-            |       |   |   |___postfixExpression {id=195,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression]}
-            |       |   |       |___Token:a {id=202,slot_type=[aux_rule__postfixExpression_4,Identifier]}
-            |       |   |       |___(*) {id=197,slot_type=kleene_star__postfixExpression_2}
-            |       |   |           |___aux_rule__postfixExpression_11 {id=199,slot_type=[aux_rule__postfixExpression_3,aux_rule__postfixExpression_11]}
-            |       |   |               |___Token:( {id=200,slot_type=LeftParen}
-            |       |   |               |___Token:) {id=201,slot_type=RightParen}
-            |       |   |___Token:; {id=178,slot_type=Semi}
-            |       |___jumpStatement {id=149,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,jumpStatement]}
-            |           |___aux_rule__jumpStatement_4 {id=152,slot_type=[altnt_block__jumpStatement_2,aux_rule__jumpStatement_4]}
-            |           |   |___Token:return {id=153,slot_type=Return}
-            |           |   |___(?) {id=154,slot_type=optional__postfixExpression_1}
-            |           |       |___Token:0x100ull {id=173,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,Constant]}
-            |           |___Token:; {id=151,slot_type=Semi}
-            |___Token:} {id=142,slot_type=RightBrace}
+translationUnit {id=134,slot_type=translationUnit}
+|___(+) {id=135,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=137,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___(?) {id=138,slot_type=optional__functionDefinition_2}
+        |   |___(+) {id=213,slot_type=declarationSpecifiers}
+        |       |___Token:int {id=217,slot_type=[declarationSpecifier,typeSpecifierWithAttrList,typeSpecifier,Int]}
+        |___directDeclarator {id=204,slot_type=[declarator,directDeclarator]}
+        |   |___Token:main {id=212,slot_type=[aux_rule__directDeclarator_9,Identifier]}
+        |   |___(*) {id=206,slot_type=kleene_star__directDeclarator_7}
+        |       |___aux_rule__directDeclarator_15 {id=208,slot_type=[aux_rule__directDeclarator_8,aux_rule__directDeclarator_15]}
+        |           |___Token:( {id=209,slot_type=LeftParen}
+        |           |___Token:) {id=211,slot_type=RightParen}
+        |___compoundStatement {id=140,slot_type=compoundStatement}
+            |___Token:{ {id=141,slot_type=LeftBrace}
+            |___(?) {id=142,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=145,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=177,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |       |   |___(?) {id=178,slot_type=optional__postfixExpression_1}
+            |       |   |   |___postfixExpression {id=196,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression]}
+            |       |   |       |___Token:a {id=203,slot_type=[aux_rule__postfixExpression_4,Identifier]}
+            |       |   |       |___(*) {id=198,slot_type=kleene_star__postfixExpression_2}
+            |       |   |           |___aux_rule__postfixExpression_11 {id=200,slot_type=[aux_rule__postfixExpression_3,aux_rule__postfixExpression_11]}
+            |       |   |               |___Token:( {id=201,slot_type=LeftParen}
+            |       |   |               |___Token:) {id=202,slot_type=RightParen}
+            |       |   |___Token:; {id=179,slot_type=Semi}
+            |       |___jumpStatement {id=150,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,jumpStatement]}
+            |           |___aux_rule__jumpStatement_4 {id=153,slot_type=[altnt_block__jumpStatement_2,aux_rule__jumpStatement_4]}
+            |           |   |___Token:return {id=154,slot_type=Return}
+            |           |   |___(?) {id=155,slot_type=optional__postfixExpression_1}
+            |           |       |___Token:0x100ull {id=174,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,Constant]}
+            |           |___Token:; {id=152,slot_type=Semi}
+            |___Token:} {id=143,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
-=================Reducing node 134, size=13=================
+=================Reducing node 135, size=13=================
 
 The current best program is the following
 
@@ -1859,11 +1863,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 134
+Failed to reduce node 135
 ------------------------------------------------------------
 
 
-=================Reducing node 136, size=13=================
+=================Reducing node 137, size=13=================
 
 The current best program is the following
 
@@ -1897,11 +1901,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 136
+Failed to reduce node 137
 ------------------------------------------------------------
 
 
-=================Reducing node 139, size=13=================
+=================Reducing node 140, size=13=================
 
 The current best program is the following
 
@@ -1915,11 +1919,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 139
+Failed to reduce node 140
 ------------------------------------------------------------
 
 
-=================Reducing node 141, size=13=================
+=================Reducing node 142, size=13=================
 
 The current best program is the following
 
@@ -1945,11 +1949,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 141
+Failed to reduce node 142
 ------------------------------------------------------------
 
 
-=================Reducing node 144, size=13=================
+=================Reducing node 145, size=13=================
 
 The current best program is the following
 
@@ -1963,7 +1967,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=144}
+    NodeDeletionAction{target_node=145}
 ------------------------------------------------------------
 
 
@@ -1983,7 +1987,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=149}
+    NodeDeletionAction{target_node=150}
 ------------------------------------------------------------
 
 
@@ -2003,11 +2007,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 144
+Failed to reduce node 145
 ------------------------------------------------------------
 
 
-=================Reducing node 176, size=13=================
+=================Reducing node 177, size=13=================
 
 The current best program is the following
 
@@ -2021,7 +2025,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=176}
+    NodeDeletionAction{target_node=177}
 ------------------------------------------------------------
 
 
@@ -2043,11 +2047,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 176
+Failed to reduce node 177
 ------------------------------------------------------------
 
 
-=================Reducing node 203, size=13=================
+=================Reducing node 204, size=13=================
 
 The current best program is the following
 
@@ -2077,11 +2081,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 203
+Failed to reduce node 204
 ------------------------------------------------------------
 
 
-=================Reducing node 177, size=13=================
+=================Reducing node 178, size=13=================
 
 The current best program is the following
 
@@ -2111,11 +2115,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 177
+Failed to reduce node 178
 ------------------------------------------------------------
 
 
-=================Reducing node 195, size=13=================
+=================Reducing node 196, size=13=================
 
 The current best program is the following
 
@@ -2129,7 +2133,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=195}
+    NodeDeletionAction{target_node=196}
 ------------------------------------------------------------
 
 
@@ -2151,11 +2155,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 195
+Failed to reduce node 196
 ------------------------------------------------------------
 
 
-=================Reducing node 149, size=13=================
+=================Reducing node 150, size=13=================
 
 The current best program is the following
 
@@ -2169,7 +2173,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=149}
+    NodeDeletionAction{target_node=150}
 ------------------------------------------------------------
 
 
@@ -2191,11 +2195,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 149
+Failed to reduce node 150
 ------------------------------------------------------------
 
 
-=================Reducing node 205, size=13=================
+=================Reducing node 206, size=13=================
 
 The current best program is the following
 
@@ -2225,11 +2229,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 205
+Failed to reduce node 206
 ------------------------------------------------------------
 
 
-=================Reducing node 207, size=13=================
+=================Reducing node 208, size=13=================
 
 The current best program is the following
 
@@ -2243,17 +2247,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=207}
+    NodeDeletionAction{target_node=208}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 207
+Failed to reduce node 208
 ------------------------------------------------------------
 
 
-=================Reducing node 197, size=13=================
+=================Reducing node 198, size=13=================
 
 The current best program is the following
 
@@ -2283,11 +2287,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 197
+Failed to reduce node 198
 ------------------------------------------------------------
 
 
-=================Reducing node 199, size=13=================
+=================Reducing node 200, size=13=================
 
 The current best program is the following
 
@@ -2301,17 +2305,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=199}
+    NodeDeletionAction{target_node=200}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 199
+Failed to reduce node 200
 ------------------------------------------------------------
 
 
-=================Reducing node 152, size=13=================
+=================Reducing node 153, size=13=================
 
 The current best program is the following
 
@@ -2341,7 +2345,25 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 152
+Failed to reduce node 153
+------------------------------------------------------------
+
+
+=================Reducing node 212, size=13=================
+
+The current best program is the following
+
+    --file: t.c--
+    int main() {
+       a               ();
+       return 0x100ull ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 212
 ------------------------------------------------------------
 
 
@@ -2363,7 +2385,7 @@ Failed to reduce node 211
 ------------------------------------------------------------
 
 
-=================Reducing node 210, size=13=================
+=================Reducing node 209, size=13=================
 
 The current best program is the following
 
@@ -2377,11 +2399,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 210
+Failed to reduce node 209
 ------------------------------------------------------------
 
 
-=================Reducing node 208, size=13=================
+=================Reducing node 203, size=13=================
 
 The current best program is the following
 
@@ -2395,7 +2417,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 208
+Failed to reduce node 203
 ------------------------------------------------------------
 
 
@@ -2435,7 +2457,7 @@ Failed to reduce node 201
 ------------------------------------------------------------
 
 
-=================Reducing node 200, size=13=================
+=================Reducing node 179, size=13=================
 
 The current best program is the following
 
@@ -2449,29 +2471,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 200
+Failed to reduce node 179
 ------------------------------------------------------------
 
 
-=================Reducing node 178, size=13=================
-
-The current best program is the following
-
-    --file: t.c--
-    int main() {
-       a               ();
-       return 0x100ull ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 178
-------------------------------------------------------------
-
-
-=================Reducing node 154, size=13=================
+=================Reducing node 155, size=13=================
 
 The current best program is the following
 
@@ -2501,11 +2505,47 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
+Failed to reduce node 155
+------------------------------------------------------------
+
+
+=================Reducing node 174, size=13=================
+
+The current best program is the following
+
+    --file: t.c--
+    int main() {
+       a               ();
+       return 0x100ull ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 174
+------------------------------------------------------------
+
+
+=================Reducing node 154, size=13=================
+
+The current best program is the following
+
+    --file: t.c--
+    int main() {
+       a               ();
+       return 0x100ull ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
 Failed to reduce node 154
 ------------------------------------------------------------
 
 
-=================Reducing node 173, size=13=================
+=================Reducing node 152, size=13=================
 
 The current best program is the following
 
@@ -2519,11 +2559,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 173
+Failed to reduce node 152
 ------------------------------------------------------------
 
 
-=================Reducing node 153, size=13=================
+=================Reducing node 143, size=13=================
 
 The current best program is the following
 
@@ -2537,11 +2577,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 153
+Failed to reduce node 143
 ------------------------------------------------------------
 
 
-=================Reducing node 151, size=13=================
+=================Reducing node 141, size=13=================
 
 The current best program is the following
 
@@ -2555,47 +2595,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 151
+Failed to reduce node 141
 ------------------------------------------------------------
 
 
-=================Reducing node 142, size=13=================
-
-The current best program is the following
-
-    --file: t.c--
-    int main() {
-       a               ();
-       return 0x100ull ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 142
-------------------------------------------------------------
-
-
-=================Reducing node 140, size=13=================
-
-The current best program is the following
-
-    --file: t.c--
-    int main() {
-       a               ();
-       return 0x100ull ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 140
-------------------------------------------------------------
-
-
-=================Reducing node 137, size=13=================
+=================Reducing node 138, size=13=================
 
 The current best program is the following
 
@@ -2625,11 +2629,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 137
+Failed to reduce node 138
 ------------------------------------------------------------
 
 
-=================Reducing node 212, size=13=================
+=================Reducing node 213, size=13=================
 
 The current best program is the following
 
@@ -2643,17 +2647,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=212}
+    NodeDeletionAction{target_node=213}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 212
+Failed to reduce node 213
 ------------------------------------------------------------
 
 
-=================Reducing node 216, size=13=================
+=================Reducing node 217, size=13=================
 
 The current best program is the following
 
@@ -2667,45 +2671,45 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 216
+Failed to reduce node 217
 ------------------------------------------------------------
 
 
 =====Fixpoint iteration 4. Reducer: token_canonicalizer=====
 
 The spar-tree is the following.
-translationUnit {id=133}
-|___(+) {id=134,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=136,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___(?) {id=137,slot_type=optional__functionDefinition_2}
-        |   |___(+) {id=212,slot_type=declarationSpecifiers}
-        |       |___Token:int {id=216,slot_type=[declarationSpecifier,typeSpecifierWithAttrList,typeSpecifier,Int]}
-        |___directDeclarator {id=203,slot_type=[declarator,directDeclarator]}
-        |   |___Token:main {id=211,slot_type=[aux_rule__directDeclarator_9,Identifier]}
-        |   |___(*) {id=205,slot_type=kleene_star__directDeclarator_7}
-        |       |___aux_rule__directDeclarator_15 {id=207,slot_type=[aux_rule__directDeclarator_8,aux_rule__directDeclarator_15]}
-        |           |___Token:( {id=208,slot_type=LeftParen}
-        |           |___Token:) {id=210,slot_type=RightParen}
-        |___compoundStatement {id=139,slot_type=compoundStatement}
-            |___Token:{ {id=140,slot_type=LeftBrace}
-            |___(?) {id=141,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=144,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=176,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |       |   |___(?) {id=177,slot_type=optional__postfixExpression_1}
-            |       |   |   |___postfixExpression {id=195,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression]}
-            |       |   |       |___Token:a {id=202,slot_type=[aux_rule__postfixExpression_4,Identifier]}
-            |       |   |       |___(*) {id=197,slot_type=kleene_star__postfixExpression_2}
-            |       |   |           |___aux_rule__postfixExpression_11 {id=199,slot_type=[aux_rule__postfixExpression_3,aux_rule__postfixExpression_11]}
-            |       |   |               |___Token:( {id=200,slot_type=LeftParen}
-            |       |   |               |___Token:) {id=201,slot_type=RightParen}
-            |       |   |___Token:; {id=178,slot_type=Semi}
-            |       |___jumpStatement {id=149,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,jumpStatement]}
-            |           |___aux_rule__jumpStatement_4 {id=152,slot_type=[altnt_block__jumpStatement_2,aux_rule__jumpStatement_4]}
-            |           |   |___Token:return {id=153,slot_type=Return}
-            |           |   |___(?) {id=154,slot_type=optional__postfixExpression_1}
-            |           |       |___Token:0x100ull {id=173,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,Constant]}
-            |           |___Token:; {id=151,slot_type=Semi}
-            |___Token:} {id=142,slot_type=RightBrace}
+translationUnit {id=134,slot_type=translationUnit}
+|___(+) {id=135,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=137,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___(?) {id=138,slot_type=optional__functionDefinition_2}
+        |   |___(+) {id=213,slot_type=declarationSpecifiers}
+        |       |___Token:int {id=217,slot_type=[declarationSpecifier,typeSpecifierWithAttrList,typeSpecifier,Int]}
+        |___directDeclarator {id=204,slot_type=[declarator,directDeclarator]}
+        |   |___Token:main {id=212,slot_type=[aux_rule__directDeclarator_9,Identifier]}
+        |   |___(*) {id=206,slot_type=kleene_star__directDeclarator_7}
+        |       |___aux_rule__directDeclarator_15 {id=208,slot_type=[aux_rule__directDeclarator_8,aux_rule__directDeclarator_15]}
+        |           |___Token:( {id=209,slot_type=LeftParen}
+        |           |___Token:) {id=211,slot_type=RightParen}
+        |___compoundStatement {id=140,slot_type=compoundStatement}
+            |___Token:{ {id=141,slot_type=LeftBrace}
+            |___(?) {id=142,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=145,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=177,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |       |   |___(?) {id=178,slot_type=optional__postfixExpression_1}
+            |       |   |   |___postfixExpression {id=196,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression]}
+            |       |   |       |___Token:a {id=203,slot_type=[aux_rule__postfixExpression_4,Identifier]}
+            |       |   |       |___(*) {id=198,slot_type=kleene_star__postfixExpression_2}
+            |       |   |           |___aux_rule__postfixExpression_11 {id=200,slot_type=[aux_rule__postfixExpression_3,aux_rule__postfixExpression_11]}
+            |       |   |               |___Token:( {id=201,slot_type=LeftParen}
+            |       |   |               |___Token:) {id=202,slot_type=RightParen}
+            |       |   |___Token:; {id=179,slot_type=Semi}
+            |       |___jumpStatement {id=150,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,jumpStatement]}
+            |           |___aux_rule__jumpStatement_4 {id=153,slot_type=[altnt_block__jumpStatement_2,aux_rule__jumpStatement_4]}
+            |           |   |___Token:return {id=154,slot_type=Return}
+            |           |   |___(?) {id=155,slot_type=optional__postfixExpression_1}
+            |           |       |___Token:0x100ull {id=174,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,Constant]}
+            |           |___Token:; {id=152,slot_type=Semi}
+            |___Token:} {id=143,slot_type=RightBrace}
 ------------------------------------------------------------
 
 

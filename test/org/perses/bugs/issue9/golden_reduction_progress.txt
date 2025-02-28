@@ -3,7 +3,9 @@
 The initial program size is 58
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "TRUE"
-  nodeActionSetCaching: true
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "reduction_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "reduction_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "TRUE"
+  nodeActionSetCaching: true
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.java.Java8ParserFacade
 ------------------------------------------------------------
@@ -91,54 +95,54 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-compilationUnit {id=1}
-|___(*) {id=2,slot_type=kleene_star__typeDeclaration}
+compilationUnit {id=1,slot_type=compilationUnit}
+|___(*) {id=2,slot_type=kleene_star__compilationUnit_3}
     |___normalClassDeclaration {id=5,slot_type=[typeDeclaration,classDeclaration,normalClassDeclaration]}
         |___(*) {id=6,slot_type=kleene_star__normalClassDeclaration_1}
-        |   |___Token:public {id=269,slot_type=[classModifier,PUBLIC]}
+        |   |___Token:public {id=270,slot_type=[classModifier,PUBLIC]}
         |___Token:class {id=7,slot_type=CLASS}
         |___Token:T {id=8,slot_type=Identifier}
         |___classBody {id=9,slot_type=classBody}
             |___Token:{ {id=10,slot_type=LBRACE}
             |___(*) {id=11,slot_type=kleene_star__classBody_1}
-            |   |___methodDeclaration {id=219,slot_type=[classBodyDeclaration,methodDeclaration]}
-            |   |   |___(*) {id=220,slot_type=kleene_star__methodDeclaration_1}
-            |   |   |   |___Token:private {id=267,slot_type=[methodModifier,PRIVATE]}
-            |   |   |   |___Token:static {id=266,slot_type=[methodModifier,STATIC]}
-            |   |   |___methodHeader {id=221,slot_type=methodHeader}
-            |   |   |   |___Token:int {id=263,slot_type=[result,unannType,altnt_block__primitiveType_1,INT]}
-            |   |   |   |___methodDeclarator {id=257,slot_type=methodDeclarator}
-            |   |   |       |___Token:counter {id=258,slot_type=Identifier}
-            |   |   |       |___Token:( {id=259,slot_type=LPAREN}
-            |   |   |       |___Token:) {id=260,slot_type=RPAREN}
-            |   |   |___block {id=223,slot_type=[methodBody,block]}
-            |   |       |___Token:{ {id=224,slot_type=LBRACE}
-            |   |       |___(?) {id=225,slot_type=optional__block_1}
-            |   |       |   |___(+) {id=227,slot_type=blockStatements}
-            |   |       |       |___returnStatement {id=231,slot_type=[blockStatement,statement,statementWithoutTrailingSubstatement,returnStatement]}
-            |   |       |           |___Token:return {id=232,slot_type=RETURN}
-            |   |       |           |___(?) {id=233,slot_type=optional__returnStatement_1}
-            |   |       |           |   |___Token:100 {id=255,slot_type=[expression,conditionalExpression,conditionalOrExpression,conditionalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,altnt_block__primary_2,literal,IntegerLiteral]}
-            |   |       |           |___Token:; {id=234,slot_type=SEMI}
-            |   |       |___Token:} {id=226,slot_type=RBRACE}
+            |   |___methodDeclaration {id=220,slot_type=[classBodyDeclaration,methodDeclaration]}
+            |   |   |___(*) {id=221,slot_type=kleene_star__methodDeclaration_1}
+            |   |   |   |___Token:private {id=268,slot_type=[methodModifier,PRIVATE]}
+            |   |   |   |___Token:static {id=267,slot_type=[methodModifier,STATIC]}
+            |   |   |___methodHeader {id=222,slot_type=methodHeader}
+            |   |   |   |___Token:int {id=264,slot_type=[result,unannType,altnt_block__primitiveType_3,INT]}
+            |   |   |   |___methodDeclarator {id=258,slot_type=methodDeclarator}
+            |   |   |       |___Token:counter {id=259,slot_type=Identifier}
+            |   |   |       |___Token:( {id=260,slot_type=LPAREN}
+            |   |   |       |___Token:) {id=261,slot_type=RPAREN}
+            |   |   |___block {id=224,slot_type=[methodBody,block]}
+            |   |       |___Token:{ {id=225,slot_type=LBRACE}
+            |   |       |___(?) {id=226,slot_type=optional__block_1}
+            |   |       |   |___(+) {id=228,slot_type=blockStatements}
+            |   |       |       |___returnStatement {id=232,slot_type=[blockStatement,statement,statementWithoutTrailingSubstatement,returnStatement]}
+            |   |       |           |___Token:return {id=233,slot_type=RETURN}
+            |   |       |           |___(?) {id=234,slot_type=optional__returnStatement_1}
+            |   |       |           |   |___Token:100 {id=256,slot_type=[expression,conditionalExpression,conditionalOrExpression,conditionalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,altnt_block__primary_2,literal,IntegerLiteral]}
+            |   |       |           |___Token:; {id=235,slot_type=SEMI}
+            |   |       |___Token:} {id=227,slot_type=RBRACE}
             |   |___methodDeclaration {id=15,slot_type=[classBodyDeclaration,methodDeclaration]}
             |       |___(*) {id=16,slot_type=kleene_star__methodDeclaration_1}
-            |       |   |___Token:public {id=218,slot_type=[methodModifier,PUBLIC]}
-            |       |   |___Token:static {id=217,slot_type=[methodModifier,STATIC]}
+            |       |   |___Token:public {id=219,slot_type=[methodModifier,PUBLIC]}
+            |       |   |___Token:static {id=218,slot_type=[methodModifier,STATIC]}
             |       |___methodHeader {id=17,slot_type=methodHeader}
-            |       |   |___Token:void {id=214,slot_type=[result,VOID]}
+            |       |   |___Token:void {id=215,slot_type=[result,VOID]}
             |       |   |___methodDeclarator {id=192,slot_type=methodDeclarator}
             |       |       |___Token:main {id=193,slot_type=Identifier}
             |       |       |___Token:( {id=194,slot_type=LPAREN}
             |       |       |___(?) {id=195,slot_type=optional__methodDeclarator_1}
-            |       |       |   |___formalParameter {id=199,slot_type=[formalParameterList,lastFormalParameter,formalParameter]}
-            |       |       |       |___unannArrayType {id=203,slot_type=[unannType,unannArrayType]}
-            |       |       |       |   |___Token:String {id=213,slot_type=[altnt_block__unannArrayType_1,unannClassOrInterfaceType,altnt_block__unannClassOrInterfaceType_3,unannClassType_lfno_unannClassOrInterfaceType,Identifier]}
-            |       |       |       |   |___(+) {id=206,slot_type=[dims,kleene_plus__dims_3]}
-            |       |       |       |       |___aux_rule__dims_1 {id=207,slot_type=aux_rule__dims_1}
-            |       |       |       |           |___Token:[ {id=208,slot_type=LBRACK}
-            |       |       |       |           |___Token:] {id=209,slot_type=RBRACK}
-            |       |       |       |___Token:args {id=202,slot_type=[variableDeclaratorId,Identifier]}
+            |       |       |   |___formalParameter {id=200,slot_type=[formalParameterList,aux_rule__formalParameterList_3,lastFormalParameter,formalParameter]}
+            |       |       |       |___unannArrayType {id=204,slot_type=[unannType,unannArrayType]}
+            |       |       |       |   |___Token:String {id=214,slot_type=[altnt_block__unannArrayType_1,unannClassOrInterfaceType,altnt_block__unannClassOrInterfaceType_3,unannClassType_lfno_unannClassOrInterfaceType,Identifier]}
+            |       |       |       |   |___(+) {id=207,slot_type=[dims,kleene_plus__dims_5]}
+            |       |       |       |       |___aux_rule__dims_3 {id=208,slot_type=aux_rule__dims_3}
+            |       |       |       |           |___Token:[ {id=209,slot_type=LBRACK}
+            |       |       |       |           |___Token:] {id=210,slot_type=RBRACK}
+            |       |       |       |___Token:args {id=203,slot_type=[variableDeclaratorId,Identifier]}
             |       |       |___Token:) {id=196,slot_type=RPAREN}
             |       |___block {id=19,slot_type=[methodBody,block]}
             |           |___Token:{ {id=20,slot_type=LBRACE}
@@ -149,7 +153,7 @@ compilationUnit {id=1}
             |           |           |___Token:( {id=28,slot_type=LPAREN}
             |           |           |___(?) {id=29,slot_type=optional__basicForStatement_1}
             |           |           |   |___localVariableDeclaration {id=158,slot_type=[forInit,localVariableDeclaration]}
-            |           |           |       |___Token:int {id=190,slot_type=[unannType,altnt_block__primitiveType_1,INT]}
+            |           |           |       |___Token:int {id=190,slot_type=[unannType,altnt_block__primitiveType_3,INT]}
             |           |           |       |___variableDeclarator {id=161,slot_type=[variableDeclaratorList,variableDeclarator]}
             |           |           |           |___Token:i {id=188,slot_type=[variableDeclaratorId,Identifier]}
             |           |           |           |___(?) {id=163,slot_type=optional__variableDeclarator_2}
@@ -228,7 +232,7 @@ The current best program is the following
 
 ============Testing the following program: fail=============
 
-// edit action set type: [kleene_star:kleene_star__typeDeclaration]dd@1
+// edit action set type: [kleene_star:kleene_star__compilationUnit_3]dd@1
     --file: T.java--
     --file: <formatted tokenized program in its original format>--
 ------------------------------------------------------------
@@ -659,7 +663,7 @@ Failed to reduce node 45
 ------------------------------------------------------------
 
 
-=================Reducing node 219, size=40=================
+=================Reducing node 220, size=40=================
 
 The current best program is the following
 
@@ -737,7 +741,7 @@ It took less than 1 second to cancel the task.
 
 ===================Node reduction is done===================
 
-Succeeded to reduce node 219 from 40 to 29
+Succeeded to reduce node 220 from 40 to 29
 ------------------------------------------------------------
 
 
@@ -881,7 +885,7 @@ Failed to reduce node 195
 ------------------------------------------------------------
 
 
-=================Reducing node 199, size=29=================
+=================Reducing node 200, size=29=================
 
 The current best program is the following
 
@@ -897,13 +901,13 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=199}
+    NodeDeletionAction{target_node=200}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 199
+Failed to reduce node 200
 ------------------------------------------------------------
 
 
@@ -1013,7 +1017,7 @@ Failed to reduce node 68
 ------------------------------------------------------------
 
 
-=================Reducing node 203, size=29=================
+=================Reducing node 204, size=29=================
 
 The current best program is the following
 
@@ -1049,7 +1053,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 203
+Failed to reduce node 204
 ------------------------------------------------------------
 
 
@@ -1178,26 +1182,6 @@ Failed to reduce node 52
 ------------------------------------------------------------
 
 
-=================Reducing node 206, size=29=================
-
-The current best program is the following
-
-    --file: T.java--
-    public class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 206
-------------------------------------------------------------
-
-
 =================Reducing node 207, size=29=================
 
 The current best program is the following
@@ -1215,6 +1199,26 @@ The current best program is the following
 ===================Node reduction is done===================
 
 Failed to reduce node 207
+------------------------------------------------------------
+
+
+=================Reducing node 208, size=29=================
+
+The current best program is the following
+
+    --file: T.java--
+    public class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 208
 ------------------------------------------------------------
 
 
@@ -1383,6 +1387,26 @@ Failed to reduce node 16
 ------------------------------------------------------------
 
 
+=================Reducing node 219, size=29=================
+
+The current best program is the following
+
+    --file: T.java--
+    public class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 219
+------------------------------------------------------------
+
+
 =================Reducing node 218, size=29=================
 
 The current best program is the following
@@ -1403,7 +1427,7 @@ Failed to reduce node 218
 ------------------------------------------------------------
 
 
-=================Reducing node 217, size=29=================
+=================Reducing node 215, size=29=================
 
 The current best program is the following
 
@@ -1419,7 +1443,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 217
+Failed to reduce node 215
 ------------------------------------------------------------
 
 
@@ -1443,7 +1467,7 @@ Failed to reduce node 214
 ------------------------------------------------------------
 
 
-=================Reducing node 213, size=29=================
+=================Reducing node 210, size=29=================
 
 The current best program is the following
 
@@ -1459,7 +1483,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 213
+Failed to reduce node 210
 ------------------------------------------------------------
 
 
@@ -1483,7 +1507,7 @@ Failed to reduce node 209
 ------------------------------------------------------------
 
 
-=================Reducing node 208, size=29=================
+=================Reducing node 203, size=29=================
 
 The current best program is the following
 
@@ -1499,27 +1523,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 208
-------------------------------------------------------------
-
-
-=================Reducing node 202, size=29=================
-
-The current best program is the following
-
-    --file: T.java--
-    public class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 202
+Failed to reduce node 203
 ------------------------------------------------------------
 
 
@@ -1998,67 +2002,67 @@ Succeeded to reduce node 6 from 29 to 28
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-compilationUnit {id=270}
-|___(*) {id=271,slot_type=kleene_star__typeDeclaration}
-    |___normalClassDeclaration {id=274,slot_type=[typeDeclaration,classDeclaration,normalClassDeclaration]}
-        |___Token:class {id=275,slot_type=CLASS}
-        |___Token:T {id=276,slot_type=Identifier}
-        |___classBody {id=277,slot_type=classBody}
-            |___Token:{ {id=278,slot_type=LBRACE}
-            |___(*) {id=279,slot_type=kleene_star__classBody_1}
-            |   |___methodDeclaration {id=282,slot_type=[classBodyDeclaration,methodDeclaration]}
-            |       |___(*) {id=283,slot_type=kleene_star__methodDeclaration_1}
-            |       |   |___Token:public {id=379,slot_type=[methodModifier,PUBLIC]}
-            |       |   |___Token:static {id=378,slot_type=[methodModifier,STATIC]}
-            |       |___methodHeader {id=284,slot_type=methodHeader}
-            |       |   |___Token:void {id=375,slot_type=[result,VOID]}
-            |       |   |___methodDeclarator {id=353,slot_type=methodDeclarator}
-            |       |       |___Token:main {id=354,slot_type=Identifier}
-            |       |       |___Token:( {id=355,slot_type=LPAREN}
-            |       |       |___(?) {id=356,slot_type=optional__methodDeclarator_1}
-            |       |       |   |___formalParameter {id=360,slot_type=[formalParameterList,lastFormalParameter,formalParameter]}
-            |       |       |       |___unannArrayType {id=364,slot_type=[unannType,unannArrayType]}
-            |       |       |       |   |___Token:String {id=374,slot_type=[altnt_block__unannArrayType_1,unannClassOrInterfaceType,altnt_block__unannClassOrInterfaceType_3,unannClassType_lfno_unannClassOrInterfaceType,Identifier]}
-            |       |       |       |   |___(+) {id=367,slot_type=[dims,kleene_plus__dims_3]}
-            |       |       |       |       |___aux_rule__dims_1 {id=368,slot_type=aux_rule__dims_1}
-            |       |       |       |           |___Token:[ {id=369,slot_type=LBRACK}
-            |       |       |       |           |___Token:] {id=370,slot_type=RBRACK}
-            |       |       |       |___Token:args {id=363,slot_type=[variableDeclaratorId,Identifier]}
-            |       |       |___Token:) {id=357,slot_type=RPAREN}
-            |       |___block {id=286,slot_type=[methodBody,block]}
-            |           |___Token:{ {id=287,slot_type=LBRACE}
-            |           |___(?) {id=288,slot_type=optional__block_1}
-            |           |   |___(+) {id=290,slot_type=blockStatements}
-            |           |       |___expressionStatement {id=294,slot_type=[blockStatement,statement,statementWithoutTrailingSubstatement,expressionStatement]}
-            |           |           |___methodInvocation {id=297,slot_type=[statementExpression,methodInvocation]}
-            |           |           |   |___aux_rule__methodInvocation_18 {id=300,slot_type=[altnt_block__methodInvocation_12,aux_rule__methodInvocation_18]}
-            |           |           |   |   |___typeName {id=301,slot_type=typeName}
-            |           |           |   |   |   |___(?) {id=346,slot_type=optional__typeName_2}
-            |           |           |   |   |   |   |___aux_rule__typeName_1 {id=348,slot_type=aux_rule__typeName_1}
-            |           |           |   |   |   |       |___Token:System {id=351,slot_type=[packageName,Identifier]}
-            |           |           |   |   |   |       |___Token:. {id=350,slot_type=DOT}
-            |           |           |   |   |   |___Token:out {id=347,slot_type=Identifier}
-            |           |           |   |   |___Token:. {id=302,slot_type=DOT}
-            |           |           |   |   |___altnt_block__methodInvocation_13 {id=303,slot_type=altnt_block__methodInvocation_13}
-            |           |           |   |       |___Token:println {id=304,slot_type=Identifier}
-            |           |           |   |       |___Token:( {id=305,slot_type=LPAREN}
-            |           |           |   |       |___(?) {id=306,slot_type=optional__explicitConstructorInvocation_2}
-            |           |           |   |           |___shiftExpression {id=317,slot_type=[argumentList,expression,conditionalExpression,conditionalOrExpression,conditionalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression]}
-            |           |           |   |               |___Token:1 {id=345,slot_type=[additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,altnt_block__primary_2,literal,IntegerLiteral]}
-            |           |           |   |               |___(*) {id=319,slot_type=kleene_star__shiftExpression_1}
-            |           |           |   |                   |___aux_rule__shiftExpression_2 {id=320,slot_type=aux_rule__shiftExpression_2}
-            |           |           |   |                       |___aux_rule__shiftExpression_5 {id=333,slot_type=[altnt_block__shiftExpression_4,aux_rule__shiftExpression_5]}
-            |           |           |   |                       |   |___Token:< {id=334,slot_type=LT}
-            |           |           |   |                       |   |___Token:< {id=335,slot_type=LT}
-            |           |           |   |                       |___Token:2 {id=332,slot_type=[additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,altnt_block__primary_2,literal,IntegerLiteral]}
-            |           |           |   |___Token:) {id=299,slot_type=RPAREN}
-            |           |           |___Token:; {id=296,slot_type=SEMI}
-            |           |___Token:} {id=289,slot_type=RBRACE}
-            |___Token:} {id=280,slot_type=RBRACE}
+compilationUnit {id=272,slot_type=compilationUnit}
+|___(*) {id=273,slot_type=kleene_star__compilationUnit_3}
+    |___normalClassDeclaration {id=276,slot_type=[typeDeclaration,classDeclaration,normalClassDeclaration]}
+        |___Token:class {id=277,slot_type=CLASS}
+        |___Token:T {id=278,slot_type=Identifier}
+        |___classBody {id=279,slot_type=classBody}
+            |___Token:{ {id=280,slot_type=LBRACE}
+            |___(*) {id=281,slot_type=kleene_star__classBody_1}
+            |   |___methodDeclaration {id=284,slot_type=[classBodyDeclaration,methodDeclaration]}
+            |       |___(*) {id=285,slot_type=kleene_star__methodDeclaration_1}
+            |       |   |___Token:public {id=382,slot_type=[methodModifier,PUBLIC]}
+            |       |   |___Token:static {id=381,slot_type=[methodModifier,STATIC]}
+            |       |___methodHeader {id=286,slot_type=methodHeader}
+            |       |   |___Token:void {id=378,slot_type=[result,VOID]}
+            |       |   |___methodDeclarator {id=355,slot_type=methodDeclarator}
+            |       |       |___Token:main {id=356,slot_type=Identifier}
+            |       |       |___Token:( {id=357,slot_type=LPAREN}
+            |       |       |___(?) {id=358,slot_type=optional__methodDeclarator_1}
+            |       |       |   |___formalParameter {id=363,slot_type=[formalParameterList,aux_rule__formalParameterList_3,lastFormalParameter,formalParameter]}
+            |       |       |       |___unannArrayType {id=367,slot_type=[unannType,unannArrayType]}
+            |       |       |       |   |___Token:String {id=377,slot_type=[altnt_block__unannArrayType_1,unannClassOrInterfaceType,altnt_block__unannClassOrInterfaceType_3,unannClassType_lfno_unannClassOrInterfaceType,Identifier]}
+            |       |       |       |   |___(+) {id=370,slot_type=[dims,kleene_plus__dims_5]}
+            |       |       |       |       |___aux_rule__dims_3 {id=371,slot_type=aux_rule__dims_3}
+            |       |       |       |           |___Token:[ {id=372,slot_type=LBRACK}
+            |       |       |       |           |___Token:] {id=373,slot_type=RBRACK}
+            |       |       |       |___Token:args {id=366,slot_type=[variableDeclaratorId,Identifier]}
+            |       |       |___Token:) {id=359,slot_type=RPAREN}
+            |       |___block {id=288,slot_type=[methodBody,block]}
+            |           |___Token:{ {id=289,slot_type=LBRACE}
+            |           |___(?) {id=290,slot_type=optional__block_1}
+            |           |   |___(+) {id=292,slot_type=blockStatements}
+            |           |       |___expressionStatement {id=296,slot_type=[blockStatement,statement,statementWithoutTrailingSubstatement,expressionStatement]}
+            |           |           |___methodInvocation {id=299,slot_type=[statementExpression,methodInvocation]}
+            |           |           |   |___aux_rule__methodInvocation_18 {id=302,slot_type=[altnt_block__methodInvocation_12,aux_rule__methodInvocation_18]}
+            |           |           |   |   |___typeName {id=303,slot_type=typeName}
+            |           |           |   |   |   |___(?) {id=348,slot_type=optional__typeName_2}
+            |           |           |   |   |   |   |___aux_rule__typeName_1 {id=350,slot_type=aux_rule__typeName_1}
+            |           |           |   |   |   |       |___Token:System {id=353,slot_type=[packageName,Identifier]}
+            |           |           |   |   |   |       |___Token:. {id=352,slot_type=DOT}
+            |           |           |   |   |   |___Token:out {id=349,slot_type=Identifier}
+            |           |           |   |   |___Token:. {id=304,slot_type=DOT}
+            |           |           |   |   |___altnt_block__methodInvocation_13 {id=305,slot_type=altnt_block__methodInvocation_13}
+            |           |           |   |       |___Token:println {id=306,slot_type=Identifier}
+            |           |           |   |       |___Token:( {id=307,slot_type=LPAREN}
+            |           |           |   |       |___(?) {id=308,slot_type=optional__explicitConstructorInvocation_2}
+            |           |           |   |           |___shiftExpression {id=319,slot_type=[argumentList,expression,conditionalExpression,conditionalOrExpression,conditionalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression]}
+            |           |           |   |               |___Token:1 {id=347,slot_type=[additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,altnt_block__primary_2,literal,IntegerLiteral]}
+            |           |           |   |               |___(*) {id=321,slot_type=kleene_star__shiftExpression_1}
+            |           |           |   |                   |___aux_rule__shiftExpression_2 {id=322,slot_type=aux_rule__shiftExpression_2}
+            |           |           |   |                       |___aux_rule__shiftExpression_5 {id=335,slot_type=[altnt_block__shiftExpression_4,aux_rule__shiftExpression_5]}
+            |           |           |   |                       |   |___Token:< {id=336,slot_type=LT}
+            |           |           |   |                       |   |___Token:< {id=337,slot_type=LT}
+            |           |           |   |                       |___Token:2 {id=334,slot_type=[additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,altnt_block__primary_2,literal,IntegerLiteral]}
+            |           |           |   |___Token:) {id=301,slot_type=RPAREN}
+            |           |           |___Token:; {id=298,slot_type=SEMI}
+            |           |___Token:} {id=291,slot_type=RBRACE}
+            |___Token:} {id=282,slot_type=RBRACE}
 ------------------------------------------------------------
 
 
-=================Reducing node 271, size=28=================
+=================Reducing node 273, size=28=================
 
 The current best program is the following
 
@@ -2081,11 +2085,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 271
+Failed to reduce node 273
 ------------------------------------------------------------
 
 
-=================Reducing node 274, size=28=================
+=================Reducing node 276, size=28=================
 
 The current best program is the following
 
@@ -2101,17 +2105,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=274}
+    NodeDeletionAction{target_node=276}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 274
+Failed to reduce node 276
 ------------------------------------------------------------
 
 
-=================Reducing node 277, size=28=================
+=================Reducing node 279, size=28=================
 
 The current best program is the following
 
@@ -2127,11 +2131,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 277
+Failed to reduce node 279
 ------------------------------------------------------------
 
 
-=================Reducing node 279, size=28=================
+=================Reducing node 281, size=28=================
 
 The current best program is the following
 
@@ -2159,11 +2163,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 279
+Failed to reduce node 281
 ------------------------------------------------------------
 
 
-=================Reducing node 282, size=28=================
+=================Reducing node 284, size=28=================
 
 The current best program is the following
 
@@ -2179,7 +2183,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=282}
+    NodeDeletionAction{target_node=284}
 ------------------------------------------------------------
 
 
@@ -2203,11 +2207,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 282
+Failed to reduce node 284
 ------------------------------------------------------------
 
 
-=================Reducing node 286, size=28=================
+=================Reducing node 288, size=28=================
 
 The current best program is the following
 
@@ -2223,11 +2227,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 286
+Failed to reduce node 288
 ------------------------------------------------------------
 
 
-=================Reducing node 288, size=28=================
+=================Reducing node 290, size=28=================
 
 The current best program is the following
 
@@ -2261,11 +2265,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 288
+Failed to reduce node 290
 ------------------------------------------------------------
 
 
-=================Reducing node 290, size=28=================
+=================Reducing node 292, size=28=================
 
 The current best program is the following
 
@@ -2281,17 +2285,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=290}
+    NodeDeletionAction{target_node=292}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 290
+Failed to reduce node 292
 ------------------------------------------------------------
 
 
-=================Reducing node 294, size=28=================
+=================Reducing node 296, size=28=================
 
 The current best program is the following
 
@@ -2324,11 +2328,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 294
+Failed to reduce node 296
 ------------------------------------------------------------
 
 
-=================Reducing node 297, size=28=================
+=================Reducing node 299, size=28=================
 
 The current best program is the following
 
@@ -2344,11 +2348,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 297
+Failed to reduce node 299
 ------------------------------------------------------------
 
 
-=================Reducing node 300, size=28=================
+=================Reducing node 302, size=28=================
 
 The current best program is the following
 
@@ -2364,11 +2368,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 300
+Failed to reduce node 302
 ------------------------------------------------------------
 
 
-=================Reducing node 284, size=28=================
+=================Reducing node 286, size=28=================
 
 The current best program is the following
 
@@ -2384,11 +2388,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 284
+Failed to reduce node 286
 ------------------------------------------------------------
 
 
-=================Reducing node 353, size=28=================
+=================Reducing node 355, size=28=================
 
 The current best program is the following
 
@@ -2404,11 +2408,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 353
+Failed to reduce node 355
 ------------------------------------------------------------
 
 
-=================Reducing node 303, size=28=================
+=================Reducing node 305, size=28=================
 
 The current best program is the following
 
@@ -2424,11 +2428,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 303
+Failed to reduce node 305
 ------------------------------------------------------------
 
 
-=================Reducing node 356, size=28=================
+=================Reducing node 358, size=28=================
 
 The current best program is the following
 
@@ -2464,11 +2468,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 356
+Failed to reduce node 358
 ------------------------------------------------------------
 
 
-=================Reducing node 360, size=28=================
+=================Reducing node 363, size=28=================
 
 The current best program is the following
 
@@ -2484,17 +2488,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=360}
+    NodeDeletionAction{target_node=363}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 360
+Failed to reduce node 363
 ------------------------------------------------------------
 
 
-=================Reducing node 306, size=28=================
+=================Reducing node 308, size=28=================
 
 The current best program is the following
 
@@ -2530,113 +2534,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 306
-------------------------------------------------------------
-
-
-=================Reducing node 317, size=28=================
-
-The current best program is the following
-
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=317}
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1     );
-        }
-    }
-    --file: <formatted tokenized program in its original format>--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1     );
-        }
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(     2);
-        }
-    }
-    --file: <formatted tokenized program in its original format>--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(     2);
-        }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 317
-------------------------------------------------------------
-
-
-=================Reducing node 364, size=28=================
-
-The current best program is the following
-
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: T.java--
-           class T {
-      public static void main(String   args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-    --file: <formatted tokenized program in its original format>--
-           class T {
-      public static void main(String   args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 364
+Failed to reduce node 308
 ------------------------------------------------------------
 
 
@@ -2654,8 +2552,15 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
+==============Node edit action set cache hit.===============
 
+    NodeDeletionAction{target_node=319}
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
     --file: T.java--
            class T {
       public static void main(String[] args)
@@ -2668,6 +2573,26 @@ The current best program is the following
       public static void main(String[] args)
                                             {
           System.out.println(1     );
+        }
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(     2);
+        }
+    }
+    --file: <formatted tokenized program in its original format>--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(     2);
         }
     }
 ------------------------------------------------------------
@@ -2676,92 +2601,6 @@ The current best program is the following
 ===================Node reduction is done===================
 
 Failed to reduce node 319
-------------------------------------------------------------
-
-
-=================Reducing node 320, size=28=================
-
-The current best program is the following
-
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=320}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 320
-------------------------------------------------------------
-
-
-=================Reducing node 301, size=28=================
-
-The current best program is the following
-
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-                 out.println(1 << 2);
-        }
-    }
-    --file: <formatted tokenized program in its original format>--
-           class T {
-      public static void main(String[] args)
-                                            {
-                 out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System    .println(1 << 2);
-        }
-    }
-    --file: <formatted tokenized program in its original format>--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System    .println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 301
 ------------------------------------------------------------
 
 
@@ -2779,13 +2618,158 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: T.java--
+           class T {
+      public static void main(String   args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+    --file: <formatted tokenized program in its original format>--
+           class T {
+      public static void main(String   args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 367
 ------------------------------------------------------------
 
 
-=================Reducing node 368, size=28=================
+=================Reducing node 321, size=28=================
+
+The current best program is the following
+
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1     );
+        }
+    }
+    --file: <formatted tokenized program in its original format>--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1     );
+        }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 321
+------------------------------------------------------------
+
+
+=================Reducing node 322, size=28=================
+
+The current best program is the following
+
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=322}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 322
+------------------------------------------------------------
+
+
+=================Reducing node 303, size=28=================
+
+The current best program is the following
+
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+                 out.println(1 << 2);
+        }
+    }
+    --file: <formatted tokenized program in its original format>--
+           class T {
+      public static void main(String[] args)
+                                            {
+                 out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System    .println(1 << 2);
+        }
+    }
+    --file: <formatted tokenized program in its original format>--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System    .println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 303
+------------------------------------------------------------
+
+
+=================Reducing node 370, size=28=================
 
 The current best program is the following
 
@@ -2801,11 +2785,31 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 368
+Failed to reduce node 370
 ------------------------------------------------------------
 
 
-=================Reducing node 346, size=28=================
+=================Reducing node 371, size=28=================
+
+The current best program is the following
+
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 371
+------------------------------------------------------------
+
+
+=================Reducing node 348, size=28=================
 
 The current best program is the following
 
@@ -2840,11 +2844,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 346
+Failed to reduce node 348
 ------------------------------------------------------------
 
 
-=================Reducing node 348, size=28=================
+=================Reducing node 350, size=28=================
 
 The current best program is the following
 
@@ -2860,17 +2864,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=348}
+    NodeDeletionAction{target_node=350}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 348
+Failed to reduce node 350
 ------------------------------------------------------------
 
 
-=================Reducing node 333, size=28=================
+=================Reducing node 335, size=28=================
 
 The current best program is the following
 
@@ -2886,11 +2890,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 333
+Failed to reduce node 335
 ------------------------------------------------------------
 
 
-=================Reducing node 283, size=28=================
+=================Reducing node 285, size=28=================
 
 The current best program is the following
 
@@ -2966,11 +2970,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 283
+Failed to reduce node 285
 ------------------------------------------------------------
 
 
-=================Reducing node 379, size=28=================
+=================Reducing node 382, size=28=================
 
 The current best program is the following
 
@@ -2986,7 +2990,27 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 379
+Failed to reduce node 382
+------------------------------------------------------------
+
+
+=================Reducing node 381, size=28=================
+
+The current best program is the following
+
+    --file: T.java--
+           class T {
+      public static void main(String[] args)
+                                            {
+          System.out.println(1 << 2);
+        }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 381
 ------------------------------------------------------------
 
 
@@ -3010,7 +3034,7 @@ Failed to reduce node 378
 ------------------------------------------------------------
 
 
-=================Reducing node 375, size=28=================
+=================Reducing node 377, size=28=================
 
 The current best program is the following
 
@@ -3026,11 +3050,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 375
+Failed to reduce node 377
 ------------------------------------------------------------
 
 
-=================Reducing node 374, size=28=================
+=================Reducing node 373, size=28=================
 
 The current best program is the following
 
@@ -3046,11 +3070,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 374
+Failed to reduce node 373
 ------------------------------------------------------------
 
 
-=================Reducing node 370, size=28=================
+=================Reducing node 372, size=28=================
 
 The current best program is the following
 
@@ -3066,11 +3090,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 370
+Failed to reduce node 372
 ------------------------------------------------------------
 
 
-=================Reducing node 369, size=28=================
+=================Reducing node 366, size=28=================
 
 The current best program is the following
 
@@ -3086,11 +3110,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 369
+Failed to reduce node 366
 ------------------------------------------------------------
 
 
-=================Reducing node 363, size=28=================
+=================Reducing node 359, size=28=================
 
 The current best program is the following
 
@@ -3106,7 +3130,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 363
+Failed to reduce node 359
 ------------------------------------------------------------
 
 
@@ -3130,7 +3154,7 @@ Failed to reduce node 357
 ------------------------------------------------------------
 
 
-=================Reducing node 355, size=28=================
+=================Reducing node 356, size=28=================
 
 The current best program is the following
 
@@ -3146,11 +3170,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 355
+Failed to reduce node 356
 ------------------------------------------------------------
 
 
-=================Reducing node 354, size=28=================
+=================Reducing node 353, size=28=================
 
 The current best program is the following
 
@@ -3166,11 +3190,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 354
+Failed to reduce node 353
 ------------------------------------------------------------
 
 
-=================Reducing node 351, size=28=================
+=================Reducing node 352, size=28=================
 
 The current best program is the following
 
@@ -3186,11 +3210,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 351
+Failed to reduce node 352
 ------------------------------------------------------------
 
 
-=================Reducing node 350, size=28=================
+=================Reducing node 349, size=28=================
 
 The current best program is the following
 
@@ -3206,7 +3230,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 350
+Failed to reduce node 349
 ------------------------------------------------------------
 
 
@@ -3230,7 +3254,7 @@ Failed to reduce node 347
 ------------------------------------------------------------
 
 
-=================Reducing node 345, size=28=================
+=================Reducing node 337, size=28=================
 
 The current best program is the following
 
@@ -3246,11 +3270,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 345
+Failed to reduce node 337
 ------------------------------------------------------------
 
 
-=================Reducing node 335, size=28=================
+=================Reducing node 336, size=28=================
 
 The current best program is the following
 
@@ -3266,7 +3290,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 335
+Failed to reduce node 336
 ------------------------------------------------------------
 
 
@@ -3290,7 +3314,7 @@ Failed to reduce node 334
 ------------------------------------------------------------
 
 
-=================Reducing node 332, size=28=================
+=================Reducing node 307, size=28=================
 
 The current best program is the following
 
@@ -3306,11 +3330,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 332
+Failed to reduce node 307
 ------------------------------------------------------------
 
 
-=================Reducing node 305, size=28=================
+=================Reducing node 306, size=28=================
 
 The current best program is the following
 
@@ -3326,7 +3350,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 305
+Failed to reduce node 306
 ------------------------------------------------------------
 
 
@@ -3350,7 +3374,7 @@ Failed to reduce node 304
 ------------------------------------------------------------
 
 
-=================Reducing node 302, size=28=================
+=================Reducing node 301, size=28=================
 
 The current best program is the following
 
@@ -3366,11 +3390,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 302
+Failed to reduce node 301
 ------------------------------------------------------------
 
 
-=================Reducing node 299, size=28=================
+=================Reducing node 298, size=28=================
 
 The current best program is the following
 
@@ -3386,11 +3410,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 299
+Failed to reduce node 298
 ------------------------------------------------------------
 
 
-=================Reducing node 296, size=28=================
+=================Reducing node 291, size=28=================
 
 The current best program is the following
 
@@ -3406,7 +3430,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 296
+Failed to reduce node 291
 ------------------------------------------------------------
 
 
@@ -3430,7 +3454,7 @@ Failed to reduce node 289
 ------------------------------------------------------------
 
 
-=================Reducing node 287, size=28=================
+=================Reducing node 282, size=28=================
 
 The current best program is the following
 
@@ -3446,7 +3470,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 287
+Failed to reduce node 282
 ------------------------------------------------------------
 
 
@@ -3490,7 +3514,7 @@ Failed to reduce node 278
 ------------------------------------------------------------
 
 
-=================Reducing node 276, size=28=================
+=================Reducing node 277, size=28=================
 
 The current best program is the following
 
@@ -3506,27 +3530,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 276
-------------------------------------------------------------
-
-
-=================Reducing node 275, size=28=================
-
-The current best program is the following
-
-    --file: T.java--
-           class T {
-      public static void main(String[] args)
-                                            {
-          System.out.println(1 << 2);
-        }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 275
+Failed to reduce node 277
 ------------------------------------------------------------
 
 

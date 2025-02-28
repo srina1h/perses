@@ -30,10 +30,10 @@ import org.perses.reduction.reducer.TreeTransformations.findCompatibleDescendant
 import org.perses.reduction.reducer.TreeTransformations.findCompatibleKleeneDescendantsForKleeneQuantifiedNode
 import org.perses.spartree.AbstractSparTreeEdit
 import org.perses.spartree.AbstractSparTreeNode
-import org.perses.spartree.ChildHoistingActionSet
 import org.perses.spartree.LexerRuleSparTreeNode
 import org.perses.spartree.NodeDeletionActionSet
 import org.perses.spartree.NodeReplacementAction
+import org.perses.spartree.NodeReplacementActionSet
 import org.perses.spartree.ParserRuleSparTreeNode
 import org.perses.spartree.SparTree
 import org.perses.util.Util.lazyAssert
@@ -127,7 +127,7 @@ open class PersesNodeReducer(
       editList.add(
         asyncCreateTreeEdit {
           optionallyCreateReplacementEditAndLog(
-            ChildHoistingActionSet.createByReplacingSingleNode(
+            NodeReplacementActionSet.createByReplacingSingleNode(
               action,
               "[regular_node]kleene replacement",
             ),
@@ -146,7 +146,7 @@ open class PersesNodeReducer(
       editList.add(
         asyncCreateTreeEdit {
           optionallyCreateReplacementEditAndLog(
-            ChildHoistingActionSet.createByReplacingSingleNode(
+            NodeReplacementActionSet.createByReplacingSingleNode(
               action,
               "[regular node]compatible replacement",
             ),

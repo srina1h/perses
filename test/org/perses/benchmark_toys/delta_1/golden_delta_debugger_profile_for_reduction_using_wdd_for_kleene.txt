@@ -195,10 +195,10 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 2 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=482, parent=404}
+  element=ParserRuleSparTreeNode{id=483, parent=405}
 --Element 1
   index=1, payload=ElementWrapper{index=1, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=407, parent=404}
+  element=ParserRuleSparTreeNode{id=408, parent=405}
 Testing the empty input is disabled.
 Partition size: 2
 ----Partition 0: [0]
@@ -218,7 +218,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=489, parent=484}
+  element=ParserRuleSparTreeNode{id=490, parent=485}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -228,7 +228,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=493, parent=491}
+  element=ParserRuleSparTreeNode{id=494, parent=492}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -238,7 +238,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=415, parent=412}
+  element=ParserRuleSparTreeNode{id=416, parent=413}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -248,7 +248,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=438, parent=420}
+  element=ParserRuleSparTreeNode{id=439, parent=421}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -258,7 +258,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=442, parent=440}
+  element=ParserRuleSparTreeNode{id=443, parent=441}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -268,10 +268,10 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 2 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.LexerRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=LexerRuleSparTreeNode{token=PersesToken{token=const}, LexerRuleSparTreeNode{id=519, parent=504}}
+  element=LexerRuleSparTreeNode{token=PersesToken{token=const}, LexerRuleSparTreeNode{id=520, parent=505}}
 --Element 1
   index=1, payload=ElementWrapper{index=1, element=org.perses.spartree.LexerRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=LexerRuleSparTreeNode{token=PersesToken{token=char}, LexerRuleSparTreeNode{id=517, parent=504}}
+  element=LexerRuleSparTreeNode{token=PersesToken{token=char}, LexerRuleSparTreeNode{id=518, parent=505}}
 Testing the empty input is disabled.
 Partition size: 2
 ----Partition 0: [0]
@@ -291,7 +291,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=500, parent=499}
+  element=ParserRuleSparTreeNode{id=501, parent=500}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -301,7 +301,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=471, parent=469}
+  element=ParserRuleSparTreeNode{id=472, parent=470}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -311,7 +311,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=509, parent=506}
+  element=ParserRuleSparTreeNode{id=510, parent=507}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -321,7 +321,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=464, parent=444}
+  element=ParserRuleSparTreeNode{id=465, parent=445}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip
@@ -331,7 +331,7 @@ Reduction starts: algorithm=org.perses.listminimizer.WeightedDeltaDebugger
 The original input has 1 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.ParserRuleSparTreeNode, payload=kotlin.Int}.elementPayload}
-  element=ParserRuleSparTreeNode{id=476, parent=408}
+  element=ParserRuleSparTreeNode{id=477, parent=409}
 Testing the empty input.
 Property Test. Deleted elements: [0]. Interestingness: skip
 Property Test. Deleted elements: [0]. Interestingness: skip

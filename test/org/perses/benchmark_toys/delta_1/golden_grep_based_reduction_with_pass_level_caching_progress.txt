@@ -3,7 +3,9 @@
 The initial program size is 56
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "FALSE"
-  nodeActionSetCaching: false
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: true
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "grep_based_reduction_with_pass_level_cache_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "grep_based_reduction_with_pass_level_cache_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "FALSE"
+  nodeActionSetCaching: false
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: true
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 ==Fixpoint iteration 1. Reducer: concurrent_token_slicer@1==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -1937,7 +1941,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 2. Reducer: concurrent_token_slicer@2==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -2726,7 +2730,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 3. Reducer: concurrent_token_slicer@3==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -2986,7 +2990,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 4. Reducer: concurrent_token_slicer@4==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3087,7 +3091,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 5. Reducer: concurrent_token_slicer@5==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3168,7 +3172,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 6. Reducer: concurrent_token_slicer@6==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3231,7 +3235,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 7. Reducer: concurrent_token_slicer@7==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3280,7 +3284,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 8. Reducer: concurrent_token_slicer@8==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3317,7 +3321,7 @@ translationUnit {id=1}
 ==Fixpoint iteration 9. Reducer: concurrent_token_slicer@9==
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3346,7 +3350,7 @@ translationUnit {id=1}
 =Fixpoint iteration 10. Reducer: concurrent_token_slicer@10=
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3375,7 +3379,7 @@ translationUnit {id=1}
 =Fixpoint iteration 11. Reducer: concurrent_token_slicer@11=
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3404,7 +3408,7 @@ translationUnit {id=1}
 =Fixpoint iteration 12. Reducer: concurrent_token_slicer@12=
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3433,7 +3437,7 @@ translationUnit {id=1}
 =Fixpoint iteration 13. Reducer: concurrent_token_slicer@13=
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3462,7 +3466,7 @@ translationUnit {id=1}
 =Fixpoint iteration 14. Reducer: concurrent_token_slicer@14=
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -3491,27 +3495,27 @@ translationUnit {id=1}
 =Fixpoint iteration 15. Reducer: concurrent_token_slicer@1==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___(?) {id=407,slot_type=optional__functionDefinition_2}
-        |   |___(+) {id=467,slot_type=declarationSpecifiers}
-        |       |___Token:int {id=471,slot_type=[declarationSpecifier,typeSpecifierWithAttrList,typeSpecifier,Int]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___(?) {id=408,slot_type=optional__functionDefinition_2}
+        |   |___(+) {id=468,slot_type=declarationSpecifiers}
+        |       |___Token:int {id=472,slot_type=[declarationSpecifier,typeSpecifierWithAttrList,typeSpecifier,Int]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -3682,24 +3686,24 @@ translationUnit {id=403}
 =Fixpoint iteration 16. Reducer: concurrent_token_slicer@2==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -3808,24 +3812,24 @@ translationUnit {id=403}
 =Fixpoint iteration 17. Reducer: concurrent_token_slicer@3==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -3910,24 +3914,24 @@ translationUnit {id=403}
 =Fixpoint iteration 18. Reducer: concurrent_token_slicer@4==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -3990,24 +3994,24 @@ translationUnit {id=403}
 =Fixpoint iteration 19. Reducer: concurrent_token_slicer@5==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4050,24 +4054,24 @@ translationUnit {id=403}
 =Fixpoint iteration 20. Reducer: concurrent_token_slicer@6==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4094,24 +4098,24 @@ translationUnit {id=403}
 =Fixpoint iteration 21. Reducer: concurrent_token_slicer@7==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4126,192 +4130,192 @@ translationUnit {id=403}
 =Fixpoint iteration 22. Reducer: concurrent_token_slicer@8==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 23. Reducer: concurrent_token_slicer@9==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 24. Reducer: concurrent_token_slicer@10=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 25. Reducer: concurrent_token_slicer@11=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 26. Reducer: concurrent_token_slicer@12=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 27. Reducer: concurrent_token_slicer@13=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 28. Reducer: concurrent_token_slicer@14=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=466,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=409,slot_type=compoundStatement}
-            |___Token:{ {id=410,slot_type=LeftBrace}
-            |___(?) {id=411,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=442,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=443,slot_type=LeftParen}
-            |           |       |   |___(+) {id=462,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=463,slot_type=StringLiteral}
-            |           |       |___Token:) {id=441,slot_type=RightParen}
-            |           |___Token:; {id=420,slot_type=Semi}
-            |___Token:} {id=412,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=467,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=410,slot_type=compoundStatement}
+            |___Token:{ {id=411,slot_type=LeftBrace}
+            |___(?) {id=412,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=415,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=419,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=420,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=440,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=443,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=444,slot_type=LeftParen}
+            |           |       |   |___(+) {id=463,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=464,slot_type=StringLiteral}
+            |           |       |___Token:) {id=442,slot_type=RightParen}
+            |           |___Token:; {id=421,slot_type=Semi}
+            |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 29. Reducer: concurrent_token_slicer@1==
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4448,24 +4452,24 @@ translationUnit {id=472}
 =Fixpoint iteration 30. Reducer: line_based_concurrent_token_slicer@1
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4580,24 +4584,24 @@ translationUnit {id=472}
 =Fixpoint iteration 31. Reducer: line_based_concurrent_token_slicer@2
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4684,24 +4688,24 @@ translationUnit {id=472}
 =Fixpoint iteration 32. Reducer: line_based_concurrent_token_slicer@3
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4764,24 +4768,24 @@ translationUnit {id=472}
 =Fixpoint iteration 33. Reducer: line_based_concurrent_token_slicer@4
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4824,24 +4828,24 @@ translationUnit {id=472}
 =Fixpoint iteration 34. Reducer: line_based_concurrent_token_slicer@5
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4868,24 +4872,24 @@ translationUnit {id=472}
 =Fixpoint iteration 35. Reducer: line_based_concurrent_token_slicer@6
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -4900,236 +4904,216 @@ translationUnit {id=472}
 =Fixpoint iteration 36. Reducer: line_based_concurrent_token_slicer@7
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 37. Reducer: line_based_concurrent_token_slicer@8
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 38. Reducer: line_based_concurrent_token_slicer@9
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 39. Reducer: line_based_concurrent_token_slicer@10
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 40. Reducer: line_based_concurrent_token_slicer@11
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 41. Reducer: line_based_concurrent_token_slicer@12
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 42. Reducer: line_based_concurrent_token_slicer@13
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 43. Reducer: line_based_concurrent_token_slicer@14
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 ========Fixpoint iteration 44. Reducer: tree_slicer=========
 
 The spar-tree is the following.
-translationUnit {id=472}
-|___(+) {id=473,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=475,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:printf {id=534,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=477,slot_type=compoundStatement}
-            |___Token:{ {id=478,slot_type=LeftBrace}
-            |___(?) {id=479,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=482,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=486,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=487,slot_type=optional__postfixExpression_1}
-            |           |   |___aux_rule__postfixExpression_13 {id=507,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
-            |           |       |___aux_rule__primaryExpression_4 {id=510,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
-            |           |       |   |___Token:( {id=511,slot_type=LeftParen}
-            |           |       |   |___(+) {id=530,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |       |___Token:"world\n" {id=531,slot_type=StringLiteral}
-            |           |       |___Token:) {id=509,slot_type=RightParen}
-            |           |___Token:; {id=488,slot_type=Semi}
-            |___Token:} {id=480,slot_type=RightBrace}
-------------------------------------------------------------
-
-
-=================Reducing node 473, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 473
+translationUnit {id=474,slot_type=translationUnit}
+|___(+) {id=475,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=477,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:printf {id=536,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=479,slot_type=compoundStatement}
+            |___Token:{ {id=480,slot_type=LeftBrace}
+            |___(?) {id=481,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=484,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=488,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=489,slot_type=optional__postfixExpression_1}
+            |           |   |___aux_rule__postfixExpression_13 {id=509,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,aux_rule__postfixExpression_13]}
+            |           |       |___aux_rule__primaryExpression_4 {id=512,slot_type=[altnt_block__primaryExpression_3,aux_rule__primaryExpression_4]}
+            |           |       |   |___Token:( {id=513,slot_type=LeftParen}
+            |           |       |   |___(+) {id=532,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |       |___Token:"world\n" {id=533,slot_type=StringLiteral}
+            |           |       |___Token:) {id=511,slot_type=RightParen}
+            |           |___Token:; {id=490,slot_type=Semi}
+            |___Token:} {id=482,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -5173,7 +5157,7 @@ Failed to reduce node 477
 ------------------------------------------------------------
 
 
-=================Reducing node 534, size=7==================
+=================Reducing node 479, size=7==================
 
 The current best program is the following
 
@@ -5189,7 +5173,81 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 534
+Failed to reduce node 479
+------------------------------------------------------------
+
+
+=================Reducing node 536, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 536
+------------------------------------------------------------
+
+
+=================Reducing node 482, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 482
+------------------------------------------------------------
+
+
+=================Reducing node 481, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: t.c--
+        printf
+                                      {
+    }
+    --file: <formatted tokenized program in its original format>--
+        printf
+                                      {
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 481
 ------------------------------------------------------------
 
 
@@ -5213,7 +5271,7 @@ Failed to reduce node 480
 ------------------------------------------------------------
 
 
-=================Reducing node 479, size=7==================
+=================Reducing node 484, size=7==================
 
 The current best program is the following
 
@@ -5243,95 +5301,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 479
-------------------------------------------------------------
-
-
-=================Reducing node 478, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 478
-------------------------------------------------------------
-
-
-=================Reducing node 482, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: t.c--
-        printf
-                                      {
-    }
-    --file: <formatted tokenized program in its original format>--
-        printf
-                                      {
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 482
-------------------------------------------------------------
-
-
-=================Reducing node 486, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: t.c--
-        printf
-                                      {
-    }
-    --file: <formatted tokenized program in its original format>--
-        printf
-                                      {
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 486
+Failed to reduce node 484
 ------------------------------------------------------------
 
 
@@ -5349,13 +5319,47 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: t.c--
+        printf
+                                      {
+    }
+    --file: <formatted tokenized program in its original format>--
+        printf
+                                      {
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 488
 ------------------------------------------------------------
 
 
-=================Reducing node 487, size=7==================
+=================Reducing node 490, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 490
+------------------------------------------------------------
+
+
+=================Reducing node 489, size=7==================
 
 The current best program is the following
 
@@ -5387,43 +5391,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 487
-------------------------------------------------------------
-
-
-=================Reducing node 507, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: t.c--
-        printf
-                                      {
-                ;
-    }
-    --file: <formatted tokenized program in its original format>--
-        printf
-                                      {
-                ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 507
+Failed to reduce node 489
 ------------------------------------------------------------
 
 
@@ -5441,49 +5409,25 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: t.c--
+        printf
+                                      {
+                ;
+    }
+    --file: <formatted tokenized program in its original format>--
+        printf
+                                      {
+                ;
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 509
-------------------------------------------------------------
-
-
-=================Reducing node 510, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 510
-------------------------------------------------------------
-
-
-=================Reducing node 530, size=7==================
-
-The current best program is the following
-
-    --file: t.c--
-        printf
-                                      {
-           (
-            "world\n")
-                ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 530
 ------------------------------------------------------------
 
 
@@ -5507,7 +5451,7 @@ Failed to reduce node 511
 ------------------------------------------------------------
 
 
-=================Reducing node 531, size=7==================
+=================Reducing node 512, size=7==================
 
 The current best program is the following
 
@@ -5523,7 +5467,67 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 531
+Failed to reduce node 512
+------------------------------------------------------------
+
+
+=================Reducing node 532, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 532
+------------------------------------------------------------
+
+
+=================Reducing node 513, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 513
+------------------------------------------------------------
+
+
+=================Reducing node 533, size=7==================
+
+The current best program is the following
+
+    --file: t.c--
+        printf
+                                      {
+           (
+            "world\n")
+                ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 533
 ------------------------------------------------------------
 
 

@@ -50,6 +50,10 @@ class SparTreeNodeFactory(
     return nextNodeId()
   }
 
+  fun createSentinelRootNode(): SparTreeSentinelRootNode {
+    return SparTreeSentinelRootNode(nextNodeId())
+  }
+
   fun createLexerRuleSparTreeNode(
     node: TerminalNode,
   ): LexerRuleSparTreeNode {
@@ -135,7 +139,7 @@ class SparTreeNodeFactory(
           check(source.text == ".") {
             "Unexpected source: $source"
           }
-          node.isTokenNode
+          node.isTokenNode()
         }
         is PersesNotAst -> {
           isCompatibleWithTheTokenSetNegation(source, node)

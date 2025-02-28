@@ -3,7 +3,9 @@
 The initial program size is 29
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "TRUE"
-  nodeActionSetCaching: true
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "reduce_scala_print_with_tree_slicer_reduction_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE_FORMAT_SENSITIVE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "reduce_scala_print_with_tree_slicer_reduction_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "TRUE"
+  nodeActionSetCaching: true
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE_FORMAT_SENSITIVE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.scala.PnfScalaParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_with_dfs_delta==
 
 The spar-tree is the following.
-compilationUnit {id=1}
+compilationUnit {id=1,slot_type=compilationUnit}
 |___(+) {id=2,slot_type=topStatSeq}
     |___aux_rule__tmplDef_7 {id=8,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
         |___Token:object {id=9,slot_type=Token}
@@ -1844,55 +1848,55 @@ Failed to reduce node 163
 =Fixpoint iteration 2. Reducer: perses_node_with_dfs_delta==
 
 The spar-tree is the following.
-compilationUnit {id=179}
-|___(+) {id=180,slot_type=topStatSeq}
-    |___aux_rule__tmplDef_7 {id=186,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
-        |___Token:object {id=187,slot_type=Token}
-        |___objectDef {id=188,slot_type=objectDef}
-            |___Token:Hello {id=189,slot_type=Id}
-            |___(?) {id=191,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
-                |___templateBody {id=193,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
-                    |___Token:{ {id=194,slot_type=Token}
-                    |___(+) {id=195,slot_type=kleene_plus__templateBody_3}
-                    |   |___aux_rule__def_2 {id=201,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
-                    |       |___Token:def {id=202,slot_type=Token}
-                    |       |___aux_rule__funDef_8 {id=204,slot_type=[funDef,aux_rule__funDef_8]}
-                    |           |___funSig {id=205,slot_type=funSig}
-                    |           |   |___Token:main {id=250,slot_type=Id}
-                    |           |   |___(*) {id=252,slot_type=[paramClauses,kleene_star__paramClauses_1]}
-                    |           |       |___paramClause {id=253,slot_type=paramClause}
-                    |           |           |___Token:( {id=254,slot_type=Token}
-                    |           |           |___(?) {id=255,slot_type=optional__paramClause_2}
-                    |           |           |   |___param {id=258,slot_type=[params,param]}
-                    |           |           |       |___Token:args {id=259,slot_type=Id}
-                    |           |           |       |___(?) {id=260,slot_type=optional__param_3}
-                    |           |           |           |___aux_rule__param_2 {id=261,slot_type=aux_rule__param_2}
-                    |           |           |               |___Token:: {id=262,slot_type=Token}
-                    |           |           |               |___simpleType {id=270,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
-                    |           |           |                   |___Token:Array {id=292,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                   |___(*) {id=272,slot_type=kleene_star__simpleType_3}
-                    |           |           |                       |___typeArgs {id=274,slot_type=[aux_rule__simpleType_4,typeArgs]}
-                    |           |           |                           |___Token:[ {id=275,slot_type=Token}
-                    |           |           |                           |___Token:String {id=288,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                           |___Token:] {id=277,slot_type=Token}
-                    |           |           |___Token:) {id=256,slot_type=Token}
-                    |           |___aux_rule__funDef_9 {id=207,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
-                    |               |___Token:= {id=208,slot_type=Token}
-                    |               |___infixExpr {id=214,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr]}
-                    |                   |___Token:println {id=249,slot_type=[prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
-                    |                   |___(*) {id=216,slot_type=kleene_star__infixExpr_2}
-                    |                       |___aux_rule__infixExpr_3 {id=217,slot_type=aux_rule__infixExpr_3}
-                    |                           |___Token:println {id=218,slot_type=Id}
-                    |                           |___aux_rule__simpleExpr1_10 {id=225,slot_type=[infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,aux_rule__simpleExpr1_10]}
-                    |                               |___Token:( {id=226,slot_type=Token}
-                    |                               |___(?) {id=227,slot_type=optional__simpleExpr1_1}
-                    |                               |   |___Token:"Hello, world" {id=242,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
-                    |                               |___Token:) {id=228,slot_type=Token}
-                    |___Token:} {id=196,slot_type=Token}
+compilationUnit {id=180,slot_type=compilationUnit}
+|___(+) {id=181,slot_type=topStatSeq}
+    |___aux_rule__tmplDef_7 {id=187,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
+        |___Token:object {id=188,slot_type=Token}
+        |___objectDef {id=189,slot_type=objectDef}
+            |___Token:Hello {id=190,slot_type=Id}
+            |___(?) {id=192,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
+                |___templateBody {id=194,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
+                    |___Token:{ {id=195,slot_type=Token}
+                    |___(+) {id=196,slot_type=kleene_plus__templateBody_3}
+                    |   |___aux_rule__def_2 {id=202,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
+                    |       |___Token:def {id=203,slot_type=Token}
+                    |       |___aux_rule__funDef_8 {id=205,slot_type=[funDef,aux_rule__funDef_8]}
+                    |           |___funSig {id=206,slot_type=funSig}
+                    |           |   |___Token:main {id=251,slot_type=Id}
+                    |           |   |___(*) {id=253,slot_type=[paramClauses,kleene_star__paramClauses_1]}
+                    |           |       |___paramClause {id=254,slot_type=paramClause}
+                    |           |           |___Token:( {id=255,slot_type=Token}
+                    |           |           |___(?) {id=256,slot_type=optional__paramClause_2}
+                    |           |           |   |___param {id=259,slot_type=[params,param]}
+                    |           |           |       |___Token:args {id=260,slot_type=Id}
+                    |           |           |       |___(?) {id=261,slot_type=optional__param_3}
+                    |           |           |           |___aux_rule__param_2 {id=262,slot_type=aux_rule__param_2}
+                    |           |           |               |___Token:: {id=263,slot_type=Token}
+                    |           |           |               |___simpleType {id=271,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
+                    |           |           |                   |___Token:Array {id=293,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                   |___(*) {id=273,slot_type=kleene_star__simpleType_3}
+                    |           |           |                       |___typeArgs {id=275,slot_type=[aux_rule__simpleType_4,typeArgs]}
+                    |           |           |                           |___Token:[ {id=276,slot_type=Token}
+                    |           |           |                           |___Token:String {id=289,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                           |___Token:] {id=278,slot_type=Token}
+                    |           |           |___Token:) {id=257,slot_type=Token}
+                    |           |___aux_rule__funDef_9 {id=208,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
+                    |               |___Token:= {id=209,slot_type=Token}
+                    |               |___infixExpr {id=215,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr]}
+                    |                   |___Token:println {id=250,slot_type=[prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
+                    |                   |___(*) {id=217,slot_type=kleene_star__infixExpr_2}
+                    |                       |___aux_rule__infixExpr_3 {id=218,slot_type=aux_rule__infixExpr_3}
+                    |                           |___Token:println {id=219,slot_type=Id}
+                    |                           |___aux_rule__simpleExpr1_10 {id=226,slot_type=[infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,aux_rule__simpleExpr1_10]}
+                    |                               |___Token:( {id=227,slot_type=Token}
+                    |                               |___(?) {id=228,slot_type=optional__simpleExpr1_1}
+                    |                               |   |___Token:"Hello, world" {id=243,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
+                    |                               |___Token:) {id=229,slot_type=Token}
+                    |___Token:} {id=197,slot_type=Token}
 ------------------------------------------------------------
 
 
-=================Reducing node 180, size=20=================
+=================Reducing node 181, size=20=================
 
 The current best program is the following
 
@@ -1907,26 +1911,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 180
-------------------------------------------------------------
-
-
-=================Reducing node 186, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 186
+Failed to reduce node 181
 ------------------------------------------------------------
 
 
@@ -1962,15 +1947,6 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello
-    --file: <formatted tokenized program in its original format>--
-    object Hello
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 188
@@ -1990,13 +1966,41 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello
+    --file: <formatted tokenized program in its original format>--
+    object Hello
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 189
 ------------------------------------------------------------
 
 
-=================Reducing node 191, size=20=================
+=================Reducing node 190, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 190
+------------------------------------------------------------
+
+
+=================Reducing node 192, size=20=================
 
 The current best program is the following
 
@@ -2020,11 +2024,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 191
+Failed to reduce node 192
 ------------------------------------------------------------
 
 
-=================Reducing node 193, size=20=================
+=================Reducing node 194, size=20=================
 
 The current best program is the following
 
@@ -2039,26 +2043,7 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=193}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 193
-------------------------------------------------------------
-
-
-=================Reducing node 194, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
+    NodeDeletionAction{target_node=194}
 ------------------------------------------------------------
 
 
@@ -2106,7 +2091,7 @@ Failed to reduce node 196
 ------------------------------------------------------------
 
 
-=================Reducing node 201, size=20=================
+=================Reducing node 197, size=20=================
 
 The current best program is the following
 
@@ -2119,52 +2104,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-            main
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-            main
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: Hello.sc--
-    object Hello {
-            println
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-            println
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: Hello.sc--
-    object Hello {
-            println
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
-Failed to reduce node 201
+Failed to reduce node 197
 ------------------------------------------------------------
 
 
@@ -2181,13 +2123,56 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+            main
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+            main
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: Hello.sc--
+    object Hello {
+            println
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+            println
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: Hello.sc--
+    object Hello {
+            println
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 202
 ------------------------------------------------------------
 
 
-=================Reducing node 204, size=20=================
+=================Reducing node 203, size=20=================
 
 The current best program is the following
 
@@ -2202,7 +2187,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 204
+Failed to reduce node 203
 ------------------------------------------------------------
 
 
@@ -2219,49 +2204,13 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: Hello.sc--
-    object Hello {
-        def main                      =
-            println
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main                      =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: Hello.sc--
-    object Hello {
-        def      args                 =
-            println
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def      args                 =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 205
 ------------------------------------------------------------
 
 
-=================Reducing node 207, size=20=================
+=================Reducing node 206, size=20=================
 
 The current best program is the following
 
@@ -2274,46 +2223,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-===================Node reduction is done===================
+============Testing the following program: fail=============
 
-Failed to reduce node 207
-------------------------------------------------------------
-
-
-=================Reducing node 250, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 250
-------------------------------------------------------------
-
-
-=================Reducing node 252, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
+// edit action set type: [regular node]compatible replacement
     --file: Hello.sc--
     object Hello {
         def main                      =
@@ -2329,9 +2241,27 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: Hello.sc--
+    object Hello {
+        def      args                 =
+            println
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def      args                 =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
-Failed to reduce node 252
+Failed to reduce node 206
 ------------------------------------------------------------
 
 
@@ -2354,7 +2284,81 @@ Failed to reduce node 208
 ------------------------------------------------------------
 
 
-=================Reducing node 214, size=20=================
+=================Reducing node 251, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 251
+------------------------------------------------------------
+
+
+=================Reducing node 253, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main                      =
+            println
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main                      =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 253
+------------------------------------------------------------
+
+
+=================Reducing node 209, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 209
+------------------------------------------------------------
+
+
+=================Reducing node 215, size=20=================
 
 The current best program is the following
 
@@ -2415,11 +2419,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 214
+Failed to reduce node 215
 ------------------------------------------------------------
 
 
-=================Reducing node 253, size=20=================
+=================Reducing node 254, size=20=================
 
 The current best program is the following
 
@@ -2434,17 +2438,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=253}
+    NodeDeletionAction{target_node=254}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 253
+Failed to reduce node 254
 ------------------------------------------------------------
 
 
-=================Reducing node 249, size=20=================
+=================Reducing node 250, size=20=================
 
 The current best program is the following
 
@@ -2459,11 +2463,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 249
+Failed to reduce node 250
 ------------------------------------------------------------
 
 
-=================Reducing node 216, size=20=================
+=================Reducing node 217, size=20=================
 
 The current best program is the following
 
@@ -2493,11 +2497,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 216
+Failed to reduce node 217
 ------------------------------------------------------------
 
 
-=================Reducing node 254, size=20=================
+=================Reducing node 255, size=20=================
 
 The current best program is the following
 
@@ -2512,11 +2516,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 254
+Failed to reduce node 255
 ------------------------------------------------------------
 
 
-=================Reducing node 255, size=20=================
+=================Reducing node 256, size=20=================
 
 The current best program is the following
 
@@ -2549,30 +2553,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 255
-------------------------------------------------------------
-
-
-=================Reducing node 256, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
 Failed to reduce node 256
 ------------------------------------------------------------
 
 
-=================Reducing node 217, size=20=================
+=================Reducing node 257, size=20=================
 
 The current best program is the following
 
@@ -2582,22 +2567,16 @@ The current best program is the following
             println
             println("Hello, world")
     }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=217}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 217
+Failed to reduce node 257
 ------------------------------------------------------------
 
 
-=================Reducing node 258, size=20=================
+=================Reducing node 218, size=20=================
 
 The current best program is the following
 
@@ -2612,7 +2591,32 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=258}
+    NodeDeletionAction{target_node=218}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 218
+------------------------------------------------------------
+
+
+=================Reducing node 259, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=259}
 ------------------------------------------------------------
 
 
@@ -2653,85 +2657,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 258
-------------------------------------------------------------
-
-
-=================Reducing node 218, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 218
-------------------------------------------------------------
-
-
-=================Reducing node 225, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println "Hello, world"
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println "Hello, world"
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 225
-------------------------------------------------------------
-
-
-=================Reducing node 259, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
 Failed to reduce node 259
 ------------------------------------------------------------
 
 
-=================Reducing node 260, size=20=================
+=================Reducing node 219, size=20=================
 
 The current best program is the following
 
@@ -2744,26 +2674,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args               ) =
-            println
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args               ) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
-Failed to reduce node 260
+Failed to reduce node 219
 ------------------------------------------------------------
 
 
@@ -2780,13 +2693,49 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println "Hello, world"
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println "Hello, world"
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 226
 ------------------------------------------------------------
 
 
-=================Reducing node 227, size=20=================
+=================Reducing node 260, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 260
+------------------------------------------------------------
+
+
+=================Reducing node 261, size=20=================
 
 The current best program is the following
 
@@ -2803,15 +2752,34 @@ The current best program is the following
 
     --file: Hello.sc--
     object Hello {
-        def main(args: Array[String]) =
+        def main(args               ) =
             println
-            println(              )
+            println("Hello, world")
     }
     --file: <formatted tokenized program in its original format>--
     object Hello {
+        def main(args               ) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 261
+------------------------------------------------------------
+
+
+=================Reducing node 227, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
         def main(args: Array[String]) =
             println
-            println(              )
+            println("Hello, world")
     }
 ------------------------------------------------------------
 
@@ -2835,38 +2803,30 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println(              )
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println(              )
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 228
 ------------------------------------------------------------
 
 
-=================Reducing node 261, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=261}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 261
-------------------------------------------------------------
-
-
-=================Reducing node 242, size=20=================
+=================Reducing node 229, size=20=================
 
 The current best program is the following
 
@@ -2881,7 +2841,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 242
+Failed to reduce node 229
 ------------------------------------------------------------
 
 
@@ -2898,13 +2858,57 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=262}
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 262
 ------------------------------------------------------------
 
 
-=================Reducing node 270, size=20=================
+=================Reducing node 243, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 243
+------------------------------------------------------------
+
+
+=================Reducing node 263, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 263
+------------------------------------------------------------
+
+
+=================Reducing node 271, size=20=================
 
 The current best program is the following
 
@@ -2953,11 +2957,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 270
+Failed to reduce node 271
 ------------------------------------------------------------
 
 
-=================Reducing node 292, size=20=================
+=================Reducing node 293, size=20=================
 
 The current best program is the following
 
@@ -2972,11 +2976,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 292
+Failed to reduce node 293
 ------------------------------------------------------------
 
 
-=================Reducing node 272, size=20=================
+=================Reducing node 273, size=20=================
 
 The current best program is the following
 
@@ -3008,32 +3012,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 272
-------------------------------------------------------------
-
-
-=================Reducing node 274, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=274}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 274
+Failed to reduce node 273
 ------------------------------------------------------------
 
 
@@ -3050,13 +3029,19 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=275}
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 275
 ------------------------------------------------------------
 
 
-=================Reducing node 288, size=20=================
+=================Reducing node 276, size=20=================
 
 The current best program is the following
 
@@ -3071,11 +3056,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 288
+Failed to reduce node 276
 ------------------------------------------------------------
 
 
-=================Reducing node 277, size=20=================
+=================Reducing node 289, size=20=================
 
 The current best program is the following
 
@@ -3090,62 +3075,81 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 277
+Failed to reduce node 289
+------------------------------------------------------------
+
+
+=================Reducing node 278, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 278
 ------------------------------------------------------------
 
 
 =========Fixpoint iteration 3. Reducer: tree_slicer=========
 
 The spar-tree is the following.
-compilationUnit {id=179}
-|___(+) {id=180,slot_type=topStatSeq}
-    |___aux_rule__tmplDef_7 {id=186,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
-        |___Token:object {id=187,slot_type=Token}
-        |___objectDef {id=188,slot_type=objectDef}
-            |___Token:Hello {id=189,slot_type=Id}
-            |___(?) {id=191,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
-                |___templateBody {id=193,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
-                    |___Token:{ {id=194,slot_type=Token}
-                    |___(+) {id=195,slot_type=kleene_plus__templateBody_3}
-                    |   |___aux_rule__def_2 {id=201,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
-                    |       |___Token:def {id=202,slot_type=Token}
-                    |       |___aux_rule__funDef_8 {id=204,slot_type=[funDef,aux_rule__funDef_8]}
-                    |           |___funSig {id=205,slot_type=funSig}
-                    |           |   |___Token:main {id=250,slot_type=Id}
-                    |           |   |___(*) {id=252,slot_type=[paramClauses,kleene_star__paramClauses_1]}
-                    |           |       |___paramClause {id=253,slot_type=paramClause}
-                    |           |           |___Token:( {id=254,slot_type=Token}
-                    |           |           |___(?) {id=255,slot_type=optional__paramClause_2}
-                    |           |           |   |___param {id=258,slot_type=[params,param]}
-                    |           |           |       |___Token:args {id=259,slot_type=Id}
-                    |           |           |       |___(?) {id=260,slot_type=optional__param_3}
-                    |           |           |           |___aux_rule__param_2 {id=261,slot_type=aux_rule__param_2}
-                    |           |           |               |___Token:: {id=262,slot_type=Token}
-                    |           |           |               |___simpleType {id=270,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
-                    |           |           |                   |___Token:Array {id=292,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                   |___(*) {id=272,slot_type=kleene_star__simpleType_3}
-                    |           |           |                       |___typeArgs {id=274,slot_type=[aux_rule__simpleType_4,typeArgs]}
-                    |           |           |                           |___Token:[ {id=275,slot_type=Token}
-                    |           |           |                           |___Token:String {id=288,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                           |___Token:] {id=277,slot_type=Token}
-                    |           |           |___Token:) {id=256,slot_type=Token}
-                    |           |___aux_rule__funDef_9 {id=207,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
-                    |               |___Token:= {id=208,slot_type=Token}
-                    |               |___infixExpr {id=214,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr]}
-                    |                   |___Token:println {id=249,slot_type=[prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
-                    |                   |___(*) {id=216,slot_type=kleene_star__infixExpr_2}
-                    |                       |___aux_rule__infixExpr_3 {id=217,slot_type=aux_rule__infixExpr_3}
-                    |                           |___Token:println {id=218,slot_type=Id}
-                    |                           |___aux_rule__simpleExpr1_10 {id=225,slot_type=[infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,aux_rule__simpleExpr1_10]}
-                    |                               |___Token:( {id=226,slot_type=Token}
-                    |                               |___(?) {id=227,slot_type=optional__simpleExpr1_1}
-                    |                               |   |___Token:"Hello, world" {id=242,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
-                    |                               |___Token:) {id=228,slot_type=Token}
-                    |___Token:} {id=196,slot_type=Token}
+compilationUnit {id=180,slot_type=compilationUnit}
+|___(+) {id=181,slot_type=topStatSeq}
+    |___aux_rule__tmplDef_7 {id=187,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
+        |___Token:object {id=188,slot_type=Token}
+        |___objectDef {id=189,slot_type=objectDef}
+            |___Token:Hello {id=190,slot_type=Id}
+            |___(?) {id=192,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
+                |___templateBody {id=194,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
+                    |___Token:{ {id=195,slot_type=Token}
+                    |___(+) {id=196,slot_type=kleene_plus__templateBody_3}
+                    |   |___aux_rule__def_2 {id=202,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
+                    |       |___Token:def {id=203,slot_type=Token}
+                    |       |___aux_rule__funDef_8 {id=205,slot_type=[funDef,aux_rule__funDef_8]}
+                    |           |___funSig {id=206,slot_type=funSig}
+                    |           |   |___Token:main {id=251,slot_type=Id}
+                    |           |   |___(*) {id=253,slot_type=[paramClauses,kleene_star__paramClauses_1]}
+                    |           |       |___paramClause {id=254,slot_type=paramClause}
+                    |           |           |___Token:( {id=255,slot_type=Token}
+                    |           |           |___(?) {id=256,slot_type=optional__paramClause_2}
+                    |           |           |   |___param {id=259,slot_type=[params,param]}
+                    |           |           |       |___Token:args {id=260,slot_type=Id}
+                    |           |           |       |___(?) {id=261,slot_type=optional__param_3}
+                    |           |           |           |___aux_rule__param_2 {id=262,slot_type=aux_rule__param_2}
+                    |           |           |               |___Token:: {id=263,slot_type=Token}
+                    |           |           |               |___simpleType {id=271,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
+                    |           |           |                   |___Token:Array {id=293,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                   |___(*) {id=273,slot_type=kleene_star__simpleType_3}
+                    |           |           |                       |___typeArgs {id=275,slot_type=[aux_rule__simpleType_4,typeArgs]}
+                    |           |           |                           |___Token:[ {id=276,slot_type=Token}
+                    |           |           |                           |___Token:String {id=289,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                           |___Token:] {id=278,slot_type=Token}
+                    |           |           |___Token:) {id=257,slot_type=Token}
+                    |           |___aux_rule__funDef_9 {id=208,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
+                    |               |___Token:= {id=209,slot_type=Token}
+                    |               |___infixExpr {id=215,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr]}
+                    |                   |___Token:println {id=250,slot_type=[prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
+                    |                   |___(*) {id=217,slot_type=kleene_star__infixExpr_2}
+                    |                       |___aux_rule__infixExpr_3 {id=218,slot_type=aux_rule__infixExpr_3}
+                    |                           |___Token:println {id=219,slot_type=Id}
+                    |                           |___aux_rule__simpleExpr1_10 {id=226,slot_type=[infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,aux_rule__simpleExpr1_10]}
+                    |                               |___Token:( {id=227,slot_type=Token}
+                    |                               |___(?) {id=228,slot_type=optional__simpleExpr1_1}
+                    |                               |   |___Token:"Hello, world" {id=243,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
+                    |                               |___Token:) {id=229,slot_type=Token}
+                    |___Token:} {id=197,slot_type=Token}
 ------------------------------------------------------------
 
 
-=================Reducing node 180, size=20=================
+=================Reducing node 181, size=20=================
 
 The current best program is the following
 
@@ -3160,45 +3164,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 180
-------------------------------------------------------------
-
-
-=================Reducing node 186, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 186
-------------------------------------------------------------
-
-
-=================Reducing node 188, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 188
+Failed to reduce node 181
 ------------------------------------------------------------
 
 
@@ -3221,7 +3187,45 @@ Failed to reduce node 187
 ------------------------------------------------------------
 
 
-=================Reducing node 191, size=20=================
+=================Reducing node 189, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 189
+------------------------------------------------------------
+
+
+=================Reducing node 188, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 188
+------------------------------------------------------------
+
+
+=================Reducing node 192, size=20=================
 
 The current best program is the following
 
@@ -3245,11 +3249,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 191
+Failed to reduce node 192
 ------------------------------------------------------------
 
 
-=================Reducing node 189, size=20=================
+=================Reducing node 190, size=20=================
 
 The current best program is the following
 
@@ -3264,11 +3268,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 189
+Failed to reduce node 190
 ------------------------------------------------------------
 
 
-=================Reducing node 193, size=20=================
+=================Reducing node 194, size=20=================
 
 The current best program is the following
 
@@ -3283,13 +3287,32 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=193}
+    NodeDeletionAction{target_node=194}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 193
+Failed to reduce node 194
+------------------------------------------------------------
+
+
+=================Reducing node 197, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 197
 ------------------------------------------------------------
 
 
@@ -3331,63 +3354,6 @@ Failed to reduce node 195
 ------------------------------------------------------------
 
 
-=================Reducing node 194, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 194
-------------------------------------------------------------
-
-
-=================Reducing node 201, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 201
-------------------------------------------------------------
-
-
-=================Reducing node 204, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 204
-------------------------------------------------------------
-
-
 =================Reducing node 202, size=20=================
 
 The current best program is the following
@@ -3401,60 +3367,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: Hello.sc--
-    object Hello {
-            main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-            main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 202
-------------------------------------------------------------
-
-
-=================Reducing node 207, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String])
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String])
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 207
 ------------------------------------------------------------
 
 
@@ -3477,7 +3392,77 @@ Failed to reduce node 205
 ------------------------------------------------------------
 
 
-=================Reducing node 214, size=20=================
+=================Reducing node 203, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: Hello.sc--
+    object Hello {
+            main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+            main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 203
+------------------------------------------------------------
+
+
+=================Reducing node 208, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String])
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String])
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 208
+------------------------------------------------------------
+
+
+=================Reducing node 206, size=20=================
 
 The current best program is the following
 
@@ -3492,11 +3477,30 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 214
+Failed to reduce node 206
 ------------------------------------------------------------
 
 
-=================Reducing node 208, size=20=================
+=================Reducing node 215, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 215
+------------------------------------------------------------
+
+
+=================Reducing node 209, size=20=================
 
 The current best program is the following
 
@@ -3529,11 +3533,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 208
+Failed to reduce node 209
 ------------------------------------------------------------
 
 
-=================Reducing node 252, size=20=================
+=================Reducing node 253, size=20=================
 
 The current best program is the following
 
@@ -3565,64 +3569,64 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 252
+Failed to reduce node 253
+------------------------------------------------------------
+
+
+=================Reducing node 251, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 251
+------------------------------------------------------------
+
+
+=================Reducing node 217, size=20=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 217
 ------------------------------------------------------------
 
 
 =================Reducing node 250, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 250
-------------------------------------------------------------
-
-
-=================Reducing node 216, size=20=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-            println
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 216
-------------------------------------------------------------
-
-
-=================Reducing node 249, size=20=================
 
 The current best program is the following
 
@@ -3665,11 +3669,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Succeeded to reduce node 249 from 20 to 19
+Succeeded to reduce node 250 from 20 to 19
 ------------------------------------------------------------
 
 
-=================Reducing node 253, size=19=================
+=================Reducing node 254, size=19=================
 
 The current best program is the following
 
@@ -3699,11 +3703,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 253
+Failed to reduce node 254
 ------------------------------------------------------------
 
 
-=================Reducing node 217, size=19=================
+=================Reducing node 218, size=19=================
 
 The current best program is the following
 
@@ -3717,7 +3721,25 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 217
+Failed to reduce node 218
+------------------------------------------------------------
+
+
+=================Reducing node 257, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 257
 ------------------------------------------------------------
 
 
@@ -3728,6 +3750,22 @@ The current best program is the following
     --file: Hello.sc--
     object Hello {
         def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: Hello.sc--
+    object Hello {
+        def main(                   ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(                   ) =
             println("Hello, world")
     }
 ------------------------------------------------------------
@@ -3751,47 +3789,13 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: Hello.sc--
-    object Hello {
-        def main(                   ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(                   ) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 255
 ------------------------------------------------------------
 
 
-=================Reducing node 254, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 254
-------------------------------------------------------------
-
-
-=================Reducing node 225, size=19=================
+=================Reducing node 226, size=19=================
 
 The current best program is the following
 
@@ -3820,11 +3824,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 225
+Failed to reduce node 226
 ------------------------------------------------------------
 
 
-=================Reducing node 218, size=19=================
+=================Reducing node 219, size=19=================
 
 The current best program is the following
 
@@ -3853,11 +3857,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 218
+Failed to reduce node 219
 ------------------------------------------------------------
 
 
-=================Reducing node 258, size=19=================
+=================Reducing node 259, size=19=================
 
 The current best program is the following
 
@@ -3886,7 +3890,25 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 258
+Failed to reduce node 259
+------------------------------------------------------------
+
+
+=================Reducing node 229, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 229
 ------------------------------------------------------------
 
 
@@ -3898,6 +3920,22 @@ The current best program is the following
     object Hello {
         def main(args: Array[String]) =
             println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+============Testing the following program: fail=============
+
+// edit action set type: tree_slicer
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println(              )
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+            println(              )
     }
 ------------------------------------------------------------
 
@@ -3920,128 +3958,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 227
-------------------------------------------------------------
-
-
-=================Reducing node 226, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 226
-------------------------------------------------------------
-
-
-=================Reducing node 260, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: tree_slicer
-    --file: Hello.sc--
-    object Hello {
-        def main(args               ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args               ) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 260
-------------------------------------------------------------
-
-
-=================Reducing node 259, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 259
-------------------------------------------------------------
-
-
-=================Reducing node 242, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 242
 ------------------------------------------------------------
 
 
@@ -4057,8 +3976,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
+============Testing the following program: fail=============
 
+// edit action set type: tree_slicer
     --file: Hello.sc--
     object Hello {
         def main(args               ) =
@@ -4078,7 +3998,7 @@ Failed to reduce node 261
 ------------------------------------------------------------
 
 
-=================Reducing node 270, size=19=================
+=================Reducing node 260, size=19=================
 
 The current best program is the following
 
@@ -4092,7 +4012,40 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 270
+Failed to reduce node 260
+------------------------------------------------------------
+
+
+=================Reducing node 243, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println(              )
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+            println(              )
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 243
 ------------------------------------------------------------
 
 
@@ -4108,13 +4061,64 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args               ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args               ) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 262
 ------------------------------------------------------------
 
 
-=================Reducing node 272, size=19=================
+=================Reducing node 271, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 271
+------------------------------------------------------------
+
+
+=================Reducing node 263, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 263
+------------------------------------------------------------
+
+
+=================Reducing node 273, size=19=================
 
 The current best program is the following
 
@@ -4144,11 +4148,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 272
+Failed to reduce node 273
 ------------------------------------------------------------
 
 
-=================Reducing node 292, size=19=================
+=================Reducing node 293, size=19=================
 
 The current best program is the following
 
@@ -4162,76 +4166,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 292
-------------------------------------------------------------
-
-
-=================Reducing node 274, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array        ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array        ) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 274
-------------------------------------------------------------
-
-
-=================Reducing node 277, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 277
-------------------------------------------------------------
-
-
-=================Reducing node 288, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 288
+Failed to reduce node 293
 ------------------------------------------------------------
 
 
@@ -4247,62 +4182,131 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array        ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array        ) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 275
 ------------------------------------------------------------
 
 
+=================Reducing node 278, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 278
+------------------------------------------------------------
+
+
+=================Reducing node 289, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 289
+------------------------------------------------------------
+
+
+=================Reducing node 276, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 276
+------------------------------------------------------------
+
+
 =Fixpoint iteration 4. Reducer: perses_node_with_dfs_delta==
 
 The spar-tree is the following.
-compilationUnit {id=293}
-|___(+) {id=294,slot_type=topStatSeq}
-    |___aux_rule__tmplDef_7 {id=300,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
-        |___Token:object {id=301,slot_type=Token}
-        |___objectDef {id=302,slot_type=objectDef}
-            |___Token:Hello {id=303,slot_type=Id}
-            |___(?) {id=305,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
-                |___templateBody {id=307,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
-                    |___Token:{ {id=308,slot_type=Token}
-                    |___(+) {id=309,slot_type=kleene_plus__templateBody_3}
-                    |   |___aux_rule__def_2 {id=315,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
-                    |       |___Token:def {id=316,slot_type=Token}
-                    |       |___aux_rule__funDef_8 {id=318,slot_type=[funDef,aux_rule__funDef_8]}
-                    |           |___funSig {id=319,slot_type=funSig}
-                    |           |   |___Token:main {id=359,slot_type=Id}
-                    |           |   |___(*) {id=361,slot_type=[paramClauses,kleene_star__paramClauses_1]}
-                    |           |       |___paramClause {id=362,slot_type=paramClause}
-                    |           |           |___Token:( {id=363,slot_type=Token}
-                    |           |           |___(?) {id=364,slot_type=optional__paramClause_2}
-                    |           |           |   |___param {id=367,slot_type=[params,param]}
-                    |           |           |       |___Token:args {id=368,slot_type=Id}
-                    |           |           |       |___(?) {id=369,slot_type=optional__param_3}
-                    |           |           |           |___aux_rule__param_2 {id=370,slot_type=aux_rule__param_2}
-                    |           |           |               |___Token:: {id=371,slot_type=Token}
-                    |           |           |               |___simpleType {id=379,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
-                    |           |           |                   |___Token:Array {id=401,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                   |___(*) {id=381,slot_type=kleene_star__simpleType_3}
-                    |           |           |                       |___typeArgs {id=383,slot_type=[aux_rule__simpleType_4,typeArgs]}
-                    |           |           |                           |___Token:[ {id=384,slot_type=Token}
-                    |           |           |                           |___Token:String {id=397,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                           |___Token:] {id=386,slot_type=Token}
-                    |           |           |___Token:) {id=365,slot_type=Token}
-                    |           |___aux_rule__funDef_9 {id=321,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
-                    |               |___Token:= {id=322,slot_type=Token}
-                    |               |___simpleExpr1 {id=332,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1]}
-                    |                   |___Token:println {id=358,slot_type=[aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
-                    |                   |___(*) {id=334,slot_type=kleene_star__simpleExpr1_4}
-                    |                       |___aux_rule__argumentExprs_7 {id=337,slot_type=[aux_rule__simpleExpr1_5,argumentExprs,aux_rule__argumentExprs_7]}
-                    |                           |___Token:( {id=338,slot_type=Token}
-                    |                           |___(?) {id=341,slot_type=[altnt_block__argumentExprs_5,optional__simpleExpr1_1]}
-                    |                           |   |___Token:"Hello, world" {id=355,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
-                    |                           |___Token:) {id=340,slot_type=Token}
-                    |___Token:} {id=310,slot_type=Token}
+compilationUnit {id=295,slot_type=compilationUnit}
+|___(+) {id=296,slot_type=topStatSeq}
+    |___aux_rule__tmplDef_7 {id=302,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
+        |___Token:object {id=303,slot_type=Token}
+        |___objectDef {id=304,slot_type=objectDef}
+            |___Token:Hello {id=305,slot_type=Id}
+            |___(?) {id=307,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
+                |___templateBody {id=309,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
+                    |___Token:{ {id=310,slot_type=Token}
+                    |___(+) {id=311,slot_type=kleene_plus__templateBody_3}
+                    |   |___aux_rule__def_2 {id=317,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
+                    |       |___Token:def {id=318,slot_type=Token}
+                    |       |___aux_rule__funDef_8 {id=320,slot_type=[funDef,aux_rule__funDef_8]}
+                    |           |___funSig {id=321,slot_type=funSig}
+                    |           |   |___Token:main {id=361,slot_type=Id}
+                    |           |   |___(*) {id=363,slot_type=[paramClauses,kleene_star__paramClauses_1]}
+                    |           |       |___paramClause {id=364,slot_type=paramClause}
+                    |           |           |___Token:( {id=365,slot_type=Token}
+                    |           |           |___(?) {id=366,slot_type=optional__paramClause_2}
+                    |           |           |   |___param {id=369,slot_type=[params,param]}
+                    |           |           |       |___Token:args {id=370,slot_type=Id}
+                    |           |           |       |___(?) {id=371,slot_type=optional__param_3}
+                    |           |           |           |___aux_rule__param_2 {id=372,slot_type=aux_rule__param_2}
+                    |           |           |               |___Token:: {id=373,slot_type=Token}
+                    |           |           |               |___simpleType {id=381,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
+                    |           |           |                   |___Token:Array {id=403,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                   |___(*) {id=383,slot_type=kleene_star__simpleType_3}
+                    |           |           |                       |___typeArgs {id=385,slot_type=[aux_rule__simpleType_4,typeArgs]}
+                    |           |           |                           |___Token:[ {id=386,slot_type=Token}
+                    |           |           |                           |___Token:String {id=399,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                           |___Token:] {id=388,slot_type=Token}
+                    |           |           |___Token:) {id=367,slot_type=Token}
+                    |           |___aux_rule__funDef_9 {id=323,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
+                    |               |___Token:= {id=324,slot_type=Token}
+                    |               |___simpleExpr1 {id=334,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1]}
+                    |                   |___Token:println {id=360,slot_type=[aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
+                    |                   |___(*) {id=336,slot_type=kleene_star__simpleExpr1_4}
+                    |                       |___aux_rule__argumentExprs_7 {id=339,slot_type=[aux_rule__simpleExpr1_5,argumentExprs,aux_rule__argumentExprs_7]}
+                    |                           |___Token:( {id=340,slot_type=Token}
+                    |                           |___(?) {id=343,slot_type=[altnt_block__argumentExprs_5,optional__simpleExpr1_1]}
+                    |                           |   |___Token:"Hello, world" {id=357,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
+                    |                           |___Token:) {id=342,slot_type=Token}
+                    |___Token:} {id=312,slot_type=Token}
 ------------------------------------------------------------
 
 
-=================Reducing node 294, size=19=================
+=================Reducing node 296, size=19=================
 
 The current best program is the following
 
@@ -4316,43 +4320,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 294
-------------------------------------------------------------
-
-
-=================Reducing node 300, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 300
-------------------------------------------------------------
-
-
-=================Reducing node 301, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 301
+Failed to reduce node 296
 ------------------------------------------------------------
 
 
@@ -4365,15 +4333,6 @@ The current best program is the following
         def main(args: Array[String]) =
             println("Hello, world")
     }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello
-    --file: <formatted tokenized program in its original format>--
-    object Hello
 ------------------------------------------------------------
 
 
@@ -4401,7 +4360,7 @@ Failed to reduce node 303
 ------------------------------------------------------------
 
 
-=================Reducing node 305, size=19=================
+=================Reducing node 304, size=19=================
 
 The current best program is the following
 
@@ -4424,6 +4383,24 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
+Failed to reduce node 304
+------------------------------------------------------------
+
+
+=================Reducing node 305, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
 Failed to reduce node 305
 ------------------------------------------------------------
 
@@ -4440,33 +4417,18 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-==============Node edit action set cache hit.===============
+=========Cache hit for the following program: fail==========
 
-    NodeDeletionAction{target_node=307}
+    --file: Hello.sc--
+    object Hello
+    --file: <formatted tokenized program in its original format>--
+    object Hello
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
 Failed to reduce node 307
-------------------------------------------------------------
-
-
-=================Reducing node 308, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 308
 ------------------------------------------------------------
 
 
@@ -4479,6 +4441,12 @@ The current best program is the following
         def main(args: Array[String]) =
             println("Hello, world")
     }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=309}
 ------------------------------------------------------------
 
 
@@ -4506,7 +4474,43 @@ Failed to reduce node 310
 ------------------------------------------------------------
 
 
-=================Reducing node 315, size=19=================
+=================Reducing node 311, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 311
+------------------------------------------------------------
+
+
+=================Reducing node 312, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 312
+------------------------------------------------------------
+
+
+=================Reducing node 317, size=19=================
 
 The current best program is the following
 
@@ -4560,25 +4564,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 315
-------------------------------------------------------------
-
-
-=================Reducing node 316, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 316
+Failed to reduce node 317
 ------------------------------------------------------------
 
 
@@ -4600,7 +4586,25 @@ Failed to reduce node 318
 ------------------------------------------------------------
 
 
-=================Reducing node 319, size=19=================
+=================Reducing node 320, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 320
+------------------------------------------------------------
+
+
+=================Reducing node 321, size=19=================
 
 The current best program is the following
 
@@ -4645,29 +4649,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 319
-------------------------------------------------------------
-
-
-=================Reducing node 321, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
 Failed to reduce node 321
 ------------------------------------------------------------
 
 
-=================Reducing node 359, size=19=================
+=================Reducing node 323, size=19=================
 
 The current best program is the following
 
@@ -4681,7 +4667,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 359
+Failed to reduce node 323
 ------------------------------------------------------------
 
 
@@ -4697,46 +4683,13 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main                      =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main                      =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 361
 ------------------------------------------------------------
 
 
-=================Reducing node 322, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 322
-------------------------------------------------------------
-
-
-=================Reducing node 332, size=19=================
+=================Reducing node 363, size=19=================
 
 The current best program is the following
 
@@ -4752,63 +4705,24 @@ The current best program is the following
 
     --file: Hello.sc--
     object Hello {
-        def main(args: Array[String]) =
-            println
+        def main                      =
+            println("Hello, world")
     }
     --file: <formatted tokenized program in its original format>--
     object Hello {
-        def main(args: Array[String]) =
-            println
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-                    "Hello, world"
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-                    "Hello, world"
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 332
-------------------------------------------------------------
-
-
-=================Reducing node 362, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
+        def main                      =
             println("Hello, world")
     }
 ------------------------------------------------------------
 
 
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=362}
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
-Failed to reduce node 362
+Failed to reduce node 363
 ------------------------------------------------------------
 
 
-=================Reducing node 358, size=19=================
+=================Reducing node 324, size=19=================
 
 The current best program is the following
 
@@ -4822,7 +4736,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 358
+Failed to reduce node 324
 ------------------------------------------------------------
 
 
@@ -4853,27 +4767,24 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-===================Node reduction is done===================
-
-Failed to reduce node 334
-------------------------------------------------------------
-
-
-=================Reducing node 363, size=19=================
-
-The current best program is the following
+=========Cache hit for the following program: fail==========
 
     --file: Hello.sc--
     object Hello {
         def main(args: Array[String]) =
-            println("Hello, world")
+                    "Hello, world"
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+                    "Hello, world"
     }
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 363
+Failed to reduce node 334
 ------------------------------------------------------------
 
 
@@ -4889,16 +4800,25 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=364}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 364
+------------------------------------------------------------
+
+
+=================Reducing node 360, size=19=================
+
+The current best program is the following
 
     --file: Hello.sc--
     object Hello {
-        def main(                   ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(                   ) =
+        def main(args: Array[String]) =
             println("Hello, world")
     }
 ------------------------------------------------------------
@@ -4906,7 +4826,40 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 364
+Failed to reduce node 360
+------------------------------------------------------------
+
+
+=================Reducing node 336, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String]) =
+            println
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 336
 ------------------------------------------------------------
 
 
@@ -4928,7 +4881,7 @@ Failed to reduce node 365
 ------------------------------------------------------------
 
 
-=================Reducing node 337, size=19=================
+=================Reducing node 366, size=19=================
 
 The current best program is the following
 
@@ -4940,15 +4893,24 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-==============Node edit action set cache hit.===============
+=========Cache hit for the following program: fail==========
 
-    NodeDeletionAction{target_node=337}
+    --file: Hello.sc--
+    object Hello {
+        def main(                   ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(                   ) =
+            println("Hello, world")
+    }
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 337
+Failed to reduce node 366
 ------------------------------------------------------------
 
 
@@ -4964,9 +4926,51 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+===================Node reduction is done===================
+
+Failed to reduce node 367
+------------------------------------------------------------
+
+
+=================Reducing node 339, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=367}
+    NodeDeletionAction{target_node=339}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 339
+------------------------------------------------------------
+
+
+=================Reducing node 369, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=369}
 ------------------------------------------------------------
 
 
@@ -5003,58 +5007,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 367
-------------------------------------------------------------
-
-
-=================Reducing node 338, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 338
-------------------------------------------------------------
-
-
-=================Reducing node 341, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 341
+Failed to reduce node 369
 ------------------------------------------------------------
 
 
@@ -5076,25 +5029,7 @@ Failed to reduce node 340
 ------------------------------------------------------------
 
 
-=================Reducing node 368, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 368
-------------------------------------------------------------
-
-
-=================Reducing node 369, size=19=================
+=================Reducing node 343, size=19=================
 
 The current best program is the following
 
@@ -5110,24 +5045,24 @@ The current best program is the following
 
     --file: Hello.sc--
     object Hello {
-        def main(args               ) =
-            println("Hello, world")
+        def main(args: Array[String]) =
+            println(              )
     }
     --file: <formatted tokenized program in its original format>--
     object Hello {
-        def main(args               ) =
-            println("Hello, world")
+        def main(args: Array[String]) =
+            println(              )
     }
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 369
+Failed to reduce node 343
 ------------------------------------------------------------
 
 
-=================Reducing node 355, size=19=================
+=================Reducing node 342, size=19=================
 
 The current best program is the following
 
@@ -5141,7 +5076,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 355
+Failed to reduce node 342
 ------------------------------------------------------------
 
 
@@ -5154,12 +5089,6 @@ The current best program is the following
         def main(args: Array[String]) =
             println("Hello, world")
     }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=370}
 ------------------------------------------------------------
 
 
@@ -5181,62 +5110,28 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args               ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args               ) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 371
 ------------------------------------------------------------
 
 
-=================Reducing node 379, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array        ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array        ) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-============Testing the following program: fail=============
-
-// edit action set type: [regular node]compatible replacement
-    --file: Hello.sc--
-    object Hello {
-        def main(args:       String ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args:       String ) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 379
-------------------------------------------------------------
-
-
-=================Reducing node 401, size=19=================
+=================Reducing node 357, size=19=================
 
 The current best program is the following
 
@@ -5250,7 +5145,49 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 401
+Failed to reduce node 357
+------------------------------------------------------------
+
+
+=================Reducing node 372, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=372}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 372
+------------------------------------------------------------
+
+
+=================Reducing node 373, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 373
 ------------------------------------------------------------
 
 
@@ -5281,9 +5218,43 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+============Testing the following program: fail=============
+
+// edit action set type: [regular node]compatible replacement
+    --file: Hello.sc--
+    object Hello {
+        def main(args:       String ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args:       String ) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 381
+------------------------------------------------------------
+
+
+=================Reducing node 403, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 403
 ------------------------------------------------------------
 
 
@@ -5299,9 +5270,18 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-==============Node edit action set cache hit.===============
+=========Cache hit for the following program: fail==========
 
-    NodeDeletionAction{target_node=383}
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array        ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array        ) =
+            println("Hello, world")
+    }
 ------------------------------------------------------------
 
 
@@ -5311,7 +5291,7 @@ Failed to reduce node 383
 ------------------------------------------------------------
 
 
-=================Reducing node 384, size=19=================
+=================Reducing node 385, size=19=================
 
 The current best program is the following
 
@@ -5323,27 +5303,15 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-===================Node reduction is done===================
+==============Node edit action set cache hit.===============
 
-Failed to reduce node 384
-------------------------------------------------------------
-
-
-=================Reducing node 397, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
+    NodeDeletionAction{target_node=385}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 397
+Failed to reduce node 385
 ------------------------------------------------------------
 
 
@@ -5362,59 +5330,95 @@ The current best program is the following
 ===================Node reduction is done===================
 
 Failed to reduce node 386
+------------------------------------------------------------
+
+
+=================Reducing node 399, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 399
+------------------------------------------------------------
+
+
+=================Reducing node 388, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 388
 ------------------------------------------------------------
 
 
 =========Fixpoint iteration 5. Reducer: tree_slicer=========
 
 The spar-tree is the following.
-compilationUnit {id=293}
-|___(+) {id=294,slot_type=topStatSeq}
-    |___aux_rule__tmplDef_7 {id=300,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
-        |___Token:object {id=301,slot_type=Token}
-        |___objectDef {id=302,slot_type=objectDef}
-            |___Token:Hello {id=303,slot_type=Id}
-            |___(?) {id=305,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
-                |___templateBody {id=307,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
-                    |___Token:{ {id=308,slot_type=Token}
-                    |___(+) {id=309,slot_type=kleene_plus__templateBody_3}
-                    |   |___aux_rule__def_2 {id=315,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
-                    |       |___Token:def {id=316,slot_type=Token}
-                    |       |___aux_rule__funDef_8 {id=318,slot_type=[funDef,aux_rule__funDef_8]}
-                    |           |___funSig {id=319,slot_type=funSig}
-                    |           |   |___Token:main {id=359,slot_type=Id}
-                    |           |   |___(*) {id=361,slot_type=[paramClauses,kleene_star__paramClauses_1]}
-                    |           |       |___paramClause {id=362,slot_type=paramClause}
-                    |           |           |___Token:( {id=363,slot_type=Token}
-                    |           |           |___(?) {id=364,slot_type=optional__paramClause_2}
-                    |           |           |   |___param {id=367,slot_type=[params,param]}
-                    |           |           |       |___Token:args {id=368,slot_type=Id}
-                    |           |           |       |___(?) {id=369,slot_type=optional__param_3}
-                    |           |           |           |___aux_rule__param_2 {id=370,slot_type=aux_rule__param_2}
-                    |           |           |               |___Token:: {id=371,slot_type=Token}
-                    |           |           |               |___simpleType {id=379,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
-                    |           |           |                   |___Token:Array {id=401,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                   |___(*) {id=381,slot_type=kleene_star__simpleType_3}
-                    |           |           |                       |___typeArgs {id=383,slot_type=[aux_rule__simpleType_4,typeArgs]}
-                    |           |           |                           |___Token:[ {id=384,slot_type=Token}
-                    |           |           |                           |___Token:String {id=397,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
-                    |           |           |                           |___Token:] {id=386,slot_type=Token}
-                    |           |           |___Token:) {id=365,slot_type=Token}
-                    |           |___aux_rule__funDef_9 {id=321,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
-                    |               |___Token:= {id=322,slot_type=Token}
-                    |               |___simpleExpr1 {id=332,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1]}
-                    |                   |___Token:println {id=358,slot_type=[aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
-                    |                   |___(*) {id=334,slot_type=kleene_star__simpleExpr1_4}
-                    |                       |___aux_rule__argumentExprs_7 {id=337,slot_type=[aux_rule__simpleExpr1_5,argumentExprs,aux_rule__argumentExprs_7]}
-                    |                           |___Token:( {id=338,slot_type=Token}
-                    |                           |___(?) {id=341,slot_type=[altnt_block__argumentExprs_5,optional__simpleExpr1_1]}
-                    |                           |   |___Token:"Hello, world" {id=355,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
-                    |                           |___Token:) {id=340,slot_type=Token}
-                    |___Token:} {id=310,slot_type=Token}
+compilationUnit {id=295,slot_type=compilationUnit}
+|___(+) {id=296,slot_type=topStatSeq}
+    |___aux_rule__tmplDef_7 {id=302,slot_type=[topStat,aux_rule__topStat_5,tmplDef,aux_rule__tmplDef_5,altnt_block__tmplDef_3,aux_rule__tmplDef_7]}
+        |___Token:object {id=303,slot_type=Token}
+        |___objectDef {id=304,slot_type=objectDef}
+            |___Token:Hello {id=305,slot_type=Id}
+            |___(?) {id=307,slot_type=[classTemplateOpt,optional__classTemplateOpt_3]}
+                |___templateBody {id=309,slot_type=[aux_rule__classTemplateOpt_2,templateBody]}
+                    |___Token:{ {id=310,slot_type=Token}
+                    |___(+) {id=311,slot_type=kleene_plus__templateBody_3}
+                    |   |___aux_rule__def_2 {id=317,slot_type=[templateStat,aux_rule__templateStat_10,altnt_block__templateStat_9,def,aux_rule__def_2]}
+                    |       |___Token:def {id=318,slot_type=Token}
+                    |       |___aux_rule__funDef_8 {id=320,slot_type=[funDef,aux_rule__funDef_8]}
+                    |           |___funSig {id=321,slot_type=funSig}
+                    |           |   |___Token:main {id=361,slot_type=Id}
+                    |           |   |___(*) {id=363,slot_type=[paramClauses,kleene_star__paramClauses_1]}
+                    |           |       |___paramClause {id=364,slot_type=paramClause}
+                    |           |           |___Token:( {id=365,slot_type=Token}
+                    |           |           |___(?) {id=366,slot_type=optional__paramClause_2}
+                    |           |           |   |___param {id=369,slot_type=[params,param]}
+                    |           |           |       |___Token:args {id=370,slot_type=Id}
+                    |           |           |       |___(?) {id=371,slot_type=optional__param_3}
+                    |           |           |           |___aux_rule__param_2 {id=372,slot_type=aux_rule__param_2}
+                    |           |           |               |___Token:: {id=373,slot_type=Token}
+                    |           |           |               |___simpleType {id=381,slot_type=[paramType,aux_rule__paramType_2,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType]}
+                    |           |           |                   |___Token:Array {id=403,slot_type=[aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                   |___(*) {id=383,slot_type=kleene_star__simpleType_3}
+                    |           |           |                       |___typeArgs {id=385,slot_type=[aux_rule__simpleType_4,typeArgs]}
+                    |           |           |                           |___Token:[ {id=386,slot_type=Token}
+                    |           |           |                           |___Token:String {id=399,slot_type=[types,type_,infixType,compoundType,aux_rule__compoundType_4,annotType,simpleType,aux_rule__simpleType_5,aux_rule__simpleType_7,stableId,aux_rule__stableId_6,Id]}
+                    |           |           |                           |___Token:] {id=388,slot_type=Token}
+                    |           |           |___Token:) {id=367,slot_type=Token}
+                    |           |___aux_rule__funDef_9 {id=323,slot_type=[altnt_block__funDef_5,aux_rule__funDef_9]}
+                    |               |___Token:= {id=324,slot_type=Token}
+                    |               |___simpleExpr1 {id=334,slot_type=[expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1]}
+                    |                   |___Token:println {id=360,slot_type=[aux_rule__simpleExpr1_6,stableId,aux_rule__stableId_6,Id]}
+                    |                   |___(*) {id=336,slot_type=kleene_star__simpleExpr1_4}
+                    |                       |___aux_rule__argumentExprs_7 {id=339,slot_type=[aux_rule__simpleExpr1_5,argumentExprs,aux_rule__argumentExprs_7]}
+                    |                           |___Token:( {id=340,slot_type=Token}
+                    |                           |___(?) {id=343,slot_type=[altnt_block__argumentExprs_5,optional__simpleExpr1_1]}
+                    |                           |   |___Token:"Hello, world" {id=357,slot_type=[exprs,expr,expr1,aux_rule__expr1_25,postfixExpr,infixExpr,prefixExpr,altnt_block__expr1_18,aux_rule__expr1_32,simpleExpr1,aux_rule__simpleExpr1_6,literal,StringLiteral]}
+                    |                           |___Token:) {id=342,slot_type=Token}
+                    |___Token:} {id=312,slot_type=Token}
 ------------------------------------------------------------
 
 
-=================Reducing node 294, size=19=================
+=================Reducing node 296, size=19=================
 
 The current best program is the following
 
@@ -5428,25 +5432,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 294
-------------------------------------------------------------
-
-
-=================Reducing node 300, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 300
+Failed to reduce node 296
 ------------------------------------------------------------
 
 
@@ -5468,7 +5454,7 @@ Failed to reduce node 302
 ------------------------------------------------------------
 
 
-=================Reducing node 301, size=19=================
+=================Reducing node 304, size=19=================
 
 The current best program is the following
 
@@ -5482,34 +5468,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 301
-------------------------------------------------------------
-
-
-=================Reducing node 305, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello
-    --file: <formatted tokenized program in its original format>--
-    object Hello
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 305
+Failed to reduce node 304
 ------------------------------------------------------------
 
 
@@ -5543,15 +5502,96 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-==============Node edit action set cache hit.===============
+=========Cache hit for the following program: fail==========
 
-    NodeDeletionAction{target_node=307}
+    --file: Hello.sc--
+    object Hello
+    --file: <formatted tokenized program in its original format>--
+    object Hello
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
 Failed to reduce node 307
+------------------------------------------------------------
+
+
+=================Reducing node 305, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 305
+------------------------------------------------------------
+
+
+=================Reducing node 309, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=309}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 309
+------------------------------------------------------------
+
+
+=================Reducing node 312, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 312
+------------------------------------------------------------
+
+
+=================Reducing node 311, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 311
 ------------------------------------------------------------
 
 
@@ -5573,7 +5613,7 @@ Failed to reduce node 310
 ------------------------------------------------------------
 
 
-=================Reducing node 309, size=19=================
+=================Reducing node 317, size=19=================
 
 The current best program is the following
 
@@ -5587,11 +5627,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 309
+Failed to reduce node 317
 ------------------------------------------------------------
 
 
-=================Reducing node 308, size=19=================
+=================Reducing node 320, size=19=================
 
 The current best program is the following
 
@@ -5605,25 +5645,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 308
-------------------------------------------------------------
-
-
-=================Reducing node 315, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 315
+Failed to reduce node 320
 ------------------------------------------------------------
 
 
@@ -5639,24 +5661,6 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-===================Node reduction is done===================
-
-Failed to reduce node 318
-------------------------------------------------------------
-
-
-=================Reducing node 316, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ============Testing the following program: fail=============
 
 // edit action set type: tree_slicer
@@ -5675,7 +5679,38 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 316
+Failed to reduce node 318
+------------------------------------------------------------
+
+
+=================Reducing node 323, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String])
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args: Array[String])
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 323
 ------------------------------------------------------------
 
 
@@ -5691,26 +5726,13 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String])
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String])
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 321
 ------------------------------------------------------------
 
 
-=================Reducing node 319, size=19=================
+=================Reducing node 334, size=19=================
 
 The current best program is the following
 
@@ -5724,29 +5746,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 319
+Failed to reduce node 334
 ------------------------------------------------------------
 
 
-=================Reducing node 332, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 332
-------------------------------------------------------------
-
-
-=================Reducing node 322, size=19=================
+=================Reducing node 324, size=19=================
 
 The current best program is the following
 
@@ -5776,7 +5780,40 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 322
+Failed to reduce node 324
+------------------------------------------------------------
+
+
+=================Reducing node 363, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main                      =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main                      =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 363
 ------------------------------------------------------------
 
 
@@ -5792,46 +5829,13 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main                      =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main                      =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
 ===================Node reduction is done===================
 
 Failed to reduce node 361
 ------------------------------------------------------------
 
 
-=================Reducing node 359, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 359
-------------------------------------------------------------
-
-
-=================Reducing node 334, size=19=================
+=================Reducing node 336, size=19=================
 
 The current best program is the following
 
@@ -5860,11 +5864,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 334
+Failed to reduce node 336
 ------------------------------------------------------------
 
 
-=================Reducing node 358, size=19=================
+=================Reducing node 360, size=19=================
 
 The current best program is the following
 
@@ -5893,11 +5897,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 358
+Failed to reduce node 360
 ------------------------------------------------------------
 
 
-=================Reducing node 362, size=19=================
+=================Reducing node 364, size=19=================
 
 The current best program is the following
 
@@ -5911,17 +5915,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=362}
+    NodeDeletionAction{target_node=364}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 362
+Failed to reduce node 364
 ------------------------------------------------------------
 
 
-=================Reducing node 337, size=19=================
+=================Reducing node 339, size=19=================
 
 The current best program is the following
 
@@ -5935,13 +5939,64 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=337}
+    NodeDeletionAction{target_node=339}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 337
+Failed to reduce node 339
+------------------------------------------------------------
+
+
+=================Reducing node 367, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 367
+------------------------------------------------------------
+
+
+=================Reducing node 366, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(                   ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(                   ) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 366
 ------------------------------------------------------------
 
 
@@ -5963,7 +6018,25 @@ Failed to reduce node 365
 ------------------------------------------------------------
 
 
-=================Reducing node 364, size=19=================
+=================Reducing node 342, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 342
+------------------------------------------------------------
+
+
+=================Reducing node 343, size=19=================
 
 The current best program is the following
 
@@ -5979,38 +6052,20 @@ The current best program is the following
 
     --file: Hello.sc--
     object Hello {
-        def main(                   ) =
-            println("Hello, world")
+        def main(args: Array[String]) =
+            println(              )
     }
     --file: <formatted tokenized program in its original format>--
     object Hello {
-        def main(                   ) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 364
-------------------------------------------------------------
-
-
-=================Reducing node 363, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
         def main(args: Array[String]) =
-            println("Hello, world")
+            println(              )
     }
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 363
+Failed to reduce node 343
 ------------------------------------------------------------
 
 
@@ -6032,105 +6087,6 @@ Failed to reduce node 340
 ------------------------------------------------------------
 
 
-=================Reducing node 341, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args: Array[String]) =
-            println(              )
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 341
-------------------------------------------------------------
-
-
-=================Reducing node 338, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 338
-------------------------------------------------------------
-
-
-=================Reducing node 367, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=367}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 367
-------------------------------------------------------------
-
-
-=================Reducing node 355, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=355}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 355
-------------------------------------------------------------
-
-
 =================Reducing node 369, size=19=================
 
 The current best program is the following
@@ -6143,18 +6099,9 @@ The current best program is the following
 ------------------------------------------------------------
 
 
-=========Cache hit for the following program: fail==========
+==============Node edit action set cache hit.===============
 
-    --file: Hello.sc--
-    object Hello {
-        def main(args               ) =
-            println("Hello, world")
-    }
-    --file: <formatted tokenized program in its original format>--
-    object Hello {
-        def main(args               ) =
-            println("Hello, world")
-    }
+    NodeDeletionAction{target_node=369}
 ------------------------------------------------------------
 
 
@@ -6164,25 +6111,7 @@ Failed to reduce node 369
 ------------------------------------------------------------
 
 
-=================Reducing node 368, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 368
-------------------------------------------------------------
-
-
-=================Reducing node 370, size=19=================
+=================Reducing node 357, size=19=================
 
 The current best program is the following
 
@@ -6196,31 +6125,13 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=370}
+    NodeDeletionAction{target_node=357}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 370
-------------------------------------------------------------
-
-
-=================Reducing node 379, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 379
+Failed to reduce node 357
 ------------------------------------------------------------
 
 
@@ -6236,13 +6147,106 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+=========Cache hit for the following program: fail==========
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args               ) =
+            println("Hello, world")
+    }
+    --file: <formatted tokenized program in its original format>--
+    object Hello {
+        def main(args               ) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 371
 ------------------------------------------------------------
 
 
+=================Reducing node 370, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 370
+------------------------------------------------------------
+
+
+=================Reducing node 372, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=372}
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 372
+------------------------------------------------------------
+
+
 =================Reducing node 381, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 381
+------------------------------------------------------------
+
+
+=================Reducing node 373, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 373
+------------------------------------------------------------
+
+
+=================Reducing node 383, size=19=================
 
 The current best program is the following
 
@@ -6271,11 +6275,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 381
+Failed to reduce node 383
 ------------------------------------------------------------
 
 
-=================Reducing node 401, size=19=================
+=================Reducing node 403, size=19=================
 
 The current best program is the following
 
@@ -6289,11 +6293,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 401
+Failed to reduce node 403
 ------------------------------------------------------------
 
 
-=================Reducing node 383, size=19=================
+=================Reducing node 385, size=19=================
 
 The current best program is the following
 
@@ -6307,13 +6311,49 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=383}
+    NodeDeletionAction{target_node=385}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 383
+Failed to reduce node 385
+------------------------------------------------------------
+
+
+=================Reducing node 388, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 388
+------------------------------------------------------------
+
+
+=================Reducing node 399, size=19=================
+
+The current best program is the following
+
+    --file: Hello.sc--
+    object Hello {
+        def main(args: Array[String]) =
+            println("Hello, world")
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 399
 ------------------------------------------------------------
 
 
@@ -6332,42 +6372,6 @@ The current best program is the following
 ===================Node reduction is done===================
 
 Failed to reduce node 386
-------------------------------------------------------------
-
-
-=================Reducing node 397, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 397
-------------------------------------------------------------
-
-
-=================Reducing node 384, size=19=================
-
-The current best program is the following
-
-    --file: Hello.sc--
-    object Hello {
-        def main(args: Array[String]) =
-            println("Hello, world")
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 384
 ------------------------------------------------------------
 
 

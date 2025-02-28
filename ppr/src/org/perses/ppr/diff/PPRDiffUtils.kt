@@ -154,7 +154,7 @@ object PPRDiffUtils {
         }
       },
       visitor = {
-        val isDiff: Boolean = if (it.isTokenNode) {
+        val isDiff: Boolean = if (it.isTokenNode()) {
           tokenDiffSet.contains(it.asLexerRule().token)
         } else {
           check(it.hasChildren()) { "The node $it does not have children." }

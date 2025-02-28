@@ -128,10 +128,6 @@ abstract class AbstractMain<
     reductionInputs: ReductionInputs,
   ): Sequence<ReductionDriverCreator<ReductionDriver>>
 
-  private fun createBuiltinParserFacadeFactory(): AbstractParserFacadeFactory {
-    return builderWithBuiltinLanguages().build()
-  }
-
   protected open fun createExtFacadeFactory(): AbstractParserFacadeFactory {
     return SingleParserFacadeFactory.createEmptyFactory()
   }
@@ -144,5 +140,9 @@ abstract class AbstractMain<
 
   companion object {
     private val logger = FluentLogger.forEnclosingClass()
+
+    fun createBuiltinParserFacadeFactory(): AbstractParserFacadeFactory {
+      return builderWithBuiltinLanguages().build()
+    }
   }
 }

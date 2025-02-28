@@ -18,8 +18,8 @@ package org.perses.util.cmd
 
 import com.beust.jcommander.DefaultUsageFormatter
 import com.beust.jcommander.JCommander
-import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterDescription
+import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 import com.google.common.flogger.FluentLogger
 import org.perses.util.ktSevere
@@ -79,10 +79,15 @@ abstract class AbstractCommandOptions {
       super.appendAllParametersDetails(out, indentCount, indent, ownerFlags)
       out.append("\n")
 
+      val unimportantGroups = ImmutableList.of(verbosityFlags, versionFlags, helpFlags)
       val sortedGroupedFlags = identityMap.entries
-        .sortedBy { entry ->
-          allFlags.withIndex().single { it.value === entry.key }.index
-        }.toList()
+        .partition { it.key in unimportantGroups }
+        .let { (unimportant, important) ->
+          important.sortedBy {
+            allFlags.indexOf(it.key)
+          } +
+            unimportant.sortedBy { unimportantGroups.indexOf(it.key) }
+        }
 
       var isFirst = true
       sortedGroupedFlags.forEach { (group, flags) ->
@@ -100,16 +105,10 @@ abstract class AbstractCommandOptions {
     }
   }
 
-  @JvmField
-  @Parameter(
-    names = ["--help", "-h"],
-    description = "print help message",
-    help = true,
-    order = 0,
-  )
-  var help = false
-
   private val allFlags = mutableListOf<AbstractCommandLineFlagGroup>()
+
+  @JvmField
+  val helpFlags = registerFlags(HelpFlagGroup())
 
   @JvmField
   val verbosityFlags = registerFlags(VerbosityFlagGroup())

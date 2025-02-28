@@ -25,6 +25,7 @@ import org.perses.cmd.OutputRefiningFlagGroup
 import org.perses.cmd.ProfilingFlagGroup
 import org.perses.cmd.ReductionAlgorithmControlFlagGroup
 import org.perses.cmd.ReductionControlFlagGroup
+import org.perses.cmd.TRecFlagGroup
 import org.perses.cmd.VulcanFlagGroup
 import org.perses.util.cmd.AbstractCommandOptions
 
@@ -32,16 +33,28 @@ import org.perses.util.cmd.AbstractCommandOptions
 open class CommandOptions : AbstractCommandOptions() {
 
   val inputFlags = registerFlags(createInputFlags())
+
   val resultOutputFlags = registerFlags(OutputFlagGroup())
+
   val reductionControlFlags = registerFlags(ReductionControlFlagGroup())
+
   val outputRefiningFlags = registerFlags(OutputRefiningFlagGroup())
+
   val algorithmControlFlags = registerFlags(
     ReductionAlgorithmControlFlagGroup(),
   )
-  val cacheControlFlags = registerFlags(CacheControlFlagGroup())
-  val profilingFlags = registerFlags(ProfilingFlagGroup())
-  val experimentFlags = registerFlags(ExperimentFlagGroup())
+
   val languageControlFlags = registerFlags(LanguageControlFlagGroup())
+
   val vulcanFlags = registerFlags(VulcanFlagGroup())
+
+  val trecFlags = registerFlags(TRecFlagGroup())
+
+  val profilingFlags = registerFlags(ProfilingFlagGroup())
+
+  val cacheControlFlags = registerFlags(CacheControlFlagGroup())
+
+  val experimentFlags = registerFlags(ExperimentFlagGroup())
+
   open fun createInputFlags() = InputFlagGroup()
 }

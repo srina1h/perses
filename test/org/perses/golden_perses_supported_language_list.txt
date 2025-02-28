@@ -7,6 +7,7 @@ All currently supported languages:
     javascript    : LanguageJavaScript{name=javascript, extensions=[javascript, js], defaultCodeFormatControl=COMPACT_ORIG_FORMAT}
     line          : LanguageLine{name=line, extensions=[line], defaultCodeFormatControl=COMPACT_ORIG_FORMAT}
     mysql         : LanguageMySQL{name=mysql, extensions=[mysql], defaultCodeFormatControl=SINGLE_TOKEN_PER_LINE}
+    onetoken      : LanguageOneToken{name=onetoken, extensions=[onetoken], defaultCodeFormatControl=SINGLE_TOKEN_PER_LINE}
     php           : LanguagePhp{name=php, extensions=[php], defaultCodeFormatControl=COMPACT_ORIG_FORMAT}
     python3       : LanguagePython3{name=python3, extensions=[py, py3], defaultCodeFormatControl=COMPACT_PYTHON3_FORMAT}
     ruby          : LanguageRuby{name=ruby, extensions=[rb], defaultCodeFormatControl=COMPACT_ORIG_FORMAT}

@@ -22,11 +22,25 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.perses.program.EnumFormatControl
+import org.perses.reduction.cache.EnumQueryCachingControl
 import org.perses.reduction.cache.QueryCacheType
 import java.lang.IllegalArgumentException
 
 @RunWith(JUnit4::class)
 class AbstractProgramReductionDriverTest {
+
+  @Test
+  fun testCachingShouldBeDisabledIfVulcanIsEnabled() {
+    EnumFormatControl.entries.forEach { format ->
+      AbstractProgramReductionDriver.computeWhetherToEnableQueryCaching(
+        EnumQueryCachingControl.AUTO,
+        format,
+        vulcanEnabled = true,
+      ).let {
+        assertThat(it).isFalse()
+      }
+    }
+  }
 
   @Test
   fun testComputeQueryCacheType() {

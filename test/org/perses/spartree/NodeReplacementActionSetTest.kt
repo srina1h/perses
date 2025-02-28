@@ -22,7 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.perses.TestUtility.createSparTreeFromFile
-import org.perses.spartree.ChildHoistingActionSet.Companion.createByReplacingSingleNode
+import org.perses.spartree.NodeReplacementActionSet.Companion.createByReplacingSingleNode
 import java.nio.file.Paths
 import java.util.stream.Collectors
 
@@ -33,20 +33,20 @@ class NodeReplacementActionSetTest {
   private var node10 = tree.getNodeByTreeScanForId(10)!!
   private var node46 = tree.getNodeByTreeScanForId(46)!!
   private var node72 = tree.getNodeByTreeScanForId(72)!!
-  private lateinit var actionSet: ChildHoistingActionSet
-  private lateinit var actionSet2: ChildHoistingActionSet
+  private lateinit var actionSet: NodeReplacementActionSet
+  private lateinit var actionSet2: NodeReplacementActionSet
 
   @Before
   fun setup() {
     run {
-      val builder = ChildHoistingActionSet.Builder("test 1")
+      val builder = NodeReplacementActionSet.Builder("test 1")
       builder.replaceNode(node5, node10)
       builder.replaceNode(node46, node72)
       actionSet = builder.build()
       assertThat(actionSet.actionsDescription).isEqualTo("test 1")
     }
     run {
-      val builder = ChildHoistingActionSet.Builder("test 2")
+      val builder = NodeReplacementActionSet.Builder("test 2")
       builder.replaceNode(node5, node10)
       builder.replaceNode(node46, node72)
       actionSet2 = builder.build()
@@ -87,7 +87,7 @@ class NodeReplacementActionSetTest {
     assertThat(actionSet.actions[1]).isEqualTo(actionSet2.actions[1])
     assertThat(actionSet.equals(actionSet2)).isTrue()
     assertThat(actionSet.hashCode()).isEqualTo(actionSet2.hashCode())
-    val set = HashSet<ChildHoistingActionSet?>()
+    val set = HashSet<NodeReplacementActionSet?>()
     set.add(actionSet)
     assertThat(set).containsExactly(actionSet2)
   }

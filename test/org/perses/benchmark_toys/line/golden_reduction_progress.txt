@@ -3,7 +3,9 @@
 The initial program size is 14
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "TRUE"
-  nodeActionSetCaching: true
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "reduction_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: "delta_debugger_progress_profile.txt"
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "reduction_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: "delta_debugger_progress_profile.txt"
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "TRUE"
+  nodeActionSetCaching: true
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.line.LineParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-lines {id=1}
+lines {id=1,slot_type=lines}
 |___(*) {id=2,slot_type=kleene_star__lines_1}
     |___Token:a {id=3,slot_type=LINE}
     |___Token:b {id=4,slot_type=LINE}
@@ -884,15 +888,15 @@ Failed to reduce node 3
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-lines {id=17}
-|___(*) {id=18,slot_type=kleene_star__lines_1}
-    |___Token:a {id=19,slot_type=LINE}
-    |___Token:g {id=20,slot_type=LINE}
-    |___Token:n {id=21,slot_type=LINE}
+lines {id=18,slot_type=lines}
+|___(*) {id=19,slot_type=kleene_star__lines_1}
+    |___Token:a {id=20,slot_type=LINE}
+    |___Token:g {id=21,slot_type=LINE}
+    |___Token:n {id=22,slot_type=LINE}
 ------------------------------------------------------------
 
 
-==================Reducing node 18, size=3==================
+==================Reducing node 19, size=3==================
 
 The current best program is the following
 
@@ -932,13 +936,38 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=19}
     NodeDeletionAction{target_node=20}
+    NodeDeletionAction{target_node=21}
 ------------------------------------------------------------
 
 
 ==============Node edit action set cache hit.===============
 
+    NodeDeletionAction{target_node=22}
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: small.line--
+    a
+    --file: <formatted tokenized program in its original format>--
+    a
+------------------------------------------------------------
+
+
+=========Cache hit for the following program: fail==========
+
+    --file: small.line--
+    g
+    --file: <formatted tokenized program in its original format>--
+    g
+------------------------------------------------------------
+
+
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=20}
     NodeDeletionAction{target_node=21}
 ------------------------------------------------------------
 
@@ -946,31 +975,6 @@ The current best program is the following
 =========Cache hit for the following program: fail==========
 
     --file: small.line--
-    a
-    --file: <formatted tokenized program in its original format>--
-    a
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: small.line--
-    g
-    --file: <formatted tokenized program in its original format>--
-    g
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=19}
-    NodeDeletionAction{target_node=20}
-------------------------------------------------------------
-
-
-=========Cache hit for the following program: fail==========
-
-    --file: small.line--
     g
     n
     --file: <formatted tokenized program in its original format>--
@@ -992,13 +996,30 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=21}
+    NodeDeletionAction{target_node=22}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 18
+Failed to reduce node 19
+------------------------------------------------------------
+
+
+==================Reducing node 22, size=3==================
+
+The current best program is the following
+
+    --file: small.line--
+    a
+    g
+    n
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 22
 ------------------------------------------------------------
 
 
@@ -1033,23 +1054,6 @@ The current best program is the following
 ===================Node reduction is done===================
 
 Failed to reduce node 20
-------------------------------------------------------------
-
-
-==================Reducing node 19, size=3==================
-
-The current best program is the following
-
-    --file: small.line--
-    a
-    g
-    n
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 19
 ------------------------------------------------------------
 
 

@@ -28,7 +28,7 @@ import org.perses.util.toImmutableList
 
 /** A spar-tree, the primary data structure for the Perses program reduction.  */
 class SparTree internal constructor(
-  override val root: AbstractSparTreeNode,
+  realRoot: AbstractSparTreeNode,
   val sparTreeNodeFactory: SparTreeNodeFactory,
 ) : AbstractUnmodifiableSparTree() {
 
@@ -42,6 +42,26 @@ class SparTree internal constructor(
 
   internal var version = 0
     private set
+
+  private val sentinelRoot = sparTreeNodeFactory.createSentinelRootNode().apply {
+    addChild(
+      realRoot,
+      AbstractNodePayload.SinglePayload(expectedAntlrRuleType = realRoot.antlrRule),
+    )
+  }
+
+  override val root: AbstractSparTreeNode
+    get() {
+      check(sentinelRoot.childCount == 1)
+      return sentinelRoot.getChild(0)
+    }
+
+  fun detachRootFromTree(): AbstractSparTreeNode {
+    val root = this.root
+    sentinelRoot.removeChild(root)
+    root.resetPayload()
+    return root
+  }
 
   @PublishedApi
   internal val dummyTokenHead = LexerRuleSparTreeNode(
@@ -60,12 +80,12 @@ class SparTree internal constructor(
   private val editListeners = ArrayList<AbstractSparTreeEditListener>()
 
   init {
-    root.linkLeafNodes()
-    root.buildTokenIntervalInfoRecursive()
-    dummyTokenHead.next = root.beginToken
-    root.beginToken?.prev = dummyTokenHead
-    dummyTokenTail.prev = root.endToken
-    root.endToken?.next = dummyTokenTail
+    sentinelRoot.linkLeafNodes()
+    sentinelRoot.buildTokenIntervalInfoRecursive()
+    dummyTokenHead.next = sentinelRoot.beginToken
+    sentinelRoot.beginToken?.prev = dummyTokenHead
+    dummyTokenTail.prev = sentinelRoot.endToken
+    sentinelRoot.endToken?.next = dummyTokenTail
 
     program = computeTokenizedProgram()
   }
@@ -92,13 +112,13 @@ class SparTree internal constructor(
   }
 
   fun createNodeReplacementEdit(
-    actionSet: ChildHoistingActionSet,
+    actionSet: NodeReplacementActionSet,
   ): DescendantHoistingTreeEdit {
     return AbstractSparTreeEdit.createReplacementSparTreeEdit(this, actionSet)
   }
 
   fun createAnyNodeReplacementEdit(
-    actionSet: ChildHoistingActionSet,
+    actionSet: NodeReplacementActionSet,
   ): AnyNodeReplacementTreeEdit {
     return AbstractSparTreeEdit.createAnyNodeReplacementTreeEdit(this, actionSet)
   }
@@ -208,7 +228,16 @@ class SparTree internal constructor(
   /** The returned program might be stale if this tree is modified later.  */
   override val programSnapshot: TokenizedProgram
     get() {
-      lazyAssert { program.tokens == computeTokenizedProgram().tokens }
+      lazyAssert({ program.tokens == computeTokenizedProgram().tokens }) {
+        val snapshot = program.tokens
+        val computed = computeTokenizedProgram().tokens
+        """
+          |
+          |program:  $snapshot
+          |
+          |computed: $computed
+        """.trimMargin()
+      }
       return program
     }
 
@@ -265,15 +294,15 @@ class SparTree internal constructor(
     ): Boolean {
       var nodeInfo: AbstractSparTreeNode? = startNode
       var globalChanged = false
-      while (nodeInfo != null) {
+      while (nodeInfo != null && nodeInfo.isParserRuleNode()) {
         val node = nodeInfo.asParserRule()
         var changed = false
-        val leftmostToken = node.leftmostToken
+        val leftmostToken = node.computeLeftmostTokenBasedOnChildren()
         if (node.beginToken !== leftmostToken) {
           node.beginToken = leftmostToken
           changed = true
         }
-        val rightmostToken = node.rightmostToken
+        val rightmostToken = node.computeRightmostTokenBasedOnChildren()
         if (node.endToken !== rightmostToken) {
           node.endToken = rightmostToken
           changed = true

@@ -14,24 +14,25 @@ search space by avoiding generating syntactically invalid programs.
 
 Currently, Perses supports reduction for the following programming languages:
 
-+ C: [c]
-+ Cpp: [cc, cpp, cxx]
-+ Rust: [rs]
-+ Scala: [scala, sc]
-+ Java: [java]
-+ JavaScript: [javascript, js]
-+ Python3: [py, py3]
-+ GLSL: [glsl, comp, frag, vert]
-+ Go: [go]
-+ PHP: [php]
-+ Ruby: [rb]
-+ SQLite: [sqlite]
-+ MySQL: [mysql]
-+ Solidity: [sol]
-+ System_Verilog: [v, sv]
-+ SMTLIBv2: [smt2]
-+ XML: [xml]
-+ Line: [line]
++ c: `*.c`
++ cpp: `*.cc`, `*.cpp`, `*.cxx`
++ glsl: `*.glsl`, `*.comp`, `*.frag`, `*.vert`
++ go: `*.go`
++ java: `*.java`
++ javascript: `*.javascript`, `*.js`
++ line: `*.line`
++ mysql: `*.mysql`
++ onetoken: `*.onetoken`
++ php: `*.php`
++ python3: `*.py`, `*.py3`
++ ruby: `*.rb`
++ rust: `*.rs`
++ scala: `*.scala`, `*.sc`
++ smtlibv2: `*.smt2`
++ solidity: `*.sol`
++ sqlite: `*.sqlite`
++ system_verilog: `*.v`, `*.sv`
++ xml: `*.xml`
 
 Support for other languages is coming soon.
 
@@ -43,7 +44,7 @@ There are three ways to obtain Perses.
   for example,
 
   ```bash
-  wget https://github.com/uw-pluverse/perses/releases/download/v1.8/perses_deploy.jar
+  wget https://github.com/uw-pluverse/perses/releases/download/v2.1/perses_deploy.jar
   java -jar perses_deploy.jar [options]? --test-script <test-script.sh> --input-file <program file>
   ```
 
@@ -58,9 +59,9 @@ There are three ways to obtain Perses.
   ```
 
 - If you want to always use the trunk version of Perses, [perses-trunk](https://github.com/perses-project/perses/blob/master/scripts/perses-trunk) automatically downloads and builds the latest version.
-  
+
   NOTE: [Bazelisk](https://github.com/bazelbuild/bazelisk) is the prerequisite to run perses-trunk successfully.
-  
+
   ```bash
   wget https://raw.githubusercontent.com/perses-project/perses/master/scripts/perses-trunk
   chmod +x perses-trunk
@@ -82,13 +83,173 @@ Check all available command line arguments
 java -jar perses_deploy.jar  --help
 ```
 
+The following is the complete list of command line arguments.
+
+```
+Usage: org.perses.Main [options]
+
+[Inputs]  Options:
+  * --test-script, --test, -t
+      The test script to specify the property the reducer needs to preserve.
+  * --input-file, --input, -i
+      The input file to reduce
+    --deps
+      The dependency files required for running the property test
+      Default: []
+
+[Outputs]  Options:
+    --output-dir, -o
+      The output directory to save the reduced result.
+
+[General Reduction Control]  Options:
+    --fixpoint
+      iterative reduction till fixpoint
+      Default: true
+    --threads
+      Number of reduction threads: a positive integer, or 'auto'.
+      Default: auto
+    --code-format
+      The format of the reduced program.
+      Possible Values: [SINGLE_TOKEN_PER_LINE, ORIG_FORMAT, COMPACT_ORIG_FORMAT, PYTHON3_FORMAT, COMPACT_PYTHON3_FORMAT]
+    --script-execution-timeout-in-seconds
+      the interval in seconds to timeout the test script executions. the 
+      default timeout is 600 seconds.
+      Default: 600
+    --script-execution-keep-waiting-after-timeout
+      keep trying even after the script execution timeouts.
+      Default: true
+
+[Output Refining Control]  Options:
+    --call-formatter
+      call a formatter on the final result
+      Default: false
+    --format-cmd
+      the command to format the reduced source file
+      Default: <empty string>
+    --call-creduce
+      call C-Reduce when Perses is done.
+      Default: false
+    --creduce-cmd
+      the C-Reduce command name or path
+      Default: creduce
+
+[Reduction Algorithm Control]  Options:
+    --alg
+      reduction algorithm: use --list-algs to list all available algorithms
+    --list-algs
+      list all the reduction algorithms.
+    --enable-token-slicer
+      Enable token slicer after syntax-guided reduction is done. Maybe slow.
+      Default: false
+    --enable-tree-slicer
+      Enable tree slicer after syntax-guided reduction, and before token 
+      slicer 
+      Default: false
+    --enable-line-slicer
+      Enable line slicer after syntax-guided reduction, and before token 
+      slicer 
+      Default: false
+    --default-delta-debugger-for-kleene
+      The default delta debugger algorithm to reduce kleene nodes.
+      Default: DFS
+      Possible Values: [PRISTINE, PERSES_VARIANT_OF_PRISTINE, DFS, BFS, CDD, PROBDD, WDD, WPROBDD]
+
+[Language Control]  Options:
+    --list-langs
+      List all the supported languages.
+    --lang
+      Specify the language of the program that is to be reduced.
+      Default: <empty string>
+    --parser-facade-class-name
+      The parser facade to be used to parse the input program
+      Default: <empty string>
+    --list-parser-facades
+      List all the available parser facades.
+    --language-ext-jars
+      A list of JAR files to support new languages
+      Default: []
+
+[Vulcan Reducer Control]  Options:
+    --enable-vulcan
+      Enable vulcan (using auxiliary reducers to help produce smaller 
+      reduction output).
+      Default: false
+    --non-deletion-iteration-limit
+      The maximum number of continuous non-deletion iterations allowed.
+      Default: 10
+    --window-size
+      The window size used to perform local exhaustive pattern reduction.
+      Default: 4
+    --vulcan-fixpoint
+      Enable vulcan fixpoint iteratively using auxiliary reducers until no 
+      progress can be made
+      Default: false
+
+[T-Rec Reducer Control]  Options:
+    --enable-trec
+      enable T-Rec (a lexical-syntax guided fine-grained reduction process to 
+      reduce and canonicalize each token)
+      Default: false
+
+[Profiling]  Options:
+    --progress-dump-file
+      The file to record the reduction process. The dump file can be large..
+    --append-to-progress-dump-file
+      Whether to append the reduction progress to the progress dump file
+      Default: true
+    --stat-dump-file
+      The file to save the statistics collected during reduction.
+    --profile-query-cache-time
+      The file to save the profiling data of the query cache.
+    --profile-query-cache-time-csv
+      The file to save the profiling data of the query cache in the CSV 
+      format. 
+    --profile-query-cache-memory
+      The file to save the profiling data of the query cache.
+    --profile-actionset
+      The file to save information of all the created edit action sets.
+    --profile-delta-debugger
+      The file to save the reduction process of the delta debugger.
+
+[Cache Control]  Options:
+    --query-caching
+      Enable query caching for test script executions.
+      Default: AUTO
+      Possible Values: [TRUE, FALSE, AUTO]
+    --enable-lightweight-refreshing
+      Whether to enable lightweight refreshing
+      Default: true
+
+[Experiment Control]  Options:
+    --query-cache-type
+      the algorithm of the query cache
+      Default: COMPACT_QUERY_CACHE
+      Possible Values: [AUTO, COMPACT_QUERY_CACHE, COMPACT_QUERY_CACHE_FORMAT_SENSITIVE, PERSES_FAST_LINEAR_SCAN_NO_COMPRESSION, PERSES_LEXEME_ID, CONFIG_BASED, ORIG_CONTENT_STRING_BASED, CONTENT_LEXEME_LIST_BASE, CONTENT_SHA512, CONTENT_SHA512_FORMAT, CONTENT_ZIP, RCC_MEM_LIT]
+
+[Verbosity]  Options:
+    --verbosity
+      verbosity of logging
+      Default: INFO
+    --list-verbosity-levels
+      list all verbosity levels
+
+[Version]  Options:
+    --version
+      print the version
+
+[Help]  Options:
+    -h, --help
+      print help message
+
+```
+
 ### License
 
 GNU General Public License 3.
 
-### References
+### Publication 
 
-This repository contains the implementations of the techniques proposed in the following papers. 
+This repository contains the implementations of the techniques proposed in the following papers.
 
 #### 1. Perses: Syntax-Guided Program Reduction (ICSE 2018, [pdf](./doc/publication/2018_perses_icse.pdf))
 

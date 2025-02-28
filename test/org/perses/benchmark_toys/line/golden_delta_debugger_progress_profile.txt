@@ -141,13 +141,13 @@ Reduction starts: algorithm=org.perses.listminimizer.PristineDeltaDebugger
 The original input has 3 element(s).
 --Element 0
   index=0, payload=ElementWrapper{index=0, element=org.perses.spartree.LexerRuleSparTreeNode, payload=org.perses.listminimizer.AbstractListInputMinimizer.Companion.NoPayload}.elementPayload}
-  element=LexerRuleSparTreeNode{token=PersesToken{token=a}, LexerRuleSparTreeNode{id=19, parent=18}}
+  element=LexerRuleSparTreeNode{token=PersesToken{token=a}, LexerRuleSparTreeNode{id=20, parent=19}}
 --Element 1
   index=1, payload=ElementWrapper{index=1, element=org.perses.spartree.LexerRuleSparTreeNode, payload=org.perses.listminimizer.AbstractListInputMinimizer.Companion.NoPayload}.elementPayload}
-  element=LexerRuleSparTreeNode{token=PersesToken{token=g}, LexerRuleSparTreeNode{id=20, parent=18}}
+  element=LexerRuleSparTreeNode{token=PersesToken{token=g}, LexerRuleSparTreeNode{id=21, parent=19}}
 --Element 2
   index=2, payload=ElementWrapper{index=2, element=org.perses.spartree.LexerRuleSparTreeNode, payload=org.perses.listminimizer.AbstractListInputMinimizer.Companion.NoPayload}.elementPayload}
-  element=LexerRuleSparTreeNode{token=PersesToken{token=n}, LexerRuleSparTreeNode{id=21, parent=18}}
+  element=LexerRuleSparTreeNode{token=PersesToken{token=n}, LexerRuleSparTreeNode{id=22, parent=19}}
 Testing the empty input.
 Property Test. Deleted elements: [0, 1, 2]. Interestingness: skip
 Number of partitions: n=2

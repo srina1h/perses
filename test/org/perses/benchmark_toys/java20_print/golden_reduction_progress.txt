@@ -3,7 +3,9 @@
 The initial program size is 45
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "TRUE"
-  nodeActionSetCaching: true
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "reduction_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: "java"
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "reduction_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "TRUE"
+  nodeActionSetCaching: true
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.java.Java20ParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-(|:compilationUnit) {id=1}
+(|:compilationUnit) {id=1,slot_type=compilationUnit}
 |___(*) {id=3,slot_type=[ordinaryCompilationUnit,kleene_star__ordinaryCompilationUnit_3]}
     |___normalClassDeclaration {id=6,slot_type=[topLevelClassOrInterfaceDeclaration,classDeclaration,normalClassDeclaration]}
         |___(*) {id=7,slot_type=kleene_star__normalClassDeclaration_1}
@@ -874,30 +878,30 @@ Failed to reduce node 8
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-(|:compilationUnit) {id=218}
-|___(*) {id=220,slot_type=[ordinaryCompilationUnit,kleene_star__ordinaryCompilationUnit_3]}
-    |___normalClassDeclaration {id=223,slot_type=[topLevelClassOrInterfaceDeclaration,classDeclaration,normalClassDeclaration]}
-        |___Token:class {id=224,slot_type=CLASS}
-        |___Token:HelloJava20 {id=273,slot_type=[typeIdentifier,Identifier]}
-        |___classBody {id=226,slot_type=classBody}
-            |___Token:{ {id=227,slot_type=LBRACE}
-            |___(*) {id=228,slot_type=kleene_star__classBody_1}
-            |   |___block {id=232,slot_type=[classBodyDeclaration,instanceInitializer,block]}
-            |       |___Token:{ {id=233,slot_type=LBRACE}
-            |       |___(?) {id=234,slot_type=optional__block_1}
-            |       |   |___(+) {id=237,slot_type=[blockStatements,kleene_plus__blockStatements_2]}
-            |       |       |___expressionStatement {id=241,slot_type=[blockStatement,statement,statementWithoutTrailingSubstatement,expressionStatement]}
-            |       |           |___assignment {id=244,slot_type=[statementExpression,assignment]}
-            |       |           |   |___Token:message {id=272,slot_type=[leftHandSide,expressionName,Identifier]}
-            |       |           |   |___Token:= {id=270,slot_type=[assignmentOperator,ASSIGN]}
-            |       |           |   |___Token:"world" {id=269,slot_type=[expression,conditionalExpression,aux_rule__conditionalExpression_3,conditionalOrExpression,conditionalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,primaryNoNewArray,aux_rule__primaryNoNewArray_65,altnt_block__primaryNoNewArray_53,StringLiteral]}
-            |       |           |___Token:; {id=243,slot_type=SEMI}
-            |       |___Token:} {id=235,slot_type=RBRACE}
-            |___Token:} {id=229,slot_type=RBRACE}
+(|:compilationUnit) {id=219,slot_type=compilationUnit}
+|___(*) {id=221,slot_type=[ordinaryCompilationUnit,kleene_star__ordinaryCompilationUnit_3]}
+    |___normalClassDeclaration {id=224,slot_type=[topLevelClassOrInterfaceDeclaration,classDeclaration,normalClassDeclaration]}
+        |___Token:class {id=225,slot_type=CLASS}
+        |___Token:HelloJava20 {id=274,slot_type=[typeIdentifier,Identifier]}
+        |___classBody {id=227,slot_type=classBody}
+            |___Token:{ {id=228,slot_type=LBRACE}
+            |___(*) {id=229,slot_type=kleene_star__classBody_1}
+            |   |___block {id=233,slot_type=[classBodyDeclaration,instanceInitializer,block]}
+            |       |___Token:{ {id=234,slot_type=LBRACE}
+            |       |___(?) {id=235,slot_type=optional__block_1}
+            |       |   |___(+) {id=238,slot_type=[blockStatements,kleene_plus__blockStatements_2]}
+            |       |       |___expressionStatement {id=242,slot_type=[blockStatement,statement,statementWithoutTrailingSubstatement,expressionStatement]}
+            |       |           |___assignment {id=245,slot_type=[statementExpression,assignment]}
+            |       |           |   |___Token:message {id=273,slot_type=[leftHandSide,expressionName,Identifier]}
+            |       |           |   |___Token:= {id=271,slot_type=[assignmentOperator,ASSIGN]}
+            |       |           |   |___Token:"world" {id=270,slot_type=[expression,conditionalExpression,aux_rule__conditionalExpression_3,conditionalOrExpression,conditionalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,unaryExpression,aux_rule__unaryExpression_3,unaryExpressionNotPlusMinus,postfixExpression,altnt_block__postfixExpression_3,primary,primaryNoNewArray,aux_rule__primaryNoNewArray_65,altnt_block__primaryNoNewArray_53,StringLiteral]}
+            |       |           |___Token:; {id=244,slot_type=SEMI}
+            |       |___Token:} {id=236,slot_type=RBRACE}
+            |___Token:} {id=230,slot_type=RBRACE}
 ------------------------------------------------------------
 
 
-=================Reducing node 220, size=10=================
+=================Reducing node 221, size=10=================
 
 The current best program is the following
 
@@ -919,11 +923,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 220
+Failed to reduce node 221
 ------------------------------------------------------------
 
 
-=================Reducing node 223, size=10=================
+=================Reducing node 224, size=10=================
 
 The current best program is the following
 
@@ -938,17 +942,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=223}
+    NodeDeletionAction{target_node=224}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 223
+Failed to reduce node 224
 ------------------------------------------------------------
 
 
-=================Reducing node 226, size=10=================
+=================Reducing node 227, size=10=================
 
 The current best program is the following
 
@@ -963,11 +967,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 226
+Failed to reduce node 227
 ------------------------------------------------------------
 
 
-=================Reducing node 228, size=10=================
+=================Reducing node 229, size=10=================
 
 The current best program is the following
 
@@ -994,11 +998,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 228
+Failed to reduce node 229
 ------------------------------------------------------------
 
 
-=================Reducing node 232, size=10=================
+=================Reducing node 233, size=10=================
 
 The current best program is the following
 
@@ -1013,17 +1017,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=232}
+    NodeDeletionAction{target_node=233}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 232
+Failed to reduce node 233
 ------------------------------------------------------------
 
 
-=================Reducing node 234, size=10=================
+=================Reducing node 235, size=10=================
 
 The current best program is the following
 
@@ -1054,11 +1058,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 234
+Failed to reduce node 235
 ------------------------------------------------------------
 
 
-=================Reducing node 237, size=10=================
+=================Reducing node 238, size=10=================
 
 The current best program is the following
 
@@ -1073,17 +1077,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=237}
+    NodeDeletionAction{target_node=238}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 237
+Failed to reduce node 238
 ------------------------------------------------------------
 
 
-=================Reducing node 241, size=10=================
+=================Reducing node 242, size=10=================
 
 The current best program is the following
 
@@ -1113,11 +1117,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 241
+Failed to reduce node 242
 ------------------------------------------------------------
 
 
-=================Reducing node 244, size=10=================
+=================Reducing node 245, size=10=================
 
 The current best program is the following
 
@@ -1132,7 +1136,26 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 244
+Failed to reduce node 245
+------------------------------------------------------------
+
+
+=================Reducing node 274, size=10=================
+
+The current best program is the following
+
+    --file: HelloJava20.java.txt--
+                  class HelloJava20 {
+                                             {
+        message = "world";
+      }
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 274
 ------------------------------------------------------------
 
 
@@ -1155,7 +1178,7 @@ Failed to reduce node 273
 ------------------------------------------------------------
 
 
-=================Reducing node 272, size=10=================
+=================Reducing node 271, size=10=================
 
 The current best program is the following
 
@@ -1170,7 +1193,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 272
+Failed to reduce node 271
 ------------------------------------------------------------
 
 
@@ -1193,7 +1216,7 @@ Failed to reduce node 270
 ------------------------------------------------------------
 
 
-=================Reducing node 269, size=10=================
+=================Reducing node 244, size=10=================
 
 The current best program is the following
 
@@ -1208,11 +1231,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 269
+Failed to reduce node 244
 ------------------------------------------------------------
 
 
-=================Reducing node 243, size=10=================
+=================Reducing node 236, size=10=================
 
 The current best program is the following
 
@@ -1227,11 +1250,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 243
+Failed to reduce node 236
 ------------------------------------------------------------
 
 
-=================Reducing node 235, size=10=================
+=================Reducing node 234, size=10=================
 
 The current best program is the following
 
@@ -1246,11 +1269,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 235
+Failed to reduce node 234
 ------------------------------------------------------------
 
 
-=================Reducing node 233, size=10=================
+=================Reducing node 230, size=10=================
 
 The current best program is the following
 
@@ -1265,11 +1288,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 233
+Failed to reduce node 230
 ------------------------------------------------------------
 
 
-=================Reducing node 229, size=10=================
+=================Reducing node 228, size=10=================
 
 The current best program is the following
 
@@ -1284,11 +1307,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 229
+Failed to reduce node 228
 ------------------------------------------------------------
 
 
-=================Reducing node 227, size=10=================
+=================Reducing node 225, size=10=================
 
 The current best program is the following
 
@@ -1303,26 +1326,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 227
-------------------------------------------------------------
-
-
-=================Reducing node 224, size=10=================
-
-The current best program is the following
-
-    --file: HelloJava20.java.txt--
-                  class HelloJava20 {
-                                             {
-        message = "world";
-      }
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 224
+Failed to reduce node 225
 ------------------------------------------------------------
 
 

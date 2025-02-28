@@ -29,8 +29,8 @@ import org.perses.program.TokenizedProgramFactory
 import org.perses.spartree.AbstractSparTreeGenerator
 import org.perses.spartree.AbstractSparTreeNode
 import org.perses.spartree.AbstractTreeNode.NodeIdCopyStrategy.ReuseNodeIdStrategy
-import org.perses.spartree.ChildHoistingActionSet
 import org.perses.spartree.NodeDeletionActionSet
+import org.perses.spartree.NodeReplacementActionSet
 import org.perses.spartree.ParserRuleSparTreeNode
 import org.perses.spartree.SparTree
 import org.perses.spartree.SparTreeBuilder
@@ -111,10 +111,10 @@ class SparTreeFuzzer private constructor(
     val currentList = ImmutableList.builder<AbstractSparTreeNode>()
     val bufferStack = Stack<AbstractSparTreeNode>()
     bufferStack.push(root)
-    while (!bufferStack.empty()) {
+    while (bufferStack.isNotEmpty()) {
       val currentNode = bufferStack.pop() ?: break
       currentList.add(currentNode)
-      currentNode.forEachChild { item: AbstractSparTreeNode -> bufferStack.push(item) }
+      currentNode.forEachChild { bufferStack.push(it) }
     }
     return currentList.build()
   }
@@ -187,7 +187,9 @@ class SparTreeFuzzer private constructor(
   // Node level, syntactically valid
   @Deprecated("Should use tree-level mutation version instead")
   fun createMutantBySplicing(another: SparTreeFuzzer, random: Random): MutatedProgram? {
-    val nodeList = flattenedTree.filter { !it.isTokenNode && it.payload != null }
+    val nodeList = flattenedTree.filter {
+      it.isNonRootParserRuleNode() && it.payload != null
+    }
     if (nodeList.isEmpty()) {
       return null
     }
@@ -195,7 +197,7 @@ class SparTreeFuzzer private constructor(
     val expectedSuperRuleType = nodeToBeReplaced
       ?.payload?.expectedAntlrRuleType ?: return null
     val anotherNodeList = another.flattenedTree.filter { node ->
-      !node.isTokenNode && expectedSuperRuleType.isEqualToOrSuperOf(
+      !node.isTokenNode() && expectedSuperRuleType.isEqualToOrSuperOf(
         node.antlrRule!!,
       )
     }
@@ -217,18 +219,20 @@ class SparTreeFuzzer private constructor(
     random: Random,
     model: AbstractLanguageModel,
   ): SparTree? {
-    val nodeList = flattenedTree.filter { !it.isTokenNode && it.payload != null }
+    val nodeList = flattenedTree.filter {
+      it.isNonRootParserRuleNode() && it.payload != null
+    }
     val selectedIndex = model.selectIndexOfNodeToBeReplaced(nodeList, featureOfTheSparTree, random)
       ?: return null
     val copiedSparTree = sparTree.deepCopy(ReuseNodeIdStrategy)
     val copiedNodeList = flatSparTree(copiedSparTree).filter {
-      !it.isTokenNode && it.payload != null
+      it.isNonRootParserRuleNode() && it.payload != null
     }
     val nodeToBeReplaced = copiedNodeList[selectedIndex]
     val expectedSuperRuleType = nodeToBeReplaced
       ?.payload?.expectedAntlrRuleType ?: return null
     val anotherNodeList = another.flattenedTree.filter { node ->
-      !node.isTokenNode && expectedSuperRuleType.isEqualToOrSuperOf(
+      !node.isTokenNode() && expectedSuperRuleType.isEqualToOrSuperOf(
         node.antlrRule!!,
       )
     }
@@ -524,7 +528,7 @@ class SparTreeFuzzer private constructor(
       .toImmutableIntArray()
 
   private fun haveSameTokens(node1: AbstractSparTreeNode, node2: AbstractSparTreeNode): Boolean {
-    if (node1.isTokenNode || node2.isTokenNode) {
+    if (node1.isTokenNode() || node2.isTokenNode()) {
       return node1 === node2
     }
     return node1.beginToken === node2.beginToken && node1.endToken === node2.endToken
@@ -535,7 +539,7 @@ class SparTreeFuzzer private constructor(
     recursiveChildren: HashMap<AbstractSparTreeNode, List<AbstractSparTreeNode>>,
     random: Random,
   ): Boolean {
-    if (node.isTokenNode) {
+    if (node.isTokenNode()) {
       return false
     }
     // Use a random number so that BFS has a chance to find deeper recursive nodes
@@ -614,7 +618,7 @@ class SparTreeFuzzer private constructor(
       replacingNode: AbstractSparTreeNode,
     ): SparTree {
       val edit = sparTree.createAnyNodeReplacementEdit(
-        ChildHoistingActionSet.createByReplacingSingleNode(
+        NodeReplacementActionSet.createByReplacingSingleNode(
           targetNode,
           replacingNode,
           actionsDescription = "Replacing for generative mutation",

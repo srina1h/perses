@@ -38,9 +38,6 @@ sealed class AbstractSparTreeNode(
 
   protected abstract val labelPrefix: String
 
-  val isTokenNode: Boolean
-    get() = this is LexerRuleSparTreeNode
-
   val isKleeneStarRuleNode: Boolean
     get() = this is ParserRuleSparTreeNode && this.ruleType === RuleType.KLEENE_STAR
 
@@ -61,6 +58,16 @@ sealed class AbstractSparTreeNode(
       }
     }
 
+  fun isSentinelRoot() = this is SparTreeSentinelRootNode
+
+  fun isParserRuleNode() = this is ParserRuleSparTreeNode
+
+  fun isTokenNode() = this is LexerRuleSparTreeNode
+
+  fun isRootNode() = parent == null || parent is SparTreeSentinelRootNode
+
+  fun isNonRootParserRuleNode() = isParserRuleNode() && !isRootNode()
+
   open fun asParserRule(): ParserRuleSparTreeNode {
     TODO("The current class is ${this::class}. $this")
   }
@@ -76,7 +83,7 @@ sealed class AbstractSparTreeNode(
    */
   fun updateLeafTokenCount(): Int {
     postOrderVisit { node ->
-      if (node.isTokenNode) {
+      if (node.isTokenNode()) {
         node.leafTokenCount = 1
       } else {
         var countNum = 0
@@ -125,6 +132,11 @@ sealed class AbstractSparTreeNode(
         ErrorMessage(it)
       }
     }
+  }
+
+  override fun deleteCurrentNode() {
+    super.deleteCurrentNode()
+    lazyAssert({ checkNodeIntegrity() == null }) { checkNodeIntegrity()!! }
   }
 
   override fun checkNodeIntegrity(): ErrorMessage? {

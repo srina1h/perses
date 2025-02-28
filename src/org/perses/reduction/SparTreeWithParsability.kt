@@ -31,7 +31,7 @@ class SparTreeWithParsability(
     return sparTree
   }
 
-  fun updatetokenCountAndGet(): Int {
+  fun updateTokenCountAndGet(): Int {
     sparTree.updateLeafTokenCount()
     return sparTree.tokenCount
   }

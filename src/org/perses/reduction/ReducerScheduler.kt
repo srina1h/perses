@@ -30,7 +30,7 @@ class ReducerScheduler(
   private val reducerContext: ReducerContext,
   private val mainReducerCreator: ITokenReducerCreator,
   private val auxiliaryReducerCreators: ImmutableList<ITokenReducerCreator>,
-  computeStatistics: () -> StatsOfFilesBeingReduced,
+  private val computeStatistics: () -> StatsOfFilesBeingReduced,
   reducerRunner: (AbstractTokenReducer) -> Unit,
   private val actionBeforeNonFirstRunOfMainReducers: () -> Unit,
 ) {
@@ -85,14 +85,14 @@ class ReducerScheduler(
 
   fun readSchedulerEvents(): Iterable<SchedulerEvent> = schedulerEvents.asIterable()
 
-  private val recordStatsSnapshotIfNotYet: () -> StatsSnapshotEvent = {
+  private fun recordStatsSnapshotIfNotYet(): StatsSnapshotEvent {
     if (schedulerEvents.isLastEvent { it == null || it !is StatsSnapshotEvent }) {
       schedulerEvents.add(StatsSnapshotEvent(computeStatistics()))
     }
     val last = schedulerEvents.last()
     check(last is StatsSnapshotEvent) { "The last element is $last" }
     lazyAssert({ schedulerEvents.checkSchedulerEventsIntegrity() }) { schedulerEvents }
-    last
+    return last
   }
 
   private val callReducer = { reducer: AbstractTokenReducer ->

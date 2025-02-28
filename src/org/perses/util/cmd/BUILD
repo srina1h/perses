@@ -11,6 +11,7 @@ kt_jvm_library(
         "AbstractCommandOptions.kt",
         "AbstractMain.kt",
         "CommandLineProcessor.kt",
+        "CommonFlagGroups.kt",
         "VerbosityFlagGroup.kt",
         "VersionFlagGroup.kt",
     ],

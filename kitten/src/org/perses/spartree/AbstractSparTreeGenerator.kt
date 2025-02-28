@@ -103,7 +103,7 @@ abstract class AbstractSparTreeGenerator(
       ?: return null
     val tokenList = mutableListOf<PersesToken>()
     generatedNode.preOrderVisit {
-      if (it.isTokenNode) {
+      if (it.isTokenNode()) {
         tokenList.add((it as LexerRuleSparTreeNode).token)
       }
       it.immutableChildView
@@ -485,7 +485,7 @@ abstract class AbstractSparTreeGenerator(
       }
       val builder = ImmutableList.builder<PersesToken>()
       node.preOrderVisit {
-        if (it.isTokenNode) {
+        if (it.isTokenNode()) {
           builder.add((it as LexerRuleSparTreeNode).token)
         }
         return@preOrderVisit it.immutableChildView

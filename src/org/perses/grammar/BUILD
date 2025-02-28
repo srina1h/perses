@@ -63,6 +63,7 @@ kt_jvm_library(
         "//src/org/perses/grammar/java:parser_facade_java8",
         "//src/org/perses/grammar/javascript:parser_facade",
         "//src/org/perses/grammar/line:parser_facade",
+        "//src/org/perses/grammar/onetoken:parser_facade",
         "//src/org/perses/grammar/php:parser_facade",
         "//src/org/perses/grammar/python3:parser_facade",
         "//src/org/perses/grammar/ruby:parser_facade",

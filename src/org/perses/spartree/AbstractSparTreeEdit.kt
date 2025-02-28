@@ -90,14 +90,14 @@ sealed class AbstractSparTreeEdit<T : AbstractTreeEditAction> (
 
     fun createReplacementSparTreeEdit(
       tree: SparTree,
-      actionSet: ChildHoistingActionSet,
+      actionSet: NodeReplacementActionSet,
     ): DescendantHoistingTreeEdit {
       return DescendantHoistingTreeEdit(tree, actionSet)
     }
 
     fun createAnyNodeReplacementTreeEdit(
       tree: SparTree,
-      actionSet: ChildHoistingActionSet,
+      actionSet: NodeReplacementActionSet,
     ): AnyNodeReplacementTreeEdit {
       return AnyNodeReplacementTreeEdit(tree, actionSet)
     }

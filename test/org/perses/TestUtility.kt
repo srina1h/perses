@@ -533,7 +533,7 @@ object TestUtility {
     builder: HashMap<AbstractSparTreeNode, ImmutableList<String>>,
     node: AbstractSparTreeNode,
   ) {
-    if (node.isTokenNode) {
+    if (node.isTokenNode()) {
       val tokens = ImmutableList.of(node.asLexerRule().token.text)
       builder[node] = tokens
       return

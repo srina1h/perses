@@ -18,6 +18,7 @@ package org.perses.fuzzer
 
 import com.google.common.io.Files
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -34,13 +35,21 @@ import org.perses.program.printer.SingleTokenPerLinePrinter
 import org.perses.spartree.RandomSparTreeGenerator
 import org.perses.spartree.SparTree
 import org.perses.util.TruthExt
+import org.perses.util.Util
 import java.io.File
+import java.nio.file.Paths
 import java.util.Random
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.deleteRecursively
+import kotlin.io.path.writeText
 
 /** Test for testing fuzzer.  */
 @Suppress("DEPRECATION")
-@RunWith(JUnit4::class) // TODO(gaosen): fix this test.
+@RunWith(JUnit4::class)
 class SparTreeFuzzerTest {
+
+  private val tempDir = Util.createTempDirFor(this::class.java.simpleName)
+
   private val factory = SingleParserFacadeFactory.builderWithBuiltinLanguages().build()
   private val c = factory.getParserFacadeListForOrNull(LanguageC)!!.defaultParserFacade.create()
   private val java = factory.getParserFacadeListForOrNull(
@@ -54,16 +63,21 @@ class SparTreeFuzzerTest {
 
   private val go = factory.getParserFacadeListForOrNull(LanguageGo)!!.defaultParserFacade.create()
 
+  @OptIn(ExperimentalPathApi::class)
+  @After
+  fun tearDown() {
+    tempDir.deleteRecursively()
+  }
+
   @Test
   fun testRandomMutation() {
-    val pathname = "kitten/test/fuzzer_test_data/different_lang_test/toy.c"
-    val testFile = File(pathname)
-    val mutatedFile = File.createTempFile("mutatedFile", ".temp")
-    mutatedFile.deleteOnExit()
+    val testFile = Paths.get("kitten/test/fuzzer_test_data/different_lang_test/toy.c")
     val random = Random(1)
-    val fuzzer = SparTreeFuzzer.fromFile(c, testFile)
-    fuzzer.createMutant(random)
-    assert(!Files.equal(testFile, mutatedFile))
+    val fuzzer = SparTreeFuzzer.fromFile(c, testFile.toFile())
+    val origTokens = fuzzer.sparTree.programSnapshot.tokens
+    fuzzer.createMutant(random).let {
+      assertThat(it.tokens).isNotEqualTo(origTokens)
+    }
   }
 
   @Test
@@ -178,44 +192,47 @@ class SparTreeFuzzerTest {
 
   @Test
   fun testSplicingMutation() {
-    val test1 =
-      """
-        fn main() {
-            if true {
-                println!("yes_splicing_1");
-            } else {
-                println!("no_splicing_1");
-            }
-        }
-      """.trimIndent()
-    val test2 =
-      """
-        fn main() {
-            if true {
-                println!("yes_splicing_2");
-            } else {
-                println!("no_splicing_2");
-            }
-        }
-      """.trimIndent()
-    val test3 = ""
-    val testFile1 = File.createTempFile("testFile1", ".temp").apply { writeText(test1) }
-    testFile1.deleteOnExit()
-    val testFile2 = File.createTempFile("testFile2", ".temp").apply { writeText(test2) }
-    testFile2.deleteOnExit()
-    val testFile3 = File.createTempFile("testFile3", ".temp").apply { writeText(test3) }
-    testFile3.deleteOnExit()
+    val testFile1 = tempDir.resolve("test_file_1.temp").apply {
+      writeText(
+        """
+          fn main() {
+              if true {
+                  println!("yes_splicing_1");
+              } else {
+                  println!("no_splicing_1");
+              }
+          }
+        """.trimIndent(),
+      )
+    }.toFile()
+    val testFile2 = tempDir.resolve("testFile2.temp").apply {
+      writeText(
+        """
+          fn main() {
+              if true {
+                  println!("yes_splicing_2");
+              } else {
+                  println!("no_splicing_2");
+              }
+          }
+        """.trimIndent(),
+      )
+    }.toFile()
+    val testFile3 = tempDir.resolve("testFile3.temp").apply {
+      writeText("")
+    }.toFile()
+
     val fuzzer1 = SparTreeFuzzer.fromFile(rust, testFile1)
     val fuzzer2 = SparTreeFuzzer.fromFile(rust, testFile2)
     val fuzzer3 = SparTreeFuzzer.fromFile(rust, testFile3)
     val rn1 = Random(7)
-    val mutant1 = fuzzer1.createMutantBySplicing(fuzzer2, rn1)
+    val mutant1 = fuzzer1.createMutantBySplicing(fuzzer2, rn1)!!
     val rn2 = Random(3)
-    val mutant2 = fuzzer1.createMutantBySplicing(fuzzer2, rn2)
+    val mutant2 = fuzzer1.createMutantBySplicing(fuzzer2, rn2)!!
     // The following two cases should be handled properly
     fuzzer1.createMutantBySplicing(fuzzer3, rn1)
     fuzzer3.createMutantBySplicing(fuzzer1, rn1)
-    val expectedMutant1 =
+    assertThat(mutant1.program).isEqualTo(
       """
         |fn main ( ) {
         |if true {
@@ -224,8 +241,9 @@ class SparTreeFuzzerTest {
         |println ! ( "yes_splicing_2" ) ;
         |}
         |}
-      """.trimMargin() + "\n"
-    val expectedMutant2 =
+      """.trimMargin() + "\n",
+    )
+    assertThat(mutant2.program).isEqualTo(
       """
         |fn main ( ) {
         |if true {
@@ -234,11 +252,10 @@ class SparTreeFuzzerTest {
         |println ! ( "no_splicing_2" ) ;
         |}
         |}
-      """.trimMargin() + "\n"
-    assertThat(mutant1!!.program).isEqualTo(expectedMutant1)
-    assertThat(mutant2!!.program).isEqualTo(expectedMutant2)
-    rust.parseString(mutant1.program)
-    rust.parseString(mutant2.program)
+      """.trimMargin() + "\n",
+    )
+    rust.parseString(mutant1.program) // Does not crash
+    rust.parseString(mutant2.program) // Does not crash
   }
 
   @Test

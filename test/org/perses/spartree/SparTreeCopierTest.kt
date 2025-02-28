@@ -94,7 +94,7 @@ class SparTreeCopierTest {
     originalNodes.asSequence().zip(copyNodes.asSequence()).forEach {
       assertThat(it.first.antlrRule).isSameInstanceAs(it.second.antlrRule)
       assertThat(it.first.isQuantifierNode).isEqualTo(it.second.isQuantifierNode)
-      assertThat(it.first.isTokenNode).isEqualTo(it.second.isTokenNode)
+      assertThat(it.first.isTokenNode()).isEqualTo(it.second.isTokenNode())
       assertThat(it.first::class).isEqualTo(it.second::class)
       if (it.first is ParserRuleSparTreeNode) {
         check(it.second is ParserRuleSparTreeNode)

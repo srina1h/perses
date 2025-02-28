@@ -3,7 +3,9 @@
 The initial program size is 56
 The command line options are:
 ---
-help: false
+helpFlags:
+  groupName: "Help"
+  help: false
 verbosityFlags:
   groupName: "Verbosity"
   verbosity: "INFO"
@@ -45,30 +47,6 @@ algorithmControlFlags:
   maxEditCountForRegularRuleNode: 100
   maxBfsDepthForRegularRuleNode: 5
   stopAtFirstCompatibleChildForRegularRuleNode: false
-  enableTrec: false
-cacheControlFlags:
-  groupName: "Cache Control"
-  queryCaching: "TRUE"
-  nodeActionSetCaching: true
-  queryCacheRefreshThreshold: 0
-  enableLightweightRefreshing: true
-  enablePassCache: false
-  globalCacheFile: null
-  pathToSaveUpdatedGlobalCache: null
-profilingFlags:
-  groupName: "Profiling"
-  progressDumpFile: "grep_based_reduction_progress.txt"
-  appendToProgressDumpFile: true
-  statDumpFile: null
-  profileQueryCacheTime: null
-  profileQueryCacheTimeCSV: null
-  profileQueryCacheMemory: null
-  actionSetProfiler: null
-  profileDeltaDebugger: null
-experimentFlags:
-  groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
-  onDemandReducerClasses: null
 languageControlFlags:
   groupName: "Language Control"
   languageName: ""
@@ -82,6 +60,32 @@ vulcanFlags:
   nonDeletionIterationLimit: 10
   windowSize: 4
   vulcanFixpoint: false
+trecFlags:
+  groupName: "T-Rec Reducer Control"
+  enableTrec: false
+profilingFlags:
+  groupName: "Profiling"
+  progressDumpFile: "grep_based_reduction_progress.txt"
+  appendToProgressDumpFile: true
+  statDumpFile: null
+  profileQueryCacheTime: null
+  profileQueryCacheTimeCSV: null
+  profileQueryCacheMemory: null
+  actionSetProfiler: null
+  profileDeltaDebugger: null
+cacheControlFlags:
+  groupName: "Cache Control"
+  queryCaching: "TRUE"
+  nodeActionSetCaching: true
+  queryCacheRefreshThreshold: 0
+  enableLightweightRefreshing: true
+  enablePassCache: false
+  globalCacheFile: null
+  pathToSaveUpdatedGlobalCache: null
+experimentFlags:
+  groupName: "Experiment Control"
+  cacheType: "COMPACT_QUERY_CACHE"
+  onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
@@ -91,7 +95,7 @@ The sanity check has been performed. The result is PassingSanityCheckResult
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-translationUnit {id=1}
+translationUnit {id=1,slot_type=translationUnit}
 |___(+) {id=2,slot_type=kleene_plus__translationUnit_3}
     |___aux_rule__declaration_3 {id=360,slot_type=[aux_rule__translationUnit_2,declaration,aux_rule__declaration_3]}
     |   |___(+) {id=361,slot_type=declarationSpecifiers}
@@ -955,24 +959,24 @@ Succeeded to reduce node 6 from 6 to 5
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
-=================Reducing node 404, size=5==================
+=================Reducing node 405, size=5==================
 
 The current best program is the following
 
@@ -985,11 +989,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 404
+Failed to reduce node 405
 ------------------------------------------------------------
 
 
-=================Reducing node 406, size=5==================
+=================Reducing node 407, size=5==================
 
 The current best program is the following
 
@@ -1011,11 +1015,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 406
+Failed to reduce node 407
 ------------------------------------------------------------
 
 
-=================Reducing node 408, size=5==================
+=================Reducing node 409, size=5==================
 
 The current best program is the following
 
@@ -1028,11 +1032,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 408
+Failed to reduce node 409
 ------------------------------------------------------------
 
 
-=================Reducing node 410, size=5==================
+=================Reducing node 411, size=5==================
 
 The current best program is the following
 
@@ -1057,11 +1061,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 410
+Failed to reduce node 411
 ------------------------------------------------------------
 
 
-=================Reducing node 413, size=5==================
+=================Reducing node 414, size=5==================
 
 The current best program is the following
 
@@ -1074,17 +1078,17 @@ The current best program is the following
 
 ==============Node edit action set cache hit.===============
 
-    NodeDeletionAction{target_node=413}
+    NodeDeletionAction{target_node=414}
 ------------------------------------------------------------
 
 
 ===================Node reduction is done===================
 
-Failed to reduce node 413
+Failed to reduce node 414
 ------------------------------------------------------------
 
 
-=================Reducing node 417, size=5==================
+=================Reducing node 418, size=5==================
 
 The current best program is the following
 
@@ -1122,11 +1126,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 417
+Failed to reduce node 418
 ------------------------------------------------------------
 
 
-=================Reducing node 442, size=5==================
+=================Reducing node 443, size=5==================
 
 The current best program is the following
 
@@ -1139,28 +1143,28 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 442
+Failed to reduce node 443
+------------------------------------------------------------
+
+
+=================Reducing node 420, size=5==================
+
+The current best program is the following
+
+    --file: t.c--
+        main                          {
+            "world\n" ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 420
 ------------------------------------------------------------
 
 
 =================Reducing node 419, size=5==================
-
-The current best program is the following
-
-    --file: t.c--
-        main                          {
-            "world\n" ;
-    }
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 419
-------------------------------------------------------------
-
-
-=================Reducing node 418, size=5==================
 
 The current best program is the following
 
@@ -1186,30 +1190,7 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 418
-------------------------------------------------------------
-
-
-=================Reducing node 438, size=5==================
-
-The current best program is the following
-
-    --file: t.c--
-        main                          {
-            "world\n" ;
-    }
-------------------------------------------------------------
-
-
-==============Node edit action set cache hit.===============
-
-    NodeDeletionAction{target_node=438}
-------------------------------------------------------------
-
-
-===================Node reduction is done===================
-
-Failed to reduce node 438
+Failed to reduce node 419
 ------------------------------------------------------------
 
 
@@ -1224,13 +1205,19 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+==============Node edit action set cache hit.===============
+
+    NodeDeletionAction{target_node=439}
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 439
 ------------------------------------------------------------
 
 
-=================Reducing node 411, size=5==================
+=================Reducing node 440, size=5==================
 
 The current best program is the following
 
@@ -1243,11 +1230,11 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 411
+Failed to reduce node 440
 ------------------------------------------------------------
 
 
-=================Reducing node 409, size=5==================
+=================Reducing node 412, size=5==================
 
 The current best program is the following
 
@@ -1260,27 +1247,44 @@ The current best program is the following
 
 ===================Node reduction is done===================
 
-Failed to reduce node 409
+Failed to reduce node 412
+------------------------------------------------------------
+
+
+=================Reducing node 410, size=5==================
+
+The current best program is the following
+
+    --file: t.c--
+        main                          {
+            "world\n" ;
+    }
+------------------------------------------------------------
+
+
+===================Node reduction is done===================
+
+Failed to reduce node 410
 ------------------------------------------------------------
 
 
 ==Fixpoint iteration 3. Reducer: concurrent_token_slicer@1==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -1350,20 +1354,20 @@ translationUnit {id=403}
 ==Fixpoint iteration 4. Reducer: concurrent_token_slicer@2==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -1416,20 +1420,20 @@ translationUnit {id=403}
 ==Fixpoint iteration 5. Reducer: concurrent_token_slicer@3==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -1470,20 +1474,20 @@ translationUnit {id=403}
 ==Fixpoint iteration 6. Reducer: concurrent_token_slicer@4==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -1510,20 +1514,20 @@ translationUnit {id=403}
 ==Fixpoint iteration 7. Reducer: concurrent_token_slicer@5==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
@@ -1538,180 +1542,180 @@ translationUnit {id=403}
 ==Fixpoint iteration 8. Reducer: concurrent_token_slicer@6==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 ==Fixpoint iteration 9. Reducer: concurrent_token_slicer@7==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 10. Reducer: concurrent_token_slicer@8==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 11. Reducer: concurrent_token_slicer@9==
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 12. Reducer: concurrent_token_slicer@10=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 13. Reducer: concurrent_token_slicer@11=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 14. Reducer: concurrent_token_slicer@12=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 15. Reducer: concurrent_token_slicer@13=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
 =Fixpoint iteration 16. Reducer: concurrent_token_slicer@14=
 
 The spar-tree is the following.
-translationUnit {id=403}
-|___(+) {id=404,slot_type=kleene_plus__translationUnit_3}
-    |___functionDefinition {id=406,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
-        |___Token:main {id=442,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
-        |___compoundStatement {id=408,slot_type=compoundStatement}
-            |___Token:{ {id=409,slot_type=LeftBrace}
-            |___(?) {id=410,slot_type=optional__compoundStatement_1}
-            |   |___(+) {id=413,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
-            |       |___expressionStatement {id=417,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
-            |           |___(?) {id=418,slot_type=optional__postfixExpression_1}
-            |           |   |___(+) {id=438,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
-            |           |       |___Token:"world\n" {id=439,slot_type=StringLiteral}
-            |           |___Token:; {id=419,slot_type=Semi}
-            |___Token:} {id=411,slot_type=RightBrace}
+translationUnit {id=404,slot_type=translationUnit}
+|___(+) {id=405,slot_type=kleene_plus__translationUnit_3}
+    |___functionDefinition {id=407,slot_type=[aux_rule__translationUnit_2,functionDefinition]}
+        |___Token:main {id=443,slot_type=[declarator,directDeclarator,aux_rule__directDeclarator_9,Identifier]}
+        |___compoundStatement {id=409,slot_type=compoundStatement}
+            |___Token:{ {id=410,slot_type=LeftBrace}
+            |___(?) {id=411,slot_type=optional__compoundStatement_1}
+            |   |___(+) {id=414,slot_type=[blockItemList,kleene_plus__blockItemList_3]}
+            |       |___expressionStatement {id=418,slot_type=[aux_rule__blockItemList_2,statement,aux_rule__statement_3,expressionStatement]}
+            |           |___(?) {id=419,slot_type=optional__postfixExpression_1}
+            |           |   |___(+) {id=439,slot_type=[expression,assignmentExpression,conditionalExpression,logicalOrExpression,logicalAndExpression,inclusiveOrExpression,exclusiveOrExpression,andExpression,equalityExpression,relationalExpression,shiftExpression,additiveExpression,multiplicativeExpression,castExpression,unaryExpression,aux_rule__unaryExpression_3,postfixExpression,aux_rule__postfixExpression_4,kleene_plus__primaryExpression_1]}
+            |           |       |___Token:"world\n" {id=440,slot_type=StringLiteral}
+            |           |___Token:; {id=420,slot_type=Semi}
+            |___Token:} {id=412,slot_type=RightBrace}
 ------------------------------------------------------------
 
 
