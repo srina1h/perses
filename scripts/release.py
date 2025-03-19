@@ -3,6 +3,7 @@
 import os
 import re
 import subprocess
+from typing import List
 
 
 def check_tools() -> None:
@@ -35,17 +36,29 @@ def create_tag() -> str:
     return new_tag
 
 
-def build_binary() -> str:
-    # return built binary location
-    print("===== Building binary...")
-    build_command = ['bazel', 'build', '//src/org/perses:perses_deploy.jar']
+def _build_binary(binary_name:str, build_path:str) -> None:
+    print("----- Building %s binary..." % binary_name)
+    build_command = ['bazel', 'build', build_path]
 
     subprocess.check_call(
         build_command,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
-    # assume constant build path
-    return "bazel-bin/src/org/perses/perses_deploy.jar"
+
+
+def build_perses_binary() -> str:
+    _build_binary(binary_name='perses', build_path='//src/org/perses:perses_deploy.jar')
+    return 'bazel-bin/src/org/perses/perses_deploy.jar'
+
+
+def build_kitten_binary() -> str:
+    _build_binary(binary_name='kitten', build_path='//kitten/src/org/perses/fuzzer:kitten_deploy.jar')
+    return 'bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar'
+
+
+def build_kitten_organizer_binary() -> str:
+    _build_binary(binary_name='kitten_organizer', build_path='//kitten/src/org/perses/fuzzer/organizer:kitten_organizer_deploy.jar')
+    return 'bazel-bin/kitten/src/org/perses/fuzzer/organizer/kitten_organizer_deploy.jar'
 
 
 def check_version(jar_path: str, release_version: str):
@@ -77,9 +90,10 @@ def check_repository():
     return
 
 
-def call_hub_release(attach, message, tag):
+def call_hub_release(attachments:List[str], message, tag):
     try:
-        release_command = ['hub', 'release', 'create', '--browse', f"--attach={attach}", f'--message={message}', tag]
+        release_command = ['hub', 'release', 'create', '--browse', f'--message={message}', tag] + \
+            ['--attach=' + s for s in attachments]
         pipe = None
         subprocess.check_call(
             release_command,
@@ -111,14 +125,21 @@ def main():
     title = f"Perses {tag_name}"
 
     # get built binary path
-    jar_path = build_binary()
+    perses_binary_path = build_perses_binary()
 
     # check pre-submit conditions
-    check_version(jar_path, tag_name)
+    check_version(perses_binary_path, tag_name)
     check_repository()
 
+    kitten_binary_path = build_kitten_binary()
+    kitten_organizer_binary_path = build_kitten_organizer_binary()
+
     # release
-    call_hub_release(jar_path, title, tag_name)
+    call_hub_release(
+        attachments=[perses_binary_path, kitten_binary_path, kitten_organizer_binary_path],
+        message=title,
+        tag=tag_name
+    )
 
     print("Released successfully!")
 
