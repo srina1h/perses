@@ -89,8 +89,8 @@ abstract class AbstractSlicingTask(
           reducerContext.ioManager.createOutputManager(it).fileContentList
             .transformToImmutableList {
               FileNameContentPair(
-                fileName = it.first.baseName,
-                content = it.second,
+                fileName = it.fileName.baseName,
+                content = it.content,
               )
             }
         },

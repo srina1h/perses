@@ -31,8 +31,6 @@ import org.perses.program.SourceFile
 import org.perses.program.TokenizedProgram
 import org.perses.program.TokenizedProgramFactory
 import org.perses.reduction.AbstractActionSetProfiler.ActionSetProfiler
-import org.perses.reduction.AbstractExternalTestScriptExecutionCachePolicy.ExternalTestScriptExecutionCachePolicy
-import org.perses.reduction.AbstractExternalTestScriptExecutionCachePolicy.NullExternalTestScriptExecutionCachePolicy
 import org.perses.reduction.cache.AbstractQueryCache
 import org.perses.reduction.cache.AbstractQueryCacheProfiler
 import org.perses.reduction.cache.EnumQueryCachingControl
@@ -80,29 +78,18 @@ import org.perses.util.transformToImmutableList
 import java.lang.ref.WeakReference
 
 abstract class AbstractProgramReductionDriver(
-  val globalContext: GlobalContext,
+  globalContext: GlobalContext,
   protected val cmd: CommandOptions,
   ioManager: TokenReductionIOManager,
   private var tree: SparTreeWithParsability,
   val configuration: ReductionConfiguration,
   val listenerManager: AsyncReductionListenerManager,
 ) : AbstractReductionDriver<TokenizedProgram, LanguageKind, TokenReductionIOManager>(
+  globalContext,
   ioManager,
   cmd.reductionControlFlags.getNumOfThreads(),
   cmd.reductionControlFlags.testScriptExecutionTimeoutInSeconds,
   cmd.reductionControlFlags.testScriptExecutionKeepWaitingAfterTimeout,
-  externalTestScriptExecutionCachePolicyCreator = {
-    cmd.cacheControlFlags.globalCacheFile.let {
-      if (it == null) {
-        NullExternalTestScriptExecutionCachePolicy()
-      } else {
-        ExternalTestScriptExecutionCachePolicy(
-          historyCsvFile = it,
-          csvFileToSaveHistory = cmd.cacheControlFlags.pathToSaveUpdatedGlobalCache,
-        )
-      }
-    }
-  },
 ) {
 
   private fun createQueryCacheProfiler() =
@@ -134,7 +121,7 @@ abstract class AbstractProgramReductionDriver(
   private val queryCache =
     if (configuration.enableTestScriptExecutionCaching) {
       QueryCacheFactory.createQueryCache(
-        computeQueryCacheType(cmd.experimentFlags.cacheType, ioManager.getDefaultProgramFormat()),
+        computeQueryCacheType(cmd.cacheControlFlags.cacheType, ioManager.getDefaultProgramFormat()),
         tree.programSnapshot,
         registerToClose(createQueryCacheProfiler()),
         QueryCacheConfiguration(
@@ -254,7 +241,7 @@ abstract class AbstractProgramReductionDriver(
     logger.ktInfo {
       val queryCacheStatus = boolToString(configuration.enableTestScriptExecutionCaching)
       val editCacheStatus = boolToString(cmd.cacheControlFlags.nodeActionSetCaching)
-      val queryCacheType = cmd.experimentFlags.cacheType.name.lowercase()
+      val queryCacheType = cmd.cacheControlFlags.cacheType.name.lowercase()
       "Cache setting: query-caching=$queryCacheStatus, " +
         "edit-caching=$editCacheStatus, query-cache=$queryCacheType"
     }

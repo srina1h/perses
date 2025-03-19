@@ -1,4 +1,4 @@
-perses_bin = "//kitten/src/org/perses/fuzzer:kira_deploy.jar"
+perses_bin = "//kitten/src/org/perses/fuzzer:kitten_deploy.jar"
 
 adhoc_bin = "//src/org/perses/grammar/adhoc:perses_adhoc_installer_deploy.jar"
 

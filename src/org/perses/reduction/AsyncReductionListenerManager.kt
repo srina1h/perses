@@ -167,7 +167,7 @@ class AsyncReductionListenerManager(
     result: PropertyTestResult,
     program: TokenizedProgram,
     edit: AbstractSparTreeEdit<*>,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ) {
     val event = TestScriptExecutionEvent(
       System.currentTimeMillis(),
@@ -185,7 +185,7 @@ class AsyncReductionListenerManager(
     program: TokenizedProgram,
     edit: AbstractSparTreeEdit<*>,
     millisToCancelTheTask: Int,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ) {
     val event = AbstractTestScriptExecutionEvent.TestScriptExecutionCanceledEvent(
       System.currentTimeMillis(),
@@ -203,7 +203,7 @@ class AsyncReductionListenerManager(
     result: PropertyTestResult,
     program: TokenizedProgram,
     edit: AbstractSparTreeEdit<*>,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ) {
     val event = AbstractTestScriptExecutionEvent.TestResultCacheHitEvent(
       System.currentTimeMillis(),

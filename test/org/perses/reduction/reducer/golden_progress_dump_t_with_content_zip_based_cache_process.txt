@@ -76,6 +76,7 @@ profilingFlags:
 cacheControlFlags:
   groupName: "Cache Control"
   queryCaching: "TRUE"
+  cacheType: "CONTENT_ZIP"
   nodeActionSetCaching: true
   queryCacheRefreshThreshold: 0
   enableLightweightRefreshing: true
@@ -84,7 +85,6 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  cacheType: "CONTENT_ZIP"
   onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade

@@ -18,17 +18,9 @@ package org.perses.cmd
 
 import com.beust.jcommander.IStringConverter
 import com.beust.jcommander.Parameter
-import org.perses.reduction.cache.QueryCacheType
 import org.perses.util.cmd.AbstractCommandLineFlagGroup
 
 class ExperimentFlagGroup : AbstractCommandLineFlagGroup(groupName = "Experiment Control") {
-  @JvmField
-  @Parameter(
-    names = ["--query-cache-type"],
-    description = "the algorithm of the query cache",
-    order = 1,
-  )
-  var cacheType: QueryCacheType = QueryCacheType.COMPACT_QUERY_CACHE
 
   @JvmField
   @Parameter(

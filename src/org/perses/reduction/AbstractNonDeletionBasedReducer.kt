@@ -14,14 +14,11 @@
  * You should have received a copy of the GNU General Public License along with
  * Perses; see the file LICENSE.  If not see <http://www.gnu.org/licenses/>.
  */
-package org.perses.reduction.reducer.vulcan
+package org.perses.reduction
 
 import com.google.common.collect.ImmutableList
 import org.perses.program.TokenizedProgram
 import org.perses.program.printer.PrinterRegistry
-import org.perses.reduction.AbstractTokenReducer
-import org.perses.reduction.ReducerAnnotation
-import org.perses.reduction.ReducerContext
 import org.perses.spartree.AbstractSparTreeEdit
 import org.perses.util.Util
 

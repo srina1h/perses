@@ -22,7 +22,10 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.perses.util.markdown.MarkdownToHTMLConverter.computeStringRepresentation
+import org.perses.util.markdown.MarkdownToHTMLConverter.listItemSequence
 import java.nio.file.Files
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.readText
@@ -35,9 +38,55 @@ class MarkdownToHTMLConverterTest {
   private val markdownFile = tempDir.resolve("test.md")
   private val htmlResultFile = createTempFile("result", ".html")
 
+  @OptIn(ExperimentalPathApi::class)
   @After
   fun tearDown() {
     tempDir.deleteRecursively()
+  }
+
+  @Test
+  fun testFindAllBulletList() {
+    val document = MarkdownToHTMLConverter.parseMarkdownDocument(
+      """
+        |+ a b c
+        |+ b c d 
+        |+ c d e
+        |   + e f g 
+        |   + f i j
+      """.trimMargin(),
+    )
+    val bulletList = MarkdownToHTMLConverter.findAllBulletLists(document)
+    assertThat(bulletList).hasSize(2)
+    bulletList.first().listItemSequence().toList().let { list ->
+      assertThat(list).hasSize(3)
+      assertThat(list.map { it.computeStringRepresentation() }).containsExactly(
+        "a b c",
+        "b c d",
+        "c d e",
+      )
+    }
+    bulletList.last().listItemSequence().toList().let { list ->
+      assertThat(list).hasSize(2)
+      assertThat(list.map { it.computeStringRepresentation() }).containsExactly(
+        "e f g",
+        "f i j",
+      )
+    }
+  }
+
+  @Test
+  fun testFindAllCodeBlocks() {
+    val document = MarkdownToHTMLConverter.parseMarkdownDocument(
+      """
+        | code below
+        | ```bash
+        | aaa
+        | ```
+      """.trimMargin(),
+    )
+    val codeBlocks = MarkdownToHTMLConverter.findAllFencedCodeBlocks(document)
+    assertThat(codeBlocks).hasSize(1)
+    assertThat(codeBlocks.single().literal).isEqualTo("aaa\n")
   }
 
   @Test

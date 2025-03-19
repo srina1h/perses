@@ -1,8 +1,8 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
 package(default_visibility = [
     "//visibility:public",
 ])
-
-load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 java_library(
     name = "command_options",
@@ -33,7 +33,7 @@ kt_jvm_library(
 )
 
 java_binary(
-    name = "main",
+    name = "kitten_organizer",
     srcs = ["Main.java"],
     main_class = "org.perses.fuzzer.organizer.Main",
     deps = [

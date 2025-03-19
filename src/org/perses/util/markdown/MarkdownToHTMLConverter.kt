@@ -16,38 +16,110 @@
  */
 package org.perses.util.markdown
 
+import org.commonmark.node.BulletList
+import org.commonmark.node.FencedCodeBlock
+import org.commonmark.node.ListItem
+import org.commonmark.node.Node
+import org.commonmark.node.Paragraph
+import org.commonmark.node.Text
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.HtmlRenderer
-import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.readText
+import kotlin.io.path.writeText
 
-class MarkdownToHTMLConverter {
+object MarkdownToHTMLConverter {
 
-  companion object {
-    fun convertMarkdownToHTML(markdownFile: Path, htmlResultFile: Path) {
-      val parser = Parser.builder().build()
-      val renderer = HtmlRenderer.builder().build()
+  fun Node.singleChild(): Node {
+    return childSequence().single()
+  }
 
-      val markdown = Files.readString(markdownFile)
-      val document = parser.parse(markdown)
-      val html = renderer.render(document)
-
-      Files.writeString(htmlResultFile, html)
-    }
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-      if (args.size != 2) {
-        println(
-          "Usage: MarkdownToHTMLConverter <markdown file path> <HTML result file path>",
-        )
-        return
+  fun Node.childSequence(): Sequence<Node> {
+    return sequence {
+      var child: Node? = this@childSequence.firstChild
+      while (child != null) {
+        yield(child)
+        child = child.next
       }
-      val markdownPath = Path.of(args[0])
-      val htmlPath = Path.of(args[1])
-
-      MarkdownToHTMLConverter.convertMarkdownToHTML(markdownPath, htmlPath)
-      println("Conversion complete. HTML file created at: ${htmlPath.toAbsolutePath()}")
     }
+  }
+
+  fun ListItem.computeStringRepresentation(): String {
+    val child = this.firstChild
+    check(child is Paragraph) { child }
+    val childChild = child.firstChild
+    check(childChild is Text) { childChild }
+    return childChild.literal
+  }
+
+  fun BulletList.listItemSequence(): Sequence<ListItem> {
+    return childSequence().map { it as ListItem }
+  }
+
+  fun findAllText(node: Node): List<Text> {
+    val result = mutableListOf<Text>()
+    findAllNodes(
+      node,
+      acceptancePredicate = { n -> n is Text },
+      collector = { n -> result.add(n as Text) },
+    )
+    return result
+  }
+
+  fun findAllBulletLists(node: Node): List<BulletList> {
+    val result = mutableListOf<BulletList>()
+    findAllNodes(
+      node,
+      acceptancePredicate = { n -> n is BulletList },
+      collector = { n -> result.add(n as BulletList) },
+    )
+    return result
+  }
+
+  fun findAllFencedCodeBlocks(node: Node): List<FencedCodeBlock> {
+    val result = mutableListOf<FencedCodeBlock>()
+    findAllNodes(
+      node,
+      acceptancePredicate = { n -> n is FencedCodeBlock },
+      collector = { n -> result.add(n as FencedCodeBlock) },
+    )
+    return result
+  }
+
+  fun findAllNodes(
+    node: Node,
+    acceptancePredicate: (Node) -> Boolean,
+    collector: (Node) -> Unit,
+  ) {
+    if (acceptancePredicate.invoke(node)) {
+      collector.invoke(node)
+    }
+    node.childSequence().forEach { findAllNodes(it, acceptancePredicate, collector) }
+  }
+
+  fun parseMarkdownDocument(markdownContent: String): Node {
+    return Parser.builder().build().parse(markdownContent)
+  }
+
+  fun convertMarkdownToHTML(markdownFile: Path, htmlResultFile: Path) {
+    val document = parseMarkdownDocument(markdownFile.readText())
+    val html = HtmlRenderer.builder().build().render(document)
+    htmlResultFile.writeText(html)
+  }
+
+  @JvmStatic
+  fun main(args: Array<String>) {
+    if (args.size != 2) {
+      println(
+        "Usage: MarkdownToHTMLConverter <markdown file path> <HTML result file path>",
+      )
+      return
+    }
+    val markdownPath = Paths.get(args[0])
+    val htmlPath = Paths.get(args[1])
+
+    convertMarkdownToHTML(markdownPath, htmlPath)
+    println("Conversion complete. HTML file created at: ${htmlPath.toAbsolutePath()}")
   }
 }

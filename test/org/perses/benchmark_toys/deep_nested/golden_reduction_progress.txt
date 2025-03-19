@@ -76,6 +76,7 @@ profilingFlags:
 cacheControlFlags:
   groupName: "Cache Control"
   queryCaching: "TRUE"
+  cacheType: "CONTENT_SHA512"
   nodeActionSetCaching: true
   queryCacheRefreshThreshold: 0
   enableLightweightRefreshing: true
@@ -84,7 +85,6 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
   onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
@@ -746,7 +746,7 @@ It took less than 1 second to cancel the task.
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-3 entries are removed: 12 --> 9.
+1 entries are removed: 12 --> 11.
 ------------------------------------------------------------
 
 
@@ -814,7 +814,7 @@ It took less than 1 second to cancel the task.
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-0 entries are removed: 9 --> 9.
+1 entries are removed: 11 --> 10.
 ------------------------------------------------------------
 
 
@@ -882,7 +882,7 @@ It took less than 1 second to cancel the task.
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-0 entries are removed: 9 --> 9.
+0 entries are removed: 10 --> 10.
 ------------------------------------------------------------
 
 
@@ -950,7 +950,7 @@ It took less than 1 second to cancel the task.
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-0 entries are removed: 9 --> 9.
+1 entries are removed: 10 --> 9.
 ------------------------------------------------------------
 
 
@@ -2121,7 +2121,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-5 entries are removed: 14 --> 9.
+2 entries are removed: 14 --> 12.
 ------------------------------------------------------------
 
 

@@ -76,6 +76,7 @@ profilingFlags:
 cacheControlFlags:
   groupName: "Cache Control"
   queryCaching: "TRUE"
+  cacheType: "CONTENT_SHA512"
   nodeActionSetCaching: true
   queryCacheRefreshThreshold: 0
   enableLightweightRefreshing: true
@@ -84,7 +85,6 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
   onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.java.Java8ParserFacade
@@ -729,7 +729,7 @@ It took less than 1 second to cancel the task.
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-3 entries are removed: 5 --> 2.
+1 entries are removed: 5 --> 4.
 ------------------------------------------------------------
 
 
@@ -1983,7 +1983,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-11 entries are removed: 12 --> 1.
+3 entries are removed: 14 --> 11.
 ------------------------------------------------------------
 
 

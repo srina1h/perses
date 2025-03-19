@@ -106,39 +106,36 @@ class Main(
       reductionInputs.initiallyDeterminedMainDataKind
     }
     val allowedCodeFormatList = mutableListOf(getSpecifiedCodeFormatControl())
-    for (
-    allowedFormat in
-    reductionInputs.initiallyDeterminedMainDataKind.allowedCodeFormatControl
-    ) {
+    for (allowedFormat in reductionInputs
+      .initiallyDeterminedMainDataKind.allowedCodeFormatControl) {
       if (allowedCodeFormatList.contains(allowedFormat)) {
         continue
       }
       allowedCodeFormatList.add(allowedFormat)
     }
-    return parserFacadeCreatorList.sequenceOfCreators()
-      .flatMap { creator ->
-        allowedCodeFormatList.asSequence().map { format -> creator to format }
-      }.map { (facadeCreator, codeFormat) ->
-        ReductionDriverCreator(
-          creator = {
-            val parserFacade = facadeCreator.create()
-            RegularProgramReductionDriver.create(
-              globalContext,
-              cmd,
-              reductionInputs,
-              parserFacade,
-              codeFormat,
-              listenerManager = listenerManager,
-            )
-          },
-          descriptor = {
-            """
+    return parserFacadeCreatorList.sequenceOfCreators().flatMap { creator ->
+      allowedCodeFormatList.asSequence().map { format -> creator to format }
+    }.map { (facadeCreator, codeFormat) ->
+      ReductionDriverCreator(
+        creator = {
+          val parserFacade = facadeCreator.create()
+          RegularProgramReductionDriver.create(
+            globalContext,
+            cmd,
+            reductionInputs,
+            parserFacade,
+            codeFormat,
+            listenerManager = listenerManager,
+          )
+        },
+        descriptor = {
+          """
             $codeFormat
             ${facadeCreator.klass}
-            """.trimIndent()
-          },
-        )
-      }
+          """.trimIndent()
+        },
+      )
+    }
   }
 
   private fun getSpecifiedCodeFormatControl(): EnumFormatControl {
@@ -190,9 +187,15 @@ class Main(
       if (processor.process() == HelpRequestProcessingDecision.EXIT) {
         return
       }
+      val cmd = processor.cmd
       Util.useResources(
-        { GlobalContext() },
-        { globalContext -> Main(processor.cmd, globalContext) },
+        {
+          GlobalContext(
+            globalCacheFile = cmd.cacheControlFlags.globalCacheFile,
+            pathToSaveUpdatedGlobalCache = cmd.cacheControlFlags.pathToSaveUpdatedGlobalCache,
+          )
+        },
+        { globalContext -> Main(cmd, globalContext) },
       ) { _, main ->
         main.run()
       }

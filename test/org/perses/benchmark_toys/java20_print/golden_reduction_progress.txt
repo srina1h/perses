@@ -76,6 +76,7 @@ profilingFlags:
 cacheControlFlags:
   groupName: "Cache Control"
   queryCaching: "TRUE"
+  cacheType: "CONTENT_SHA512"
   nodeActionSetCaching: true
   queryCacheRefreshThreshold: 0
   enableLightweightRefreshing: true
@@ -84,7 +85,6 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
   onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.java.Java20ParserFacade
@@ -669,7 +669,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-2 entries are removed: 3 --> 1.
+0 entries are removed: 3 --> 3.
 ------------------------------------------------------------
 
 

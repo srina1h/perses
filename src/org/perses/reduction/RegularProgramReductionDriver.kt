@@ -48,14 +48,6 @@ class RegularProgramReductionDriver private constructor(
   listenerManager,
 ) {
 
-  val codeFormat: EnumFormatControl
-    get() = (
-      ioManager.outputManagerFactory as RegularOutputManagerFactory
-      ).defaultCodeFormatControl
-
-  val languageKind: LanguageKind
-    get() = configuration.parserFacade.language
-
   companion object {
 
     fun createIOManager(

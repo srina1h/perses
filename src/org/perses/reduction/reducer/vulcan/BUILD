@@ -7,7 +7,6 @@ package(default_visibility = [
 kt_jvm_library(
     name = "vulcan",
     srcs = [
-        "AbstractNonDeletionBasedReducer.kt",
         "IdentifierReplacementReducer.kt",
         "SubTreeReplacementReducer.kt",
         "TokenEditUtility.kt",

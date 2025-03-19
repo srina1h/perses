@@ -19,7 +19,6 @@ package org.perses.reduction
 import com.google.common.flogger.FluentLogger
 import com.google.common.io.Closer
 import org.perses.program.AbstractDataKind
-import org.perses.reduction.AbstractExternalTestScriptExecutionCachePolicy.NullExternalTestScriptExecutionCachePolicy
 import org.perses.reduction.io.AbstractReductionIOManager
 import org.perses.util.TimeUtil.formatDateForDisplay
 import org.perses.util.ktFine
@@ -33,14 +32,11 @@ abstract class AbstractReductionDriver<
   Kind : AbstractDataKind,
   IOManager : AbstractReductionIOManager<Program, Kind, IOManager>,
   >(
+  protected val globalContext: GlobalContext,
   protected val ioManager: IOManager,
   specifiedNumOfThreads: Int,
   scriptExecutionTimeoutInSeconds: Long,
   keepWaitingAfterScriptTimeout: Boolean,
-  externalTestScriptExecutionCachePolicyCreator:
-  () -> AbstractExternalTestScriptExecutionCachePolicy = {
-    NullExternalTestScriptExecutionCachePolicy()
-  },
 ) : IReductionDriver {
 
   private val closer = Closer.create()
@@ -50,7 +46,7 @@ abstract class AbstractReductionDriver<
     specifiedNumOfThreads,
     scriptExecutionTimeoutInSeconds,
     keepWaitingAfterScriptTimeout,
-    externalTestScriptExecutionCachePolicyCreator,
+    globalContext.externalTestScriptExecutionCache,
   ).also { closer.register(it) }
 
   override fun close() {

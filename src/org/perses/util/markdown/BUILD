@@ -9,6 +9,7 @@ kt_jvm_library(
     name = "markdown",
     srcs = ["MarkdownToHTMLConverter.kt"],
     deps = [
+        "//:guava",
         "@maven//:org_commonmark_commonmark",
     ],
 )

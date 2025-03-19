@@ -63,7 +63,10 @@ class RegularProgramReductionDriverTest {
   }
   private val facadeFactory = builderWithBuiltinLanguages().build()
   private val listenerManager = AsyncReductionListenerManager(listeners = ImmutableList.of())
-  private val globalContext = GlobalContext()
+  private val globalContext = GlobalContext(
+    globalCacheFile = null,
+    pathToSaveUpdatedGlobalCache = null,
+  )
 
   @After
   fun teardown() {

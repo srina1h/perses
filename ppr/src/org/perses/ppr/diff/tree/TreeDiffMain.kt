@@ -101,9 +101,15 @@ class TreeDiffMain(
       if (processor.process() == CommandLineProcessor.HelpRequestProcessingDecision.EXIT) {
         return
       }
+      val cmd = processor.cmd
       Util.useResources(
-        { GlobalContext() },
-        { globalContext -> TreeDiffMain(processor.cmd, globalContext) },
+        {
+          GlobalContext(
+            globalCacheFile = cmd.cacheControlFlags.globalCacheFile,
+            pathToSaveUpdatedGlobalCache = cmd.cacheControlFlags.pathToSaveUpdatedGlobalCache,
+          )
+        },
+        { globalContext -> TreeDiffMain(cmd, globalContext) },
       ) { _, main ->
         main.run()
       }

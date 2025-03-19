@@ -45,6 +45,7 @@ class ListDiffMain(
       ReductionDriverCreator(
         creator = {
           ListDiffReductionDriver.create(
+            globalContext,
             cmd,
             reductionInputs,
             parserFacade,
@@ -98,9 +99,15 @@ class ListDiffMain(
       if (processor.process() == CommandLineProcessor.HelpRequestProcessingDecision.EXIT) {
         return
       }
+      val cmd = processor.cmd
       Util.useResources(
-        { GlobalContext() },
-        { globalContext -> ListDiffMain(processor.cmd, globalContext) },
+        {
+          GlobalContext(
+            globalCacheFile = cmd.cacheControlFlags.globalCacheFile,
+            pathToSaveUpdatedGlobalCache = cmd.cacheControlFlags.pathToSaveUpdatedGlobalCache,
+          )
+        },
+        { globalContext -> ListDiffMain(cmd, globalContext) },
       ) { _, main ->
         main.run()
       }

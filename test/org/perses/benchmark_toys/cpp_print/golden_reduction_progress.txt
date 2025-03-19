@@ -76,6 +76,7 @@ profilingFlags:
 cacheControlFlags:
   groupName: "Cache Control"
   queryCaching: "TRUE"
+  cacheType: "CONTENT_SHA512"
   nodeActionSetCaching: true
   queryCacheRefreshThreshold: 0
   enableLightweightRefreshing: true
@@ -84,7 +85,6 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
   onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.cpp.PnfCppParserFacade
@@ -285,7 +285,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-1 entries are removed: 4 --> 3.
+0 entries are removed: 4 --> 4.
 ------------------------------------------------------------
 
 
@@ -445,7 +445,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-1 entries are removed: 5 --> 4.
+1 entries are removed: 6 --> 5.
 ------------------------------------------------------------
 
 
@@ -797,7 +797,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-2 entries are removed: 12 --> 10.
+0 entries are removed: 13 --> 13.
 ------------------------------------------------------------
 
 
@@ -856,7 +856,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-2 entries are removed: 11 --> 9.
+1 entries are removed: 14 --> 13.
 ------------------------------------------------------------
 
 
@@ -902,7 +902,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-6 entries are removed: 9 --> 3.
+9 entries are removed: 13 --> 4.
 ------------------------------------------------------------
 
 

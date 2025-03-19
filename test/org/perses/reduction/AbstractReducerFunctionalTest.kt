@@ -44,7 +44,12 @@ abstract class AbstractReducerFunctionalTest {
     Util.useResources(
       { AsyncReductionListenerManager(listeners = ImmutableList.of()) },
       { AutoDeletableFolder(Files.createTempDirectory(javaClass.simpleName)) },
-      { _, _ -> GlobalContext() },
+      { _, _ ->
+        GlobalContext(
+          globalCacheFile = null,
+          pathToSaveUpdatedGlobalCache = null,
+        )
+      },
     ) { listenerManager, folder, globalContext ->
       val cmd = CommandOptions()
       val tempSourceFile = folder.file.resolve(sourceFile)

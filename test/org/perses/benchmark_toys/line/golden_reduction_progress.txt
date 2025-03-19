@@ -76,6 +76,7 @@ profilingFlags:
 cacheControlFlags:
   groupName: "Cache Control"
   queryCaching: "TRUE"
+  cacheType: "CONTENT_SHA512"
   nodeActionSetCaching: true
   queryCacheRefreshThreshold: 0
   enableLightweightRefreshing: true
@@ -84,7 +85,6 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  cacheType: "COMPACT_QUERY_CACHE"
   onDemandReducerClasses: null
 
 Parser Facade: class org.perses.grammar.line.LineParserFacade
@@ -360,7 +360,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-4 entries are removed: 9 --> 5.
+0 entries are removed: 9 --> 9.
 ------------------------------------------------------------
 
 
@@ -518,7 +518,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-5 entries are removed: 13 --> 8.
+3 entries are removed: 17 --> 14.
 ------------------------------------------------------------
 
 
@@ -552,7 +552,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-2 entries are removed: 8 --> 6.
+3 entries are removed: 14 --> 11.
 ------------------------------------------------------------
 
 
@@ -600,7 +600,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-3 entries are removed: 7 --> 4.
+1 entries are removed: 12 --> 11.
 ------------------------------------------------------------
 
 
@@ -709,7 +709,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-4 entries are removed: 10 --> 6.
+4 entries are removed: 17 --> 13.
 ------------------------------------------------------------
 
 
@@ -749,7 +749,7 @@ The current best program is the following
 
 ===========TestScriptExecutionCacheEntryEviction============
 
-3 entries are removed: 7 --> 4.
+3 entries are removed: 14 --> 11.
 ------------------------------------------------------------
 
 

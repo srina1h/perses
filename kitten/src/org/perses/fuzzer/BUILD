@@ -1,8 +1,8 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
 package(default_visibility = [
     "//visibility:public",
 ])
-
-load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 kt_jvm_library(
     name = "perses_fuzzer",
@@ -137,7 +137,7 @@ java_library(
 )
 
 java_binary(
-    name = "kira",
+    name = "kitten",
     main_class = "org.perses.fuzzer.Main",
     runtime_deps = [
         ":kira_lib",

@@ -23,7 +23,7 @@ import org.perses.grammar.c.PnfCLexer
 import org.perses.program.EnumFormatControl
 import org.perses.program.ScriptFile
 import org.perses.program.SourceFile
-import org.perses.reduction.AbstractExternalTestScriptExecutionCachePolicy.NullExternalTestScriptExecutionCachePolicy
+import org.perses.reduction.AbstractExternalTestScriptExecutionCache.NullCache
 import org.perses.reduction.TestScriptExecutorService
 import org.perses.reduction.io.token.RegularOutputManagerFactory
 import org.perses.reduction.io.token.TokenReductionIOManager
@@ -95,9 +95,7 @@ open class CommonReductionIOManagerData(val testClass: Class<*>) : AutoCloseable
       ioManager.lazilyInitializedReductionFolderManager,
       specifiedNumOfThreads = 1,
       scriptExecutionTimeoutInSeconds = 600L,
-      externalTestScriptExecutionCachePolicyCreator = {
-        NullExternalTestScriptExecutionCachePolicy()
-      },
+      externalTestScriptExecutionCache = NullCache(),
     )
   }
   val executorService: TestScriptExecutorService by executorServiceDelegate

@@ -19,21 +19,28 @@ package org.perses.reduction.io
 import com.google.common.collect.ImmutableList
 import org.perses.program.AbstractReductionFile
 import org.perses.util.AbstractFileContent
+import org.perses.util.FileNameContentPair
 import org.perses.util.Util
 
 abstract class AbstractOutputManager(private val reductionInputs: AbstractReductionInputs<*, *>) {
 
   val shA512HashCode: Util.SHA512HashCode by lazy {
     Util.SHA512HashCode.createFromListOfFileContents(
-      fileContentList.map { it.second },
+      fileContentList.map { it.content },
     )
   }
 
   val fileContentList by lazy {
     val list = internalComputeFileContentList()
-    check(list.size == reductionInputs.mutableFiles.size)
+    check(list.size == reductionInputs.mutableFiles.size) {
+      """
+        | list = $list
+        | 
+        | mutableFiles = ${reductionInputs.mutableFiles}
+      """.trimMargin()
+    }
     list.zip(reductionInputs.mutableFiles).forEach { (first, second) ->
-      val firstReductionFile = first.first
+      val firstReductionFile = first.fileName
       check(firstReductionFile === second) {
         firstReductionFile.toString() + second.toString()
       }
@@ -45,16 +52,16 @@ abstract class AbstractOutputManager(private val reductionInputs: AbstractReduct
    * Note that we use a list instead of a map, because the list size is usually 1 element long.
    */
   private fun internalComputeFileContentList():
-    ImmutableList<Pair<AbstractReductionFile<*, *>, AbstractFileContent>> {
+    ImmutableList<FileNameContentPair<AbstractReductionFile<*, *>>> {
     val files = reductionInputs.mutableFiles
     val builder =
-      ImmutableList.builderWithExpectedSize<Pair<AbstractReductionFile<*, *>, AbstractFileContent>>(
+      ImmutableList.builderWithExpectedSize<FileNameContentPair<AbstractReductionFile<*, *>>>(
         files.size,
       )
     files.forEach {
       builder.add(
-        Pair(
-          it,
+        FileNameContentPair(
+          fileName = it,
           AbstractFileContent.TextFileContent(text = internalComputeContentForFile(it)),
         ),
       )
@@ -68,9 +75,9 @@ abstract class AbstractOutputManager(private val reductionInputs: AbstractReduct
 
   fun write(folder: ReductionFolder) {
     fileContentList.forEach { pair ->
-      val destinationFile = folder.computeAbsPathForOrigFile(pair.first)
+      val destinationFile = folder.computeAbsPathForOrigFile(pair.fileName)
       Util.ensureDirExists(destinationFile.parent)
-      pair.second.writeToFile(destinationFile)
+      pair.content.writeToFile(destinationFile)
     }
     writeMore(folder)
   }

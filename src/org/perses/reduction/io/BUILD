@@ -57,6 +57,7 @@ kt_jvm_library(
     deps = [
         ":reduction_folder",
         "//src/org/perses/program",
+        "//src/org/perses/util:file_name_content_pair",
     ],
 )
 

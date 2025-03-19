@@ -26,7 +26,7 @@ class NodeReductionStartEvent internal constructor(
   currentTimeMillis: Long,
   val program: TokenizedProgram,
   val node: AbstractSparTreeNode,
-  outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+  outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
 ) : AbstractStartEvent(currentTimeMillis, programSize = program.tokenCount()) {
 
   val textualProgram = LazyProgramOutputer(program, outputCreator)

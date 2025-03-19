@@ -93,7 +93,7 @@ class FixpointIterationStartEvent internal constructor(
     currentTimeMillis: Long,
     program: TokenizedProgram,
     node: AbstractSparTreeNode,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ): NodeReductionStartEvent {
     check(!ended)
     return NodeReductionStartEvent(

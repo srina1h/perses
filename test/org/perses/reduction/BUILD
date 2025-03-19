@@ -79,6 +79,19 @@ kt_jvm_test(
 )
 
 kt_jvm_test(
+    name = "ExternalTestScriptExecutionCacheTest",
+    srcs = [
+        "ExternalTestScriptExecutionCacheTest.kt",
+    ],
+    deps = [
+        "//:truth",
+        "//src/org/perses/reduction:external_test_script_execution_cache",
+        "//test/org/perses:test_util",
+        "//test/org/perses/reduction/io:CommonReductionIOManagerData",
+    ],
+)
+
+kt_jvm_test(
     name = "ProfileTest",
     srcs = ["ProfileTest.kt"],
     test_class = "org.perses.reduction.ProfileTest",

@@ -16,14 +16,19 @@
  */
 package org.perses.antlr.reducer
 
-import org.perses.antlr.reducer.GrammarReductionDriver.Companion.create
+import org.perses.reduction.GlobalContext
 import org.perses.util.cmd.AbstractMain
 import org.perses.util.cmd.CommandLineProcessor
 
 class Main(cmd: CommandOptions) : AbstractMain<CommandOptions>(cmd) {
 
   public override fun internalRun() {
-    create(cmd).use { driver -> driver.reduce() }
+    GlobalContext(
+      globalCacheFile = null,
+      pathToSaveUpdatedGlobalCache = null,
+    ).use { context ->
+      GrammarReductionDriver.create(context, cmd).use { driver -> driver.reduce() }
+    }
   }
 
   companion object {

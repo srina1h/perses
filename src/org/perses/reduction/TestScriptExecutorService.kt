@@ -34,8 +34,7 @@ class TestScriptExecutorService(
   val specifiedNumOfThreads: Int,
   private val scriptExecutionTimeoutInSeconds: Long,
   private val scriptExecutionKeepTryingAfterTimeout: Boolean = true,
-  externalTestScriptExecutionCachePolicyCreator:
-  () -> AbstractExternalTestScriptExecutionCachePolicy,
+  private val externalTestScriptExecutionCache: AbstractExternalTestScriptExecutionCache,
 ) : Closeable {
 
   val statistics = Statistics()
@@ -43,7 +42,6 @@ class TestScriptExecutorService(
   private val scriptExecutorService = DaemonThreadPool.create(specifiedNumOfThreads)
   private val outputManagerCreatorService = DaemonThreadPool.create(specifiedNumOfThreads)
   private val genericThreadPool = DaemonThreadPool.create(specifiedNumOfThreads)
-  private val externalTestScriptExecutionCache = externalTestScriptExecutionCachePolicyCreator()
 
   init {
     require(specifiedNumOfThreads > 0) {
@@ -61,7 +59,6 @@ class TestScriptExecutorService(
     DaemonThreadPool.shutdownOrThrow(scriptExecutorService)
     DaemonThreadPool.shutdownOrThrow(outputManagerCreatorService)
     reductionFolderManager.deleteRootFolder()
-    externalTestScriptExecutionCache.close()
   }
 
   fun interface IPostCheck<Payload> {
@@ -148,7 +145,7 @@ class TestScriptExecutorService(
           // Note that we still write the files to the folder, for debugging purpose only.
           val outputManager = outputManagerWithPayload.outputManager
           outputManager.write(workingDirectory)
-          val externalCachedResult = externalTestScriptExecutionCache.getCachedResultOrCompute(
+          val externalCachedResult = externalTestScriptExecutionCache.getCachedResultOrNull(
             outputManager,
           )
           val result = if (externalCachedResult == null) {

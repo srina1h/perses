@@ -22,7 +22,7 @@ import org.perses.util.FileNameContentPair
 
 class LazyProgramOutputer(
   program: TokenizedProgram,
-  outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+  outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
 ) {
   val textualContent: String by lazy {
     val outputList = outputCreator(program)

@@ -31,10 +31,9 @@ import org.perses.program.TokenizedProgramFactory
 import org.perses.reduction.AbstractProgramReductionDriver.Companion.createSparTree
 import org.perses.reduction.AbstractReductionDriver
 import org.perses.reduction.AsyncReductionListenerManager
+import org.perses.reduction.GlobalContext
 import org.perses.reduction.createSnapshot
 import org.perses.reduction.event.ReductionStartEvent
-import org.perses.spartree.AbstractSparTreeNode
-import org.perses.spartree.AbstractUnmodifiableSparTree
 import org.perses.util.AbstractEditOperation
 import org.perses.util.ListAlignment
 import org.perses.util.YamlUtil
@@ -42,6 +41,7 @@ import java.lang.StringBuilder
 import java.lang.ref.WeakReference
 
 class ListDiffReductionDriver private constructor(
+  globalContent: GlobalContext,
   private val cmd: ListDiffCmdOptions,
   ioManagerList: ListDiffReductionIOManager,
   val diff: ImmutableList<AbstractEditOperation<PersesToken>>,
@@ -53,6 +53,7 @@ class ListDiffReductionDriver private constructor(
   LanguageKind,
   ListDiffReductionIOManager,
   >(
+  globalContent,
   ioManagerList,
   cmd.reductionControlFlags.getNumOfThreads(),
   cmd.reductionControlFlags.testScriptExecutionTimeoutInSeconds,
@@ -170,6 +171,7 @@ class ListDiffReductionDriver private constructor(
 
     @JvmStatic
     fun create(
+      globalContent: GlobalContext,
       cmd: ListDiffCmdOptions,
       reductionInputs: ListDiffReductionInputs,
       parserFacade: AbstractParserFacade,
@@ -219,6 +221,7 @@ class ListDiffReductionDriver private constructor(
       )
 
       return ListDiffReductionDriver(
+        globalContent,
         cmd,
         ioManager,
         originalDiff,
@@ -226,19 +229,6 @@ class ListDiffReductionDriver private constructor(
         cmd.listDiffInputFlags.enableDiffSlicer,
         listenerManager,
       )
-    }
-  }
-
-  class ListDiffSparTree(
-    private val diff: ImmutableList<AbstractEditOperation<PersesToken>>,
-  ) : AbstractUnmodifiableSparTree() {
-    override val programSnapshot: TokenizedProgram
-      get() = TODO("Not yet implemented")
-    override val root: AbstractSparTreeNode
-      get() = TODO("Not yet implemented")
-
-    override fun printTreeStructure(): String {
-      TODO("Not yet implemented")
     }
   }
 }

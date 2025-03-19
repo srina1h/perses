@@ -19,9 +19,9 @@ package org.perses.reduction
 import org.perses.reduction.io.AbstractOutputManager
 import java.nio.file.Path
 
-abstract class AbstractExternalTestScriptExecutionCachePolicy : AutoCloseable {
+abstract class AbstractExternalTestScriptExecutionCache {
 
-  abstract fun getCachedResultOrCompute(
+  abstract fun getCachedResultOrNull(
     outputManager: AbstractOutputManager,
   ): TestScriptHistory.Result?
 
@@ -30,14 +30,13 @@ abstract class AbstractExternalTestScriptExecutionCachePolicy : AutoCloseable {
     result: PropertyTestResult,
   )
 
-  class ExternalTestScriptExecutionCachePolicy(
-    private val historyCsvFile: Path,
-    private val csvFileToSaveHistory: Path?,
-  ) : AbstractExternalTestScriptExecutionCachePolicy() {
+  abstract fun saveCacheEntriesToCsvFile(csvFileToSaveHistory: Path)
 
-    private val history = TestScriptHistory.loadFromCSV(historyCsvFile)
+  class ExternalTestScriptExecutionCache private constructor(
+    private val history: TestScriptHistory,
+  ) : AbstractExternalTestScriptExecutionCache() {
 
-    override fun getCachedResultOrCompute(
+    override fun getCachedResultOrNull(
       outputManager: AbstractOutputManager,
     ): TestScriptHistory.Result? {
       val key = outputManager.shA512HashCode.digest
@@ -54,16 +53,28 @@ abstract class AbstractExternalTestScriptExecutionCachePolicy : AutoCloseable {
       )
     }
 
-    override fun close() {
-      csvFileToSaveHistory?.let {
-        history.saveToCSV(it)
+    override fun saveCacheEntriesToCsvFile(csvFileToSaveHistory: Path) {
+      history.saveToCSV(csvFileToSaveHistory)
+    }
+
+    companion object {
+      fun createFromHistoryCvsFile(csvFileToSaveHistory: Path): ExternalTestScriptExecutionCache {
+        return ExternalTestScriptExecutionCache(
+          history = TestScriptHistory.loadFromCSV(csvFileToSaveHistory),
+        )
+      }
+
+      fun create(): ExternalTestScriptExecutionCache {
+        return ExternalTestScriptExecutionCache(
+          history = TestScriptHistory(),
+        )
       }
     }
   }
 
-  class NullExternalTestScriptExecutionCachePolicy :
-    AbstractExternalTestScriptExecutionCachePolicy() {
-    override fun getCachedResultOrCompute(
+  class NullCache :
+    AbstractExternalTestScriptExecutionCache() {
+    override fun getCachedResultOrNull(
       outputManager: AbstractOutputManager,
     ): TestScriptHistory.Result? {
       return null
@@ -76,7 +87,7 @@ abstract class AbstractExternalTestScriptExecutionCachePolicy : AutoCloseable {
       // Do nothing.
     }
 
-    override fun close() {
+    override fun saveCacheEntriesToCsvFile(csvFileToSaveHistory: Path) {
       // Do nothing.
     }
   }

@@ -128,15 +128,13 @@ Usage: org.perses.Main [options]
       Enable query caching for test script executions.
       Default: AUTO
       Possible Values: [TRUE, FALSE, AUTO]
+    --query-cache-type
+      the algorithm of the query cache
+      Default: CONTENT_SHA512
+      Possible Values: [AUTO, COMPACT_QUERY_CACHE, COMPACT_QUERY_CACHE_FORMAT_SENSITIVE, PERSES_FAST_LINEAR_SCAN_NO_COMPRESSION, PERSES_LEXEME_ID, CONFIG_BASED, ORIG_CONTENT_STRING_BASED, CONTENT_LEXEME_LIST_BASE, CONTENT_SHA512, CONTENT_SHA512_FORMAT, CONTENT_ZIP, RCC_MEM_LIT]
     --enable-lightweight-refreshing
       Whether to enable lightweight refreshing
       Default: true
-
-[Experiment Control]  Options:
-    --query-cache-type
-      the algorithm of the query cache
-      Default: COMPACT_QUERY_CACHE
-      Possible Values: [AUTO, COMPACT_QUERY_CACHE, COMPACT_QUERY_CACHE_FORMAT_SENSITIVE, PERSES_FAST_LINEAR_SCAN_NO_COMPRESSION, PERSES_LEXEME_ID, CONFIG_BASED, ORIG_CONTENT_STRING_BASED, CONTENT_LEXEME_LIST_BASE, CONTENT_SHA512, CONTENT_SHA512_FORMAT, CONTENT_ZIP, RCC_MEM_LIT]
 
 [Verbosity]  Options:
     --verbosity

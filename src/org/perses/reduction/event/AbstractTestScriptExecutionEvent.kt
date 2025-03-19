@@ -26,7 +26,7 @@ sealed class AbstractTestScriptExecutionEvent(
   currentTimeMillis: Long,
   val program: TokenizedProgram,
   val edit: AbstractSparTreeEdit<*>,
-  outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+  outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
 ) : AbstractReductionEvent(currentTimeMillis) {
 
   val textualProgram = LazyProgramOutputer(
@@ -39,7 +39,7 @@ sealed class AbstractTestScriptExecutionEvent(
     val result: PropertyTestResult,
     program: TokenizedProgram,
     edit: AbstractSparTreeEdit<*>,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ) : AbstractTestScriptExecutionEvent(currentTimeMillis, program, edit, outputCreator)
 
   class TestResultCacheHitEvent(
@@ -47,7 +47,7 @@ sealed class AbstractTestScriptExecutionEvent(
     val result: PropertyTestResult,
     program: TokenizedProgram,
     edit: AbstractSparTreeEdit<*>,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ) : AbstractTestScriptExecutionEvent(currentTimeMillis, program, edit, outputCreator)
 
   class TestScriptExecutionCanceledEvent(
@@ -55,6 +55,6 @@ sealed class AbstractTestScriptExecutionEvent(
     val millisToCancelTheTask: Int,
     program: TokenizedProgram,
     edit: AbstractSparTreeEdit<*>,
-    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair>,
+    outputCreator: (TokenizedProgram) -> ImmutableList<FileNameContentPair<String>>,
   ) : AbstractTestScriptExecutionEvent(currentTimeMillis, program, edit, outputCreator)
 }

@@ -18,6 +18,7 @@ package org.perses.reduction.reducer.vulcan
 
 import com.google.common.collect.ImmutableList
 import org.perses.program.PersesTokenFactory.PersesToken
+import org.perses.reduction.AbstractNonDeletionBasedReducer
 import org.perses.reduction.AbstractTokenReducer
 import org.perses.reduction.FixpointReductionState
 import org.perses.reduction.ReducerAnnotation

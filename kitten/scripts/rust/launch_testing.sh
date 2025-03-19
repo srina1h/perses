@@ -12,9 +12,9 @@ fi
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source "${SCRIPT_DIR}/configuration.sh" || exit 1
 
-bazelisk build //kitten/src/org/perses/fuzzer:kira_deploy.jar || exit 1
+bazelisk build //kitten/src/org/perses/fuzzer:kitten_deploy.jar || exit 1
 
-java -Xmx210G -Xms30G -jar bazel-bin/kitten/src/org/perses/fuzzer/kira_deploy.jar \
+java -Xmx210G -Xms30G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
   --testing-config "${SCRIPT_DIR}/all-compilers-config.yaml" \
   --threads 5 \
   --verbosity "FINE" \

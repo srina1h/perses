@@ -47,7 +47,10 @@ fi
 for entry in $(git -C "$PUBLIC_REPO_DIR" ls-tree --name-only HEAD); do
   # delete the entry in the public repo.
   rm -rf "${PUBLIC_REPO_DIR}/${entry}"
-  cp -rf "$(basename "${entry}")" "${PUBLIC_REPO_DIR}/"
+  entry_basename="$(basename "${entry}")"
+  if [ -e "${entry_basename}" ] ; then
+    cp -rf "${entry_basename}" "${PUBLIC_REPO_DIR}/"
+  fi
 done
 
 for entry in $(find . -maxdepth 1 -type f); do

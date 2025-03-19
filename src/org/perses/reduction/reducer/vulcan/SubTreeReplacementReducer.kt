@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMultimap
 import com.google.common.primitives.ImmutableIntArray
 import org.perses.antlr.ast.PersesAlternativeBlockAst
 import org.perses.antlr.ast.RuleNameRegistry.RuleNameHandle
+import org.perses.reduction.AbstractNonDeletionBasedReducer
 import org.perses.reduction.AbstractTokenReducer
 import org.perses.reduction.FixpointReductionState
 import org.perses.reduction.ReducerAnnotation

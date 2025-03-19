@@ -236,15 +236,17 @@ abstract class AbstractTokenReducer protected constructor(
 
   protected fun computeFileContentListForProgram(
     program: TokenizedProgram,
-  ): ImmutableList<FileNameContentPair> {
+  ): ImmutableList<FileNameContentPair<String>> {
     val contentList = ioManager.outputManagerFactory.createManagerFor(program)
       .fileContentList
-    val builder = ImmutableList.builderWithExpectedSize<FileNameContentPair>(contentList.size + 1)
+    val builder = ImmutableList.builderWithExpectedSize<FileNameContentPair<String>>(
+      contentList.size + 1,
+    )
     contentList.forEach {
       builder.add(
         FileNameContentPair(
-          fileName = it.first.baseName,
-          content = it.second,
+          fileName = it.fileName.baseName,
+          content = it.content,
         ),
       )
     }

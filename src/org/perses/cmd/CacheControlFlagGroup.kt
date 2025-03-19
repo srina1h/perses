@@ -20,6 +20,7 @@ import com.beust.jcommander.IStringConverter
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
 import org.perses.reduction.cache.EnumQueryCachingControl
+import org.perses.reduction.cache.QueryCacheType
 import org.perses.util.Fraction
 import org.perses.util.cmd.AbstractCommandLineFlagGroup
 import java.nio.file.Files
@@ -35,11 +36,19 @@ class CacheControlFlagGroup : AbstractCommandLineFlagGroup(groupName = "Cache Co
   )
   var queryCaching = EnumQueryCachingControl.AUTO
 
+  @JvmField
+  @Parameter(
+    names = ["--query-cache-type"],
+    description = "the algorithm of the query cache",
+    order = 10,
+  )
+  var cacheType: QueryCacheType = QueryCacheType.CONTENT_SHA512
+
   @Parameter(
     names = ["--edit-caching"],
     description = "Enable caching for edits performed between two successful reductions.",
     arity = 1,
-    order = 1,
+    order = 20,
     hidden = true,
   )
   var nodeActionSetCaching = true
@@ -53,7 +62,7 @@ class CacheControlFlagGroup : AbstractCommandLineFlagGroup(groupName = "Cache Co
       "t''	- tokens of the current best program. " +
       "Refresh threshold requires an integer input ranging [0, 100]. " +
       "e.g. 0 represents 0%, 85 represents 85%.",
-    order = 2,
+    order = 30,
     hidden = true,
   )
   var queryCacheRefreshThreshold = 0 // Represent 0/100 = 0%
@@ -61,7 +70,7 @@ class CacheControlFlagGroup : AbstractCommandLineFlagGroup(groupName = "Cache Co
   @Parameter(
     names = ["--enable-lightweight-refreshing"],
     description = "Whether to enable lightweight refreshing",
-    order = 3,
+    order = 40,
     arity = 1,
   )
   var enableLightweightRefreshing = true
@@ -69,7 +78,7 @@ class CacheControlFlagGroup : AbstractCommandLineFlagGroup(groupName = "Cache Co
   @Parameter(
     names = ["--pass-level-caching"],
     description = "Whether to enable pass-level cache. If enabled, a reducer might be skipped",
-    order = 4,
+    order = 50,
     hidden = true,
     arity = 1,
   )
@@ -78,7 +87,7 @@ class CacheControlFlagGroup : AbstractCommandLineFlagGroup(groupName = "Cache Co
   @Parameter(
     names = ["--global-cache-file"],
     description = "The file that stores the global cache",
-    order = 5,
+    order = 60,
     hidden = true,
     arity = 1,
   )
@@ -87,7 +96,7 @@ class CacheControlFlagGroup : AbstractCommandLineFlagGroup(groupName = "Cache Co
   @Parameter(
     names = ["--path-to-save-updated-global-cache"],
     description = "The file to write the updated global cache",
-    order = 6,
+    order = 70,
     hidden = true,
     arity = 1,
   )

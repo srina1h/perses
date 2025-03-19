@@ -16,7 +16,7 @@
  */
 package org.perses.util
 
-data class FileNameContentPair(
-  val fileName: String,
+data class FileNameContentPair<NameType>(
+  val fileName: NameType,
   val content: AbstractFileContent,
 )

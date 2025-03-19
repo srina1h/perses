@@ -147,6 +147,7 @@ kt_jvm_library(
 kt_jvm_library(
     name = "abstract_reducer",
     srcs = [
+        "AbstractNonDeletionBasedReducer.kt",
         "AbstractReductionListener.kt",
         "AbstractTokenReducer.kt",
         "AsyncReductionListenerManager.kt",
@@ -184,6 +185,7 @@ kt_jvm_library(
     ],
     deps = [
         "//:guava",
+        "//src/org/perses/reduction:external_test_script_execution_cache",
         "//src/org/perses/util",
     ],
 )
@@ -245,7 +247,7 @@ kt_jvm_library(
 kt_jvm_library(
     name = "external_test_script_execution_cache",
     srcs = [
-        "AbstractExternalTestScriptExecutionCachePolicy.kt",
+        "AbstractExternalTestScriptExecutionCache.kt",
     ],
     deps = [
         "//src/org/perses/reduction:TestScriptHistory",
@@ -261,6 +263,7 @@ kt_jvm_library(
         "SanityCheckFailedException.kt",
     ],
     deps = [
+        "//src/org/perses/reduction:global_context",
         "//src/org/perses/reduction:test_script_executor_service",
         "//src/org/perses/reduction/io",
     ],

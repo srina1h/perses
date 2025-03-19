@@ -28,6 +28,7 @@ import org.perses.reduction.TestScriptHistory.Result
 import org.perses.util.Util
 import org.perses.util.shell.ExitCode
 import java.nio.file.Files
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
@@ -40,6 +41,7 @@ class TestScriptHistoryTest {
 
   private val history = TestScriptHistory()
 
+  @OptIn(ExperimentalPathApi::class)
   @After
   fun teardown() {
     tempDir.deleteRecursively()

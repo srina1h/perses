@@ -12,9 +12,9 @@ fi
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source "${SCRIPT_DIR}/../configuration.sh" || exit 1
 
-bazelisk build //kitten/src/org/perses/fuzzer:kira_deploy.jar || exit 1
+bazelisk build //kitten/src/org/perses/fuzzer:kitten_deploy.jar || exit 1
 
-java -Xmx32G -Xms16G -jar bazel-bin/kitten/src/org/perses/fuzzer/kira_deploy.jar \
+java -Xmx32G -Xms16G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
   --testing-config "${SCRIPT_DIR}/../clang-ndepth.yaml" \
   --threads 1 \
   --timeout 86400 \

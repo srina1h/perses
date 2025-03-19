@@ -33,6 +33,7 @@ import org.perses.antlr.reducer.setup.Setup
 import org.perses.program.LanguageKind
 import org.perses.program.SourceFile
 import org.perses.reduction.AbstractReductionDriver
+import org.perses.reduction.GlobalContext
 import org.perses.reduction.ListenableReductionState
 import org.perses.util.Util
 import org.perses.util.ktInfo
@@ -40,6 +41,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 class GrammarReductionDriver private constructor(
+  globalContext: GlobalContext,
   ioManager: GrammarReductionIOManager,
   numberOfThreads: Int,
   val enableActionReducer: Boolean,
@@ -48,6 +50,7 @@ class GrammarReductionDriver private constructor(
   val enableArgumentsReducer: Boolean,
   val enableLabelReducer: Boolean,
 ) : AbstractReductionDriver<PersesGrammar, LanguageKind, GrammarReductionIOManager>(
+  globalContext,
   ioManager,
   numberOfThreads,
   scriptExecutionTimeoutInSeconds = 300L,
@@ -152,6 +155,7 @@ class GrammarReductionDriver private constructor(
 
     @JvmStatic
     fun create(
+      globalContext: GlobalContext,
       options: CommandOptions,
     ): GrammarReductionDriver {
       val parentWorkingDir = Paths.get(".").toAbsolutePath()
@@ -170,6 +174,7 @@ class GrammarReductionDriver private constructor(
       val ioManager = createIOManager(setup, outputDir, setup.parseableTestPrograms)
 
       return GrammarReductionDriver(
+        globalContext,
         ioManager,
         options.reductionControlFlags.getNumOfThreads(),
         enableActionReducer = options.reductionControlFlags.enableActionRemover,

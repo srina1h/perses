@@ -30,7 +30,7 @@ import org.perses.grammar.c.PnfCLexer
 import org.perses.program.EnumFormatControl.ORIG_FORMAT
 import org.perses.program.ScriptFile
 import org.perses.program.SourceFile
-import org.perses.reduction.AbstractExternalTestScriptExecutionCachePolicy.NullExternalTestScriptExecutionCachePolicy
+import org.perses.reduction.AbstractExternalTestScriptExecutionCache.NullCache
 import org.perses.reduction.TestScriptExecutorService.Companion.ALWAYS_TRUE_PRECHECK
 import org.perses.reduction.TestScriptExecutorService.Companion.IDENTITY_POST_CHECK
 import org.perses.reduction.io.RegularReductionInputs
@@ -123,9 +123,7 @@ class TestScriptExecutorServiceTest {
         ioManager.lazilyInitializedReductionFolderManager,
         1,
         scriptExecutionTimeoutInSeconds = 1L,
-        externalTestScriptExecutionCachePolicyCreator = {
-          NullExternalTestScriptExecutionCachePolicy()
-        },
+        externalTestScriptExecutionCache = NullCache(),
       ).use {
         it.testProgramAsync(
           ALWAYS_TRUE_PRECHECK,
@@ -159,9 +157,7 @@ class TestScriptExecutorServiceTest {
       ioManager.lazilyInitializedReductionFolderManager,
       threadCount,
       scriptExecutionTimeoutInSeconds = 4 * 60L,
-      externalTestScriptExecutionCachePolicyCreator = {
-        NullExternalTestScriptExecutionCachePolicy()
-      },
+      externalTestScriptExecutionCache = NullCache(),
     ).use {
       // TODO: refine this test.
       testPassing(it)
