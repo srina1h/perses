@@ -18,14 +18,25 @@ package org.perses.spartree
 
 import com.google.common.base.MoreObjects
 import com.google.common.collect.ComparisonChain
+import org.perses.util.Util
 
 class NodeReplacementAction(
   targetNode: AbstractSparTreeNode,
   val replacingNode: AbstractSparTreeNode,
 ) : AbstractTreeEditAction(targetNode) {
 
+  init {
+    Util.lazyAssert {
+      val errors = replacingNode.checkLeafLinkIntegrity()
+      if (errors != null) {
+        throw IllegalStateException(errors.toString())
+      }
+      true
+    }
+  }
+
   override fun internalCompareTo(o: AbstractTreeEditAction): Int {
-    check(o is NodeReplacementAction)
+    check(o is NodeReplacementAction) { "$o. ${o::class}" }
     // TODO, refactor this with kotlin's comparator.
     return ComparisonChain.start()
       .compare(targetNode.nodeId, o.targetNode.nodeId)

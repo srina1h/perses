@@ -8,7 +8,7 @@
 set -ex
 mkdir -p lm32/gen/
 
-yosys -l lm32/gen/xilinx.log -v2 <<EOT
+yosys -l lm32/gen/xilinx.log -v2 << EOT
 read_verilog lm32/rtl/lm32_adder.v
 read_verilog lm32/rtl/lm32_addsub.v
 read_verilog lm32/rtl/lm32_cpu.v
@@ -36,7 +36,6 @@ EOT
 
 unisims=/opt/Xilinx/Vivado/2014.4/data/verilog/src/unisims
 iverilog -o lm32/gen/xilinx_tb -Ilm32/rtl lm32/gen/xilinx.v lm32/sim/tb_lm32_system.v \
-		$(yosys-config --datdir/xilinx/cells_sim.v) $unisims/../glbl.v -y$unisims
+  $(yosys-config --datdir/xilinx/cells_sim.v) $unisims/../glbl.v -y$unisims
 
 vvp -n -l lm32/gen/xilinx.out lm32/gen/xilinx_tb
-

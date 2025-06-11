@@ -19,9 +19,9 @@ readonly FILE="$(realpath "${1}")"
 [[ -f "${FILE}" ]] || exit "${ERROR_CODE}"
 
 readonly DIR_NAME="$(dirname "${FILE}")"
-if [[ "$#" == 2 ]] ; then
+if [[ "$#" == 2 ]]; then
   readonly OUTPUT="${2}"
-elif [[ "$#" == 1 ]] ; then
+elif [[ "$#" == 1 ]]; then
   readonly OUTPUT="${DIR_NAME}/default_output.a"
 else
   print_usage_and_exit
@@ -53,7 +53,7 @@ for compiler in "${COMPILERS[@]}"; do
     rm -rf "${OUTPUT}" || true
     cmd_no_g="timeout -s 9 30 "${compiler}" "${FILE_NAME}" "${opt}" -o "${OUTPUT}""
     ${cmd_no_g}
-    if ! ${cmd_no_g} ; then
+    if ! ${cmd_no_g}; then
       echo "fail to run command: ${cmd_no_g} "
       continue
     fi
@@ -61,14 +61,14 @@ for compiler in "${COMPILERS[@]}"; do
 
     rm -rf "${OUTPUT}" || true
     cmd_g="timeout -s 9 30 "${compiler}" "${FILE_NAME}" "${opt}" -g3 -o "${OUTPUT}""
-    if ! ${cmd_g} ; then
+    if ! ${cmd_g}; then
       echo "fail to run command: ${cmd_g}"
       continue
     fi
 
     objdump --disassemble --section=.text "${OUTPUT}" > "${DIS_G_FILE_NAME}"
 
-    if ! diff --brief "${DIS_NO_G_FILE_NAME}" "${DIS_G_FILE_NAME}" ; then
+    if ! diff --brief "${DIS_NO_G_FILE_NAME}" "${DIS_G_FILE_NAME}"; then
       echoerr "internal compiler error: found compilation inconsistencies: ${cmd_g}"
       rm -rf "${OUTPUT}" || true
       exit 139

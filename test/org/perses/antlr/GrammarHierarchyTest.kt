@@ -72,7 +72,10 @@ class GrammarHierarchyTest {
 
   @Test
   fun testSubruleExtractionForStar() {
-    val hierarchy = createFromFile("subrule_star.g4")
+    val hierarchy = createFromFile(
+      startRuleName = "start",
+      "subrule_star.g4",
+    )
     val start = hierarchy.getRuleHierarchyEntryWithNameOrThrow("start")
     val a = hierarchy.getRuleHierarchyEntryWithNameOrThrow("a")
     val b = hierarchy.getRuleHierarchyEntryWithNameOrThrow("b")
@@ -85,7 +88,10 @@ class GrammarHierarchyTest {
 
   @Test
   fun testSubruleExtractionForPlus() {
-    val hierarchy = createFromFile("subrule_plus.g4")
+    val hierarchy = createFromFile(
+      startRuleName = "start",
+      "subrule_plus.g4",
+    )
     val start = hierarchy.getRuleHierarchyEntryWithNameOrThrow("start")
     val a = hierarchy.getRuleHierarchyEntryWithNameOrThrow("a")
     val b = hierarchy.getRuleHierarchyEntryWithNameOrThrow("b")
@@ -98,7 +104,10 @@ class GrammarHierarchyTest {
 
   @Test
   fun testSubruleExtractionForOptional() {
-    val hierarchy = createFromFile("subrule_optional.g4")
+    val hierarchy = createFromFile(
+      startRuleName = "start",
+      "subrule_optional.g4",
+    )
     val start = hierarchy.getRuleHierarchyEntryWithNameOrThrow("start")
     val a = hierarchy.getRuleHierarchyEntryWithNameOrThrow("a")
     val b = hierarchy.getRuleHierarchyEntryWithNameOrThrow("b")
@@ -110,8 +119,38 @@ class GrammarHierarchyTest {
   }
 
   @Test
+  fun testReachabilityGraph() {
+    val hierarchy = GrammarHierarchy.createFromString(
+      startRuleName = "a",
+      """
+      grammar graph;
+      
+      a : (b | c) + c;
+      b : c;
+      c : 'c';
+      """.trimIndent(),
+    )
+    val graph = hierarchy.reachabilityGraph.graph
+    val a = hierarchy.getRuleHierarchyEntryWithNameOrThrow("a")
+    val b = hierarchy.getRuleHierarchyEntryWithNameOrThrow("b")
+    val c = hierarchy.getRuleHierarchyEntryWithNameOrThrow("c")
+    graph.successors(a).let { successors ->
+      assertThat(successors).containsExactly(b, c)
+    }
+    graph.successors(b).let {
+      assertThat(it).containsExactly(c)
+    }
+    graph.successors(c).let {
+      assertThat(it).isEmpty()
+    }
+  }
+
+  @Test
   fun testSubruleExtractionForSequence() {
-    val hierarchy = createFromFile("subrule_sequence.g4")
+    val hierarchy = createFromFile(
+      startRuleName = "start",
+      "subrule_sequence.g4",
+    )
     val start = hierarchy.getRuleHierarchyEntryWithNameOrThrow("start")
     val a = hierarchy.getRuleHierarchyEntryWithNameOrThrow("a")
     val b = hierarchy.getRuleHierarchyEntryWithNameOrThrow("b")
@@ -128,7 +167,10 @@ class GrammarHierarchyTest {
 
   @Test
   fun testSubruleExtractionForAlternative() {
-    val hierarchy = createFromFile("subrule_alternative.g4")
+    val hierarchy = createFromFile(
+      startRuleName = "start",
+      "subrule_alternative.g4",
+    )
     val start = hierarchy.getRuleHierarchyEntryWithNameOrThrow("start")
     val a = hierarchy.getRuleHierarchyEntryWithNameOrThrow("a")
     val b = hierarchy.getRuleHierarchyEntryWithNameOrThrow("b")
@@ -147,7 +189,10 @@ class GrammarHierarchyTest {
 
   @Test
   fun testGrammarHierarchyProtoMessage() {
-    val hierarchy = createFromFile("subrule_alternative.g4")
+    val hierarchy = createFromFile(
+      startRuleName = "start",
+      "subrule_alternative.g4",
+    )
     testProtoMessageIsCreatedCorrectly(hierarchy)
   }
 
@@ -278,11 +323,11 @@ class GrammarHierarchyTest {
       return builder.toString().trim { it <= ' ' }
     }
 
-    private fun createFromFile(filename: String): GrammarHierarchy {
+    private fun createFromFile(startRuleName: String, filename: String): GrammarHierarchy {
       return try {
         val file = Paths.get("test_data/antlr_grammars/", filename)
         val content = Files.asCharSource(file.toFile(), StandardCharsets.UTF_8).read()
-        createFromString(content)
+        createFromString(startRuleName, content)
       } catch (e: Exception) {
         throw RuntimeException(e)
       }
@@ -298,7 +343,7 @@ class GrammarHierarchyTest {
       """.trimIndent(),
     )
     val hierarchy = GrammarHierarchyBuilder(
-      AbstractAntlrGrammar.CombinedAntlrGrammar(grammar),
+      AbstractAntlrGrammar.CombinedAntlrGrammar(startRuleName = "start", grammar),
     ).build()
     assertThat(hierarchy.ruleList).hasSize(1)
     val entry = hierarchy.getRuleHierarchyEntryWithNameOrThrow("start")

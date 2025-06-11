@@ -85,13 +85,40 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses: null
+  onDemandFineGritReducerAnnotationClasses: []
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<sequence>
+reducers:
+- !<fixpoint>
+  body: !<atomic>
+    reducer: perses_node_priority_with_dfs_delta
+  condition: smaller
+- !<fixpoint>
+  body: !<if>
+    condition: !<atomic>
+      reducer: token_canonicalizer
+    then: !<fixpoint>
+      body: !<atomic>
+        reducer: perses_node_priority_with_dfs_delta
+      condition: smaller
+  condition: smaller
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -1071,6 +1098,12 @@ It took less than 1 second to cancel the task.
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 13 -> 13
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: replace 1 lexer nodes with new lexeme '0'
@@ -1377,6 +1410,12 @@ It took less than 1 second to cancel the task.
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 13 -> 13
 ------------------------------------------------------------
 
 
@@ -1715,6 +1754,12 @@ It took less than 1 second to cancel the task.
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 13 -> 13
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: replace 1 lexer nodes with new lexeme '0X100ull'
@@ -1810,6 +1855,8 @@ It took less than 1 second to cancel the task.
     }
 ------------------------------------------------------------
 
+
+Rebuilding spar-tree: The spartree is rebuilt.
 
 =Fixpoint iteration 3. Reducer: perses_node_priority_with_dfs_delta
 
@@ -3095,6 +3142,105 @@ translationUnit {id=134,slot_type=translationUnit}
        return 0x100Ull ;
     }
 ------------------------------------------------------------
+
+
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 13
+  characterCount: 46
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 13
+  characterCount: 46
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[3]: ReducerCallEvent
+---
+reducer:
+  shortName: "token_canonicalizer"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_REMAIN"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 13
+  characterCount: 30
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 1
+fileContentChangedWrtPrevious: true
+
+[5]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[6]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 13
+  characterCount: 30
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 1
+fileContentChangedWrtPrevious: false
+
+[7]: ReducerCallEvent
+---
+reducer:
+  shortName: "token_canonicalizer"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_REMAIN"
+
+[8]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 13
+  characterCount: 30
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 1
+fileContentChangedWrtPrevious: false
 
 
 #test success = 3

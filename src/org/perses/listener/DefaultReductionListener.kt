@@ -18,6 +18,7 @@ package org.perses.listener
 
 import org.perses.reduction.AbstractReductionListener
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent
+import org.perses.reduction.event.AdHocMessageEvent
 import org.perses.reduction.event.BestProgramUpdateEvent
 import org.perses.reduction.event.FixpointIterationEndEvent
 import org.perses.reduction.event.FixpointIterationStartEvent
@@ -70,5 +71,8 @@ abstract class DefaultReductionListener : AbstractReductionListener() {
   override fun onBestProgramUpdated(event: BestProgramUpdateEvent) {}
   override fun onReductionSkipped(event: ReductionSkippedEvent) {}
   override fun onSanityCheck(event: SanityCheckEvent) {
+  }
+
+  override fun onAdHocMessageEvent(event: AdHocMessageEvent) {
   }
 }

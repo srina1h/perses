@@ -18,8 +18,8 @@ centos_base=http://vault.centos.org/altarch/7.3.1611/os/ppc64le/Packages/
 glibc_v=2.17-157.el7
 kernel_v=3.10.0-514.el7
 for package in glibc{,-devel,-headers}-$glibc_v kernel-headers-$kernel_v; do
-  curl $centos_base/$package.ppc64le.rpm | \
-    rpm2cpio - | cpio -idm
+  curl $centos_base/$package.ppc64le.rpm \
+    | rpm2cpio - | cpio -idm
 done
 
 ln -sT lib64 lib
@@ -48,22 +48,22 @@ hide_output ./contrib/download_prerequisites
 
 mkdir ../gcc-build
 cd ../gcc-build
-hide_output ../gcc-$GCC/configure                            \
-  --enable-languages=c,c++                       \
-  --target=$TARGET                               \
-  --with-cpu=power8                              \
-  --with-sysroot=$SYSROOT                        \
-  --disable-libcilkrts                           \
-  --disable-multilib                             \
-  --disable-nls                                  \
-  --disable-libgomp                              \
-  --disable-libquadmath                          \
-  --disable-libssp                               \
-  --disable-libvtv                               \
-  --disable-libcilkrt                            \
-  --disable-libada                               \
-  --disable-libsanitizer                         \
-  --disable-libquadmath-support                  \
+hide_output ../gcc-$GCC/configure \
+  --enable-languages=c,c++ \
+  --target=$TARGET \
+  --with-cpu=power8 \
+  --with-sysroot=$SYSROOT \
+  --disable-libcilkrts \
+  --disable-multilib \
+  --disable-nls \
+  --disable-libgomp \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libvtv \
+  --disable-libcilkrt \
+  --disable-libada \
+  --disable-libsanitizer \
+  --disable-libquadmath-support \
   --disable-lto
 hide_output hide_output make -j10
 hide_output make install

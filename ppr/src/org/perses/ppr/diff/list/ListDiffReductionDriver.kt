@@ -36,7 +36,7 @@ import org.perses.reduction.createSnapshot
 import org.perses.reduction.event.ReductionStartEvent
 import org.perses.util.AbstractEditOperation
 import org.perses.util.ListAlignment
-import org.perses.util.YamlUtil
+import org.perses.util.Serialization
 import java.lang.StringBuilder
 import java.lang.ref.WeakReference
 
@@ -77,9 +77,9 @@ class ListDiffReductionDriver private constructor(
       currentTimeMillis = System.currentTimeMillis(),
       tree = WeakReference(null),
       programSize = reductionState.bestDiff.size,
-      commandLineOptions = YamlUtil.toYamlString(
+      commandLineOptions = Serialization.toYamlString(
         value = cmd,
-        objectMapperCustomizer = YamlUtil::customizeObjectMapperByUsingBasenameForPath,
+        objectMapperCustomizer = Serialization::customizeObjectMapperByUsingBasenameForPath,
       ),
       extraData = listToString(reductionState.bestDiff),
     )
@@ -188,7 +188,7 @@ class ListDiffReductionDriver private constructor(
       val seedPersesToken = seedProgram.tokens
 
       // get variant tokens
-      val variantTokens = parserFacade.parseIntoTokens(cmd.listDiffInputFlags.getVariantFile())
+      val variantTokens = parserFacade.tokenizeFile(cmd.listDiffInputFlags.getVariantFile())
       val variantTokenizedProgramFactory = TokenizedProgramFactory
         .createFactory(variantTokens, languageKind)
       val variantPersesTokens = variantTokenizedProgramFactory.create(variantTokens).tokens

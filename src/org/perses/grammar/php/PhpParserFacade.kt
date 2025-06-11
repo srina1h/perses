@@ -19,29 +19,22 @@ package org.perses.grammar.php
 import com.google.common.primitives.ImmutableIntArray
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.antlr.ParseTreeWithParser
 import org.perses.grammar.AbstractDefaultParserFacade
 import java.io.StringReader
 
 class PhpParserFacade : AbstractDefaultParserFacade<PhpLexer, PnfPhpParser>(
-  LanguagePhp,
-  createSeparateAntlrGrammar("PnfPhpParser.g4", "PhpLexer.g4", PhpParserFacade::class.java),
-  PhpLexer::class.java,
-  PnfPhpParser::class.java,
-  ImmutableIntArray.of(PhpLexer.VarName),
+  languageKind = LanguagePhp,
+  antlrGrammar = createSeparateAntlrGrammar(
+    startRuleName = "htmlDocument",
+    antlrParserGrammarFileName = "PnfPhpParser.g4",
+    antlrLexerGrammarFileName = "PhpLexer.g4",
+    classUnderSamePkg = PhpParserFacade::class.java,
+  ),
+  lexerClass = PhpLexer::class.java,
+  parserClass = PnfPhpParser::class.java,
+  identifierTokenTypes = ImmutableIntArray.of(PhpLexer.VarName),
 ) {
-  override fun createLexer(inputStream: CharStream): PhpLexer {
-    return PhpLexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfPhpParser {
-    return PnfPhpParser(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfPhpParser): ParseTree {
-    return parser.htmlDocument()
-  }
 
   fun parseWithOrigParser(program: String?): ParseTreeWithParser {
     StringReader(program).use { reader ->

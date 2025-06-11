@@ -16,8 +16,9 @@
  */
 package org.perses.fuzzer.config
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.collect.ImmutableList
-import org.perses.util.YamlUtil
+import org.perses.util.Serialization
 import org.perses.util.containsNoWhitespace
 import java.lang.RuntimeException
 import java.nio.file.Files
@@ -112,7 +113,7 @@ data class TestingConfiguration(
 //  fun computeLanguageKind(): LanguageKind = languageKind
 
   fun writeToYamlFile(file: Path) {
-    YamlUtil.toYamlFile(this, file)
+    Serialization.toYamlFile(this, file)
   }
 
   override fun validate() {
@@ -131,7 +132,7 @@ data class TestingConfiguration(
   companion object {
 
     fun readFrom(file: Path): TestingConfiguration {
-      return YamlUtil.fromYamlFile(file, TestingConfiguration::class.java)
+      return Serialization.fromYamlFile(file, object : TypeReference<TestingConfiguration>() {})
     }
   }
 }

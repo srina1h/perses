@@ -3,25 +3,25 @@
 # source this with a bash shell in the project root
 # comment out next command if you don't want to use sudo
 sudo apt install \
-    gcc-7 \
-    g++-7 \
-    gperf \
-    autoconf \
-    automake \
-    autotools-dev \
-    libmpc-dev \
-    libmpfr-dev \
-    libgmp-dev \
-    gawk \
-    build-essential \
-    bison \
-    flex \
-    texinfo \
-    python-pexpect \
-    libusb-1.0-0-dev \
-    default-jdk \
-    zlib1g-dev \
-    valgrind
+  gcc-7 \
+  g++-7 \
+  gperf \
+  autoconf \
+  automake \
+  autotools-dev \
+  libmpc-dev \
+  libmpfr-dev \
+  libgmp-dev \
+  gawk \
+  build-essential \
+  bison \
+  flex \
+  texinfo \
+  python-pexpect \
+  libusb-1.0-0-dev \
+  default-jdk \
+  zlib1g-dev \
+  valgrind
 
 # customize your paths here
 source ci/path-setup.sh

@@ -19,7 +19,7 @@ export PATH="${CURRENT_DIR}/kitten/scripts/c/mock_compilers/ccmd_buggy:${OLD_PAT
 # Test 1, without output file
 "${TEST_SCRIPT}" "${DUMMY_FILE}"
 exit_code=$?
-if [[ "${exit_code}" != 139 ]] || [[ -f "${TEMP_DIR}/default_output.a" ]] ; then
+if [[ "${exit_code}" != 139 ]] || [[ -f "${TEMP_DIR}/default_output.a" ]]; then
   echo "test failed."
   exit 1
 fi
@@ -27,18 +27,17 @@ fi
 # Test 2, with output file
 "${TEST_SCRIPT}" "${DUMMY_FILE}" "${TEMP_DIR}/a.out"
 exit_code=$?
-if [[ "${exit_code}" != 139 ]] || [[ -f "${TEMP_DIR}/a.out" ]] ; then
+if [[ "${exit_code}" != 139 ]] || [[ -f "${TEMP_DIR}/a.out" ]]; then
   echo "test failed."
   exit 1
 fi
-
 
 readonly OLD_PATH="${PATH}"
 export PATH="${CURRENT_DIR}/kitten/scripts/c/mock_compilers/ccmd_correct:${OLD_PATH}"
 # Test 3, with output file
 "${TEST_SCRIPT}" "${DUMMY_FILE}"
 exit_code=$?
-if [[ "${exit_code}" != 0 ]] || [[ ! -f "${TEMP_DIR}/default_output.a" ]] ; then
+if [[ "${exit_code}" != 0 ]] || [[ ! -f "${TEMP_DIR}/default_output.a" ]]; then
   tree "${TEMP_DIR}"
   echo "test failed."
   exit 1
@@ -47,7 +46,7 @@ fi
 # Test 2, with output file
 "${TEST_SCRIPT}" "${DUMMY_FILE}" "${TEMP_DIR}/a.out"
 exit_code=$?
-if [[ "${exit_code}" != 0 ]] || [[ ! -f "${TEMP_DIR}/a.out" ]] ; then
+if [[ "${exit_code}" != 0 ]] || [[ ! -f "${TEMP_DIR}/a.out" ]]; then
   echo "test failed."
   exit 1
 fi

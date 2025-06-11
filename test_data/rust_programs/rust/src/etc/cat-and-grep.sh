@@ -30,32 +30,32 @@ GREPPER=fgrep
 INVERT=0
 GREPFLAGS='q'
 while getopts ':vieh' OPTION; do
-    case "$OPTION" in
-        v)
-            INVERT=1
-            ERROR_MSG='should not be found'
-            ;;
-        i)
-            GREPFLAGS="i$GREPFLAGS"
-            ;;
-        e)
-            GREPPER=egrep
-            ;;
-        h)
-            echo "$USAGE"
-            exit 2
-            ;;
-        *)
-            break
-            ;;
-    esac
+  case "$OPTION" in
+    v)
+      INVERT=1
+      ERROR_MSG='should not be found'
+      ;;
+    i)
+      GREPFLAGS="i$GREPFLAGS"
+      ;;
+    e)
+      GREPPER=egrep
+      ;;
+    h)
+      echo "$USAGE"
+      exit 2
+      ;;
+    *)
+      break
+      ;;
+  esac
 done
 
 shift $((OPTIND - 1))
 
 # use gnu version of tool if available (for bsd)
 if command -v "g${GREPPER}"; then
-    GREPPER="g${GREPPER}"
+  GREPPER="g${GREPPER}"
 fi
 
 LOG=$(mktemp -t cgrep.XXXXXX)
@@ -63,22 +63,22 @@ trap "rm -f $LOG" EXIT
 
 printf "[[[ begin stdout ]]]\n\033[90m"
 tee "$LOG"
-echo >> "$LOG"   # ensure at least 1 line of output, otherwise `grep -v` may unconditionally fail.
+echo >> "$LOG" # ensure at least 1 line of output, otherwise `grep -v` may unconditionally fail.
 printf "\033[0m\n[[[ end stdout ]]]\n"
 
 HAS_ERROR=0
 for MATCH in "$@"; do
-    if "$GREPPER" "-$GREPFLAGS" -- "$MATCH" "$LOG"; then
-        if [ "$INVERT" = 1 ]; then
-            printf "\033[1;31mError: should not match: %s\033[0m\n" "$MATCH"
-            HAS_ERROR=1
-        fi
-    else
-        if [ "$INVERT" = 0 ]; then
-            printf "\033[1;31mError: cannot match: %s\033[0m\n" "$MATCH"
-            HAS_ERROR=1
-        fi
+  if "$GREPPER" "-$GREPFLAGS" -- "$MATCH" "$LOG"; then
+    if [ "$INVERT" = 1 ]; then
+      printf "\033[1;31mError: should not match: %s\033[0m\n" "$MATCH"
+      HAS_ERROR=1
     fi
+  else
+    if [ "$INVERT" = 0 ]; then
+      printf "\033[1;31mError: cannot match: %s\033[0m\n" "$MATCH"
+      HAS_ERROR=1
+    fi
+  fi
 done
 
 exit "$HAS_ERROR"

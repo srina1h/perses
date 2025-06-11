@@ -37,7 +37,7 @@ class SparTreeCopierTest {
     LanguageC,
   )
 
-  val copy = original.deepCopy(ReuseNodeIdStrategy)
+  val copy = original.deepCopy(ReuseNodeIdStrategy).result
 
   @Test
   fun testOutputtingProgramInOrigFormat() {
@@ -48,8 +48,8 @@ class SparTreeCopierTest {
 
   @Test
   fun testDeepCopyWithSparTreeNodeFactoryAsNodeIdCopyStrategy() {
-    val anotherCopy = original.deepCopy(original.sparTreeNodeFactory)
-    val stack = SimpleStack.of(Pair(copy.root, anotherCopy.root))
+    val anotherCopy = original.deepCopy(original.sparTreeNodeFactory).result
+    val stack = SimpleStack.of(Pair(copy.realRoot, anotherCopy.realRoot))
     while (stack.isNotEmpty()) {
       val (a, b) = stack.remove()
       assertThat(a::class.java).isSameInstanceAs(b::class.java)
@@ -80,13 +80,13 @@ class SparTreeCopierTest {
   fun testObjectIdentitiesShouldBeDifferent() {
     assertThat(original).isNotSameInstanceAs(copy)
     val originalNodes = ArrayList<AbstractSparTreeNode>()
-    original.root.preOrderVisit {
+    original.realRoot.preOrderVisit {
       originalNodes.add(it)
       it.immutableChildView
     }
 
     val copyNodes = ArrayList<AbstractSparTreeNode>()
-    copy.root.preOrderVisit {
+    copy.realRoot.preOrderVisit {
       copyNodes.add(it)
       it.immutableChildView
     }

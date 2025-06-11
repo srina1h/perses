@@ -57,7 +57,7 @@ class MassiveConcurrentTokenSlicer(
       .fixpointIterationStartEvent
       .createTokenSlicingStartEvent(
         currentTimeMillis = System.currentTimeMillis(),
-        programSize = tree.programSnapshot.tokenCount(),
+        programSize = tree.programSnapshot.tokenCount,
         tokenSlicingGranularity = tokenSlicingGranularity,
       )
     listenerManager.onSlicingTokensStart(slicingStartEvent)
@@ -81,7 +81,7 @@ class MassiveConcurrentTokenSlicer(
 
     val slicingEndEvent = slicingStartEvent.createEndEvent(
       currentTimeMillis = System.currentTimeMillis(),
-      programSize = tree.programSnapshot.tokenCount(),
+      programSize = tree.programSnapshot.tokenCount,
     )
     listenerManager.onSlicingTokensEnd(slicingEndEvent)
   }
@@ -118,31 +118,29 @@ class MassiveConcurrentTokenSlicer(
       this@MassiveConcurrentTokenSlicer.analyzeResultsAndGetBest(futureResult)
   }
 
+  object META : ReducerAnnotation() {
+
+    override val deterministic: Boolean
+      get() = true
+
+    override fun shortName() = NAME
+
+    override val reductionResultSizeTrend: ReductionResultSizeTrend
+      get() = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE
+
+    override fun description() = ""
+
+    override fun create(reducerContext: ReducerContext) =
+      ImmutableList.of<AbstractTokenReducer>(
+        MassiveConcurrentTokenSlicer(
+          reducerContext,
+          minSlicingGranularity = 1,
+          maxSlicingGranularity = 14,
+        ),
+      )
+  }
   companion object {
 
     const val NAME = "massive_concurrent_token_slicer"
-
-    @JvmStatic
-    val META = object : ReducerAnnotation() {
-
-      override val deterministic: Boolean
-        get() = true
-
-      override fun shortName() = NAME
-
-      override val reductionResultSizeTrend: ReductionResultSizeTrend
-        get() = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE
-
-      override fun description() = ""
-
-      override fun create(reducerContext: ReducerContext) =
-        ImmutableList.of<AbstractTokenReducer>(
-          MassiveConcurrentTokenSlicer(
-            reducerContext,
-            minSlicingGranularity = 1,
-            maxSlicingGranularity = 14,
-          ),
-        )
-    }
   }
 }

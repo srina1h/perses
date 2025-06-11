@@ -8,8 +8,7 @@ set -e
 TARGET=$1
 
 case "${TARGET}" in
-  "public" | "staging")
-    ;;
+  "public" | "staging") ;;
 
   *)
     echo "You must specify either \"public\" or \"staging\""
@@ -17,7 +16,7 @@ case "${TARGET}" in
     ;;
 esac
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
 cd $DIR
 rm -rf public
 

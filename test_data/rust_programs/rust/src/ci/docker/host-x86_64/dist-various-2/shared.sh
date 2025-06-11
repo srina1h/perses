@@ -1,5 +1,5 @@
 hide_output() {
-  { set +x; } 2>/dev/null
+  { set +x; } 2> /dev/null
   on_err="
 echo ERROR: An error was encountered with the build.
 cat /tmp/build.log
@@ -22,7 +22,7 @@ function retry {
   while true; do
     "$@" && break || {
       if [[ $n -lt $max ]]; then
-        sleep $n  # don't retry immediately
+        sleep $n # don't retry immediately
         ((n++))
         echo "Command failed. Attempt $n/$max:"
       else
@@ -35,12 +35,12 @@ function retry {
 
 # Copied from ../../init_repo.sh
 function fetch_github_commit_archive {
-    local module=$1
-    local cached="download-${module//\//-}.tar.gz"
-    retry sh -c "rm -f $cached && \
+  local module=$1
+  local cached="download-${module//\//-}.tar.gz"
+  retry sh -c "rm -f $cached && \
         curl -f -sSL -o $cached $2"
-    mkdir $module
-    touch "$module/.git"
-    tar -C $module --strip-components=1 -xf $cached
-    rm $cached
+  mkdir $module
+  touch "$module/.git"
+  tar -C $module --strip-components=1 -xf $cached
+  rm $cached
 }

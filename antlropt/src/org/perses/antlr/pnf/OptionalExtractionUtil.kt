@@ -21,9 +21,9 @@ import org.perses.antlr.ast.AbstractPersesRuleElement
 import org.perses.antlr.ast.AstTag
 import org.perses.antlr.ast.PersesSequenceAst
 import org.perses.antlr.ast.SmartAstConstructor
-import org.perses.antlr.pnf.AstUtil.fixpoint
 import org.perses.antlr.pnf.AstUtil.isSeqOrRuleRefOrTerminal
 import org.perses.util.Interval
+import org.perses.util.Util.fixpoint
 
 object OptionalExtractionUtil {
 

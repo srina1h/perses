@@ -17,33 +17,18 @@
 package org.perses.grammar.javascript
 
 import com.google.common.primitives.ImmutableIntArray
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.grammar.AbstractDefaultParserFacade
 
 /** This is the facade for Java parsers  */
 class JavaScriptParserFacade : AbstractDefaultParserFacade<JavaScriptLexer, PnfJavaScriptParser>(
   LanguageJavaScript,
   createSeparateAntlrGrammar(
-    "PnfJavaScriptParser.g4",
-    "JavaScriptLexer.g4",
+    startRuleName = "program",
+    antlrParserGrammarFileName = "PnfJavaScriptParser.g4",
+    antlrLexerGrammarFileName = "JavaScriptLexer.g4",
     JavaScriptParserFacade::class.java,
   ),
-  JavaScriptLexer::class.java,
-  PnfJavaScriptParser::class.java,
-  ImmutableIntArray.of(JavaScriptLexer.Identifier),
-) {
-
-  override fun createLexer(inputStream: CharStream): JavaScriptLexer {
-    return JavaScriptLexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfJavaScriptParser {
-    return PnfJavaScriptParser(tokens)
-  }
-
-  override fun startParsing(parser: PnfJavaScriptParser): ParseTree {
-    return parser.program()
-  }
-}
+  lexerClass = JavaScriptLexer::class.java,
+  parserClass = PnfJavaScriptParser::class.java,
+  identifierTokenTypes = ImmutableIntArray.of(JavaScriptLexer.Identifier),
+)

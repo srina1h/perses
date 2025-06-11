@@ -21,6 +21,8 @@ import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import java.io.ByteArrayInputStream
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
@@ -30,6 +32,7 @@ class FileContentTest {
 
   private val tempDir = Util.createTempDirFor(this::class.java.canonicalName)
 
+  @OptIn(ExperimentalPathApi::class)
   @After
   fun teardown() {
     tempDir.deleteRecursively()
@@ -57,5 +60,14 @@ class FileContentTest {
     assertThat(filePath.readText()).isEqualTo(filePath2.readText())
     assertThat(filePath.readText()).isEqualTo(text)
     assertThat(fileContent.printableContentIfPossible).startsWith("SHA")
+  }
+
+  @Test
+  fun testBinaryFileContentFromInputStream() {
+    val content = "hello"
+    ByteArrayInputStream(content.toByteArray()).use { inputStream ->
+      val contentPair = AbstractFileContent.BinaryFileContent.fromInputStream(inputStream)
+      assertThat(contentPair.asTextFileContent.text).isEqualTo(content)
+    }
   }
 }

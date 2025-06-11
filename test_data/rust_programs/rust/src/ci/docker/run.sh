@@ -4,20 +4,18 @@ set -e
 
 export MSYS_NO_PATHCONV=1
 
-script=`cd $(dirname $0) && pwd`/`basename $0`
+script=$(cd $(dirname $0) && pwd)/$(basename $0)
 
 image=""
 dev=0
 
-while [[ $# -gt 0 ]]
-do
+while [[ $# -gt 0 ]]; do
   case "$1" in
     --dev)
       dev=1
       ;;
     *)
-      if [ -n "$image" ]
-      then
+      if [ -n "$image" ]; then
         echo "expected single argument for the image name"
         exit 1
       fi
@@ -27,11 +25,11 @@ do
   shift
 done
 
-script_dir="`dirname $script`"
+script_dir="$(dirname $script)"
 docker_dir="${script_dir}/host-$(uname -m)"
-ci_dir="`dirname $script_dir`"
-src_dir="`dirname $ci_dir`"
-root_dir="`dirname $src_dir`"
+ci_dir="$(dirname $script_dir)"
+src_dir="$(dirname $ci_dir)"
+root_dir="$(dirname $src_dir)"
 
 objdir=$root_dir/obj
 dist=$objdir/build/dist
@@ -41,115 +39,115 @@ source "$ci_dir/shared.sh"
 CACHE_DOMAIN="${CACHE_DOMAIN:-ci-caches.rust-lang.org}"
 
 if [ -f "$docker_dir/$image/Dockerfile" ]; then
-    if [ "$CI" != "" ]; then
-      hash_key=/tmp/.docker-hash-key.txt
-      rm -f "${hash_key}"
-      echo $image >> $hash_key
+  if [ "$CI" != "" ]; then
+    hash_key=/tmp/.docker-hash-key.txt
+    rm -f "${hash_key}"
+    echo $image >> $hash_key
 
-      cat "$docker_dir/$image/Dockerfile" >> $hash_key
-      # Look for all source files involves in the COPY command
-      copied_files=/tmp/.docker-copied-files.txt
-      rm -f "$copied_files"
-      for i in $(sed -n -e 's/^COPY \(.*\) .*$/\1/p' "$docker_dir/$image/Dockerfile"); do
-        # List the file names
-        find "$script_dir/$i" -type f >> $copied_files
-      done
-      # Sort the file names and cat the content into the hash key
-      sort $copied_files | xargs cat >> $hash_key
-
-      # Include the architecture in the hash key, since our Linux CI does not
-      # only run in x86_64 machines.
-      uname -m >> $hash_key
-
-      docker --version >> $hash_key
-      cksum=$(sha512sum $hash_key | \
-        awk '{print $1}')
-
-      url="https://$CACHE_DOMAIN/docker/$cksum"
-
-      echo "Attempting to download $url"
-      rm -f /tmp/rustci_docker_cache
-      set +e
-      retry curl -y 30 -Y 10 --connect-timeout 30 -f -L -C - -o /tmp/rustci_docker_cache "$url"
-      loaded_images=$(docker load -i /tmp/rustci_docker_cache | sed 's/.* sha/sha/')
-      set -e
-      echo "Downloaded containers:\n$loaded_images"
-    fi
-
-    dockerfile="$docker_dir/$image/Dockerfile"
-    if [ -x /usr/bin/cygpath ]; then
-        context="`cygpath -w $script_dir`"
-        dockerfile="`cygpath -w $dockerfile`"
-    else
-        context="$script_dir"
-    fi
-    retry docker \
-      build \
-      --rm \
-      -t rust-ci \
-      -f "$dockerfile" \
-      "$context"
-
-    if [ "$CI" != "" ]; then
-      s3url="s3://$SCCACHE_BUCKET/docker/$cksum"
-      upload="aws s3 cp - $s3url"
-      digest=$(docker inspect rust-ci --format '{{.Id}}')
-      echo "Built container $digest"
-      if ! grep -q "$digest" <(echo "$loaded_images"); then
-        echo "Uploading finished image to $url"
-        set +e
-        docker history -q rust-ci | \
-          grep -v missing | \
-          xargs docker save | \
-          gzip | \
-          $upload
-        set -e
-      else
-        echo "Looks like docker image is the same as before, not uploading"
-      fi
-      # Record the container image for reuse, e.g. by rustup.rs builds
-      info="$dist/image-$image.txt"
-      mkdir -p "$dist"
-      echo "$url" >"$info"
-      echo "$digest" >>"$info"
-    fi
-elif [ -f "$docker_dir/disabled/$image/Dockerfile" ]; then
-    if isCI; then
-        echo Cannot run disabled images on CI!
-        exit 1
-    fi
-    # Transform changes the context of disabled Dockerfiles to match the enabled ones
-    tar --transform 's#disabled/#./#' -C $script_dir -c . | docker \
-      build \
-      --rm \
-      -t rust-ci \
-      -f "host-$(uname -m)/$image/Dockerfile" \
-      -
-else
-    echo Invalid image: $image
-
-    # Check whether the image exists for other architectures
-    for arch_dir in "${script_dir}"/host-*; do
-        # Avoid checking non-directories and the current host architecture directory
-        if ! [[ -d "${arch_dir}" ]]; then
-            continue
-        fi
-        if [[ "${arch_dir}" = "${docker_dir}" ]]; then
-            continue
-        fi
-
-        arch_name="$(basename "${arch_dir}" | sed 's/^host-//')"
-        if [[ -f "${arch_dir}/${image}/Dockerfile" ]]; then
-            echo "Note: the image exists for the ${arch_name} host architecture"
-        elif [[ -f "${arch_dir}/disabled/${image}/Dockerfile" ]]; then
-            echo "Note: the disabled image exists for the ${arch_name} host architecture"
-        else
-            continue
-        fi
-        echo "Note: the current host architecture is $(uname -m)"
+    cat "$docker_dir/$image/Dockerfile" >> $hash_key
+    # Look for all source files involves in the COPY command
+    copied_files=/tmp/.docker-copied-files.txt
+    rm -f "$copied_files"
+    for i in $(sed -n -e 's/^COPY \(.*\) .*$/\1/p' "$docker_dir/$image/Dockerfile"); do
+      # List the file names
+      find "$script_dir/$i" -type f >> $copied_files
     done
+    # Sort the file names and cat the content into the hash key
+    sort $copied_files | xargs cat >> $hash_key
 
+    # Include the architecture in the hash key, since our Linux CI does not
+    # only run in x86_64 machines.
+    uname -m >> $hash_key
+
+    docker --version >> $hash_key
+    cksum=$(sha512sum $hash_key \
+      | awk '{print $1}')
+
+    url="https://$CACHE_DOMAIN/docker/$cksum"
+
+    echo "Attempting to download $url"
+    rm -f /tmp/rustci_docker_cache
+    set +e
+    retry curl -y 30 -Y 10 --connect-timeout 30 -f -L -C - -o /tmp/rustci_docker_cache "$url"
+    loaded_images=$(docker load -i /tmp/rustci_docker_cache | sed 's/.* sha/sha/')
+    set -e
+    echo "Downloaded containers:\n$loaded_images"
+  fi
+
+  dockerfile="$docker_dir/$image/Dockerfile"
+  if [ -x /usr/bin/cygpath ]; then
+    context="$(cygpath -w $script_dir)"
+    dockerfile="$(cygpath -w $dockerfile)"
+  else
+    context="$script_dir"
+  fi
+  retry docker \
+    build \
+    --rm \
+    -t rust-ci \
+    -f "$dockerfile" \
+    "$context"
+
+  if [ "$CI" != "" ]; then
+    s3url="s3://$SCCACHE_BUCKET/docker/$cksum"
+    upload="aws s3 cp - $s3url"
+    digest=$(docker inspect rust-ci --format '{{.Id}}')
+    echo "Built container $digest"
+    if ! grep -q "$digest" <(echo "$loaded_images"); then
+      echo "Uploading finished image to $url"
+      set +e
+      docker history -q rust-ci \
+        | grep -v missing \
+        | xargs docker save \
+        | gzip \
+        | $upload
+      set -e
+    else
+      echo "Looks like docker image is the same as before, not uploading"
+    fi
+    # Record the container image for reuse, e.g. by rustup.rs builds
+    info="$dist/image-$image.txt"
+    mkdir -p "$dist"
+    echo "$url" > "$info"
+    echo "$digest" >> "$info"
+  fi
+elif [ -f "$docker_dir/disabled/$image/Dockerfile" ]; then
+  if isCI; then
+    echo Cannot run disabled images on CI!
     exit 1
+  fi
+  # Transform changes the context of disabled Dockerfiles to match the enabled ones
+  tar --transform 's#disabled/#./#' -C $script_dir -c . | docker \
+    build \
+    --rm \
+    -t rust-ci \
+    -f "host-$(uname -m)/$image/Dockerfile" \
+    -
+else
+  echo Invalid image: $image
+
+  # Check whether the image exists for other architectures
+  for arch_dir in "${script_dir}"/host-*; do
+    # Avoid checking non-directories and the current host architecture directory
+    if ! [[ -d "${arch_dir}" ]]; then
+      continue
+    fi
+    if [[ "${arch_dir}" = "${docker_dir}" ]]; then
+      continue
+    fi
+
+    arch_name="$(basename "${arch_dir}" | sed 's/^host-//')"
+    if [[ -f "${arch_dir}/${image}/Dockerfile" ]]; then
+      echo "Note: the image exists for the ${arch_name} host architecture"
+    elif [[ -f "${arch_dir}/disabled/${image}/Dockerfile" ]]; then
+      echo "Note: the disabled image exists for the ${arch_name} host architecture"
+    else
+      continue
+    fi
+    echo "Note: the current host architecture is $(uname -m)"
+  done
+
+  exit 1
 fi
 
 mkdir -p $HOME/.cargo
@@ -159,13 +157,13 @@ mkdir -p /tmp/toolstate
 
 args=
 if [ "$SCCACHE_BUCKET" != "" ]; then
-    args="$args --env SCCACHE_BUCKET"
-    args="$args --env SCCACHE_REGION"
-    args="$args --env AWS_ACCESS_KEY_ID"
-    args="$args --env AWS_SECRET_ACCESS_KEY"
+  args="$args --env SCCACHE_BUCKET"
+  args="$args --env SCCACHE_REGION"
+  args="$args --env AWS_ACCESS_KEY_ID"
+  args="$args --env AWS_SECRET_ACCESS_KEY"
 else
-    mkdir -p $HOME/.cache/sccache
-    args="$args --env SCCACHE_DIR=/sccache --volume $HOME/.cache/sccache:/sccache"
+  mkdir -p $HOME/.cache/sccache
+  args="$args --env SCCACHE_DIR=/sccache --volume $HOME/.cache/sccache:/sccache"
 fi
 
 # Run containers as privileged as it should give them access to some more
@@ -207,11 +205,10 @@ else
   args="$args --volume $HOME/.cargo:/cargo"
   args="$args --volume $HOME/rustsrc:$HOME/rustsrc"
   args="$args --volume /tmp/toolstate:/tmp/toolstate"
-  args="$args --env LOCAL_USER_ID=`id -u`"
+  args="$args --env LOCAL_USER_ID=$(id -u)"
 fi
 
-if [ "$dev" = "1" ]
-then
+if [ "$dev" = "1" ]; then
   # Interactive + TTY
   args="$args -it"
   command="/bin/bash"

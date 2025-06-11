@@ -18,24 +18,26 @@ package org.perses.reduction
 
 import org.perses.grammar.AbstractParserFacade
 import org.perses.listminimizer.EnumListInputMinimizerType
-import org.perses.program.EnumFormatControl
 import org.perses.program.printer.PrinterRegistry
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * This is the internal configuration for Perses reducer.
  */
 class ReductionConfiguration(
-  val fixpointReduction: Boolean,
+  val fixpointReductionForMainReducer: Boolean,
   val enableTestScriptExecutionCaching: Boolean,
   val defaultDeltaDebuggerTypeForKleene: EnumListInputMinimizerType,
   val numOfReductionThreads: Int,
   val parserFacade: AbstractParserFacade,
   val persesNodeReducerConfig: PersesNodeReducerConfiguration,
   val vulcanConfig: VulcanConfig,
+  val lprConfig: LPRConfig,
 ) {
 
   val originalFormatPrinter = PrinterRegistry.getPrinter(
-    format = EnumFormatControl.ORIG_FORMAT,
+    format = parserFacade.language.origCodeFormatControl,
     lexerAtnWrapper = parserFacade.lexerAtnWrapper,
   )
 
@@ -64,6 +66,17 @@ class ReductionConfiguration(
     init {
       require(nonDeletionIterationLimit > 0)
       require(windowSizeForLocalExhaustivePatternReduction > 0)
+    }
+  }
+
+  class LPRConfig(
+    val llmClientPath: Path?,
+    val lprFixpoint: Boolean,
+  ) {
+    init {
+      require(llmClientPath == null || Files.isRegularFile(llmClientPath)) {
+        "The script to invoke LLM is not a regular file: $llmClientPath"
+      }
     }
   }
 }

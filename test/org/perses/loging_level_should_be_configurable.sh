@@ -5,7 +5,7 @@ set -o nounset
 
 readonly FILE="${1}"
 readonly NEEDLE="CONFIG"
-if grep "${NEEDLE}" "${FILE}" ; then
+if grep "${NEEDLE}" "${FILE}"; then
   exit 0
 else
   cat "${FILE}"

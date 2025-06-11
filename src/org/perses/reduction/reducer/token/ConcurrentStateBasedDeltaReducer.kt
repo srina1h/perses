@@ -60,21 +60,19 @@ class ConcurrentStateBasedDeltaReducer(
     )
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "A parallel ddmin",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(ConcurrentStateBasedDeltaReducer(reducerContext))
+    }
+  }
   companion object {
 
     const val NAME = "concurrent_state_ddmin"
-
-    @JvmStatic
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "A parallel ddmin",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(ConcurrentStateBasedDeltaReducer(reducerContext))
-      }
-    }
   }
 }
 

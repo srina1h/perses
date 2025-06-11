@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.perses.TestUtility
 import org.perses.antlr.AntlrGrammarUtil
-import org.perses.grammar.AbstractParserFacade
+import org.perses.antlr.ParseTreeUtil
 import org.perses.grammar.c.CParserFacade
 import org.perses.grammar.c.LanguageC
 import org.perses.program.PersesTokenFactory.PersesToken
@@ -253,7 +253,7 @@ class SparTreeNodeTest {
       """.trimIndent(),
       LanguageC,
     )
-    val root = tree.root
+    val root = tree.realRoot
     assertThat(root.childCount).isEqualTo(1)
     val child = root.getChild(0)
     assertThat(child.childCount).isEqualTo(2)
@@ -269,7 +269,7 @@ class SparTreeNodeTest {
     val sourceFile = TestUtility.getOneGccTestFile(filename)
     val cParserFacade = CParserFacade()
     val parseTree = cParserFacade.parseFile(sourceFile)
-    val tokens = AbstractParserFacade.getTokens(parseTree.tree)
+    val tokens = ParseTreeUtil.getTokens(parseTree.tree)
     val factory = TokenizedProgramFactory.createFactory(tokens, cParserFacade.language)
     val sparTreeNodeFactory = SparTreeNodeFactory(
       cParserFacade.metaTokenInfoDb,
@@ -277,7 +277,7 @@ class SparTreeNodeTest {
       cParserFacade.ruleHierarchy,
     )
     val tree = SparTreeBuilder(sparTreeNodeFactory, parseTree).result
-    tree.root.printTreeStructure()
+    tree.realRoot.printTreeStructure()
     val program = tree.programSnapshot
     val originalProgram = AntlrGrammarUtil.convertParseTreeToProgram(
       parseTree.tree,
@@ -285,8 +285,8 @@ class SparTreeNodeTest {
     )
     assertThat(toAntlrTokens(program.tokens))
       .containsExactlyElementsIn(toAntlrTokens(originalProgram.tokens))
-    SparTreeSimplifier.simplifySingleEntrySingleExitPath(tree.root)
-    assertThat(SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.root)).isTrue()
+    SparTreeSimplifier.simplifySingleEntrySingleExitPath(tree.realRoot)
+    assertThat(SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.realRoot)).isTrue()
   }
 
   companion object {
@@ -294,7 +294,7 @@ class SparTreeNodeTest {
       try {
         val cParserFacade = CParserFacade()
         val parseTree = cParserFacade.parseFile(file)
-        val tokens = AbstractParserFacade.getTokens(parseTree.tree)
+        val tokens = ParseTreeUtil.getTokens(parseTree.tree)
         val language = cParserFacade.language
         val factory = TokenizedProgramFactory.createFactory(tokens, language)
         val expected = AntlrGrammarUtil.convertParseTreeToProgram(parseTree.tree, language)
@@ -308,8 +308,8 @@ class SparTreeNodeTest {
         assertThat(toAntlrTokens(real.tokens))
           .containsExactlyElementsIn(toAntlrTokens(expected.tokens))
           .inOrder()
-        SparTreeSimplifier.simplifySingleEntrySingleExitPath(sparTree.root)
-        assertThat(SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(sparTree.root))
+        SparTreeSimplifier.simplifySingleEntrySingleExitPath(sparTree.realRoot)
+        assertThat(SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(sparTree.realRoot))
           .isTrue()
         val afterSESESimplification = sparTree.programSnapshot
         assertThat(toAntlrTokens(afterSESESimplification.tokens))

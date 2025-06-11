@@ -7,8 +7,7 @@ echo "Paste this into your WORKSPACE file:"
 echo "-------------------------"
 echo ""
 
-
-cat <<-EOF
+cat <<- EOF
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 RULES_JVM_EXTERNAL_TAG = "2.6"
@@ -29,12 +28,12 @@ maven_install(
 EOF
 
 {
-    pushd $BUILD_WORKSPACE_DIRECTORY 1>/dev/null
-    bazel query 'kind(maven_jar, //external:all)' --output=build | grep artifact | awk '{print $3}' | sort | sed 's/^/        /;' 2>/dev/null
-    popd 1>/dev/null
+  pushd $BUILD_WORKSPACE_DIRECTORY 1> /dev/null
+  bazel query 'kind(maven_jar, //external:all)' --output=build | grep artifact | awk '{print $3}' | sort | sed 's/^/        /;' 2> /dev/null
+  popd 1> /dev/null
 }
 
-cat <<-EOF
+cat <<- EOF
     ],
     repositories = [
         "https://jcenter.bintray.com",
@@ -50,18 +49,18 @@ echo "-------------------------"
 echo ""
 
 {
-    pushd $BUILD_WORKSPACE_DIRECTORY 1>/dev/null
-    declare -a artifact_list=($(bazel query 'kind(maven_jar, //external:all)' --output=build | grep artifact | awk '{print $3}' | sed 's/"//g; s/,//g' 2>/dev/null))
-    declare -a repo_name_list=($(bazel query 'kind(maven_jar, //external:all)' --output=build | grep name | awk '{print $3}' | sed 's/"//g; s/,//g' 2>/dev/null))
+  pushd $BUILD_WORKSPACE_DIRECTORY 1> /dev/null
+  declare -a artifact_list=($(bazel query 'kind(maven_jar, //external:all)' --output=build | grep artifact | awk '{print $3}' | sed 's/"//g; s/,//g' 2> /dev/null))
+  declare -a repo_name_list=($(bazel query 'kind(maven_jar, //external:all)' --output=build | grep name | awk '{print $3}' | sed 's/"//g; s/,//g' 2> /dev/null))
 
-    for i in "${!artifact_list[@]}"; do
-        target=$(echo "${artifact_list[$i]}" | sed "s/-/_/g; s/\./_/g;" | cut -d":" -f1,2 | sed "s/:/_/g;")
-        maven_install_target="@maven//:$target"
-        maven_jar_target="@${repo_name_list[$i]}//jar"
-        # echo $maven_jar_target $maven_install_target
-        # echo $maven_jar_target $maven_install_target
-        buildozer "substitute * $maven_jar_target $maven_install_target" //...:* || true
-    done
+  for i in "${!artifact_list[@]}"; do
+    target=$(echo "${artifact_list[$i]}" | sed "s/-/_/g; s/\./_/g;" | cut -d":" -f1,2 | sed "s/:/_/g;")
+    maven_install_target="@maven//:$target"
+    maven_jar_target="@${repo_name_list[$i]}//jar"
+    # echo $maven_jar_target $maven_install_target
+    # echo $maven_jar_target $maven_install_target
+    buildozer "substitute * $maven_jar_target $maven_install_target" //...:* || true
+  done
 
-    popd 1>/dev/null
+  popd 1> /dev/null
 }

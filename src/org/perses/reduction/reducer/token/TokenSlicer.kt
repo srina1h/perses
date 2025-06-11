@@ -57,7 +57,7 @@ class TokenSlicer(
         .fixpointIterationStartEvent
         .createTokenSlicingStartEvent(
           currentTimeMillis = System.currentTimeMillis(),
-          programSize = tree.programSnapshot.tokenCount(),
+          programSize = tree.programSnapshot.tokenCount,
           tokenSlicingGranularity = tokenSlicingGranularity,
         )
       listenerManager.onSlicingTokensStart(startEvent)
@@ -90,7 +90,7 @@ class TokenSlicer(
         }
         val parserFacade = configuration.parserFacade
         val future = executorService.testProgramAsync(
-          if (testProgram.tokenCount() <= 150) { // TODO: need to tune the threshold.
+          if (testProgram.tokenCount <= 150) { // TODO: need to tune the threshold.
             {
               if (parserFacade.isSourceCodeParsable(
                   PrinterRegistry.getPrinter(ioManager.getDefaultProgramFormat())
@@ -119,34 +119,32 @@ class TokenSlicer(
 
       val endEvent = startEvent.createEndEvent(
         currentTimeMillis = System.currentTimeMillis(),
-        programSize = tree.programSnapshot.tokenCount(),
+        programSize = tree.programSnapshot.tokenCount,
       )
       listenerManager.onSlicingTokensEnd(endEvent)
     }
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(
+        TokenSlicer(
+          reducerContext,
+          minSlicingGranularity = 1,
+          maxSlicingGranularity = 14,
+        ),
+      )
+    }
+  }
+
   companion object {
 
-    // TODO: fix the typo here.
-    const val NAME = "token_sclier"
-
-    @JvmStatic
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(
-          TokenSlicer(
-            reducerContext,
-            minSlicingGranularity = 1,
-            maxSlicingGranularity = 14,
-          ),
-        )
-      }
-    }
+    const val NAME = "token_slicer"
 
     @VisibleForTesting
     val INVALID_SYNTAX_EXIT_CODE = ExitCode(99)

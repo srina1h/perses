@@ -16,11 +16,14 @@
  */
 package org.perses.antlr
 
+import com.google.common.collect.ImmutableList
 import org.antlr.v4.runtime.Parser
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.Vocabulary
+import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.RuleNode
 import org.antlr.v4.runtime.tree.TerminalNode
+import java.util.ArrayDeque
 
 object ParseTreeUtil {
 
@@ -41,5 +44,22 @@ object ParseTreeUtil {
   @JvmStatic
   fun getSymbolicTokenTypeName(token: Token, lexerVocabulary: Vocabulary): String? {
     return lexerVocabulary.getSymbolicName(token.type)
+  }
+
+  fun getTokens(tree: ParseTree): ImmutableList<Token> {
+    val builder = ImmutableList.builderWithExpectedSize<Token>(500)
+    val stack = ArrayDeque<ParseTree>()
+    stack.push(tree)
+    while (stack.size > 0) {
+      val current = stack.pop()
+      if (current is TerminalNode) {
+        builder.add(current.symbol)
+        continue
+      }
+      for (i in current.childCount - 1 downTo 0) {
+        stack.push(current.getChild(i))
+      }
+    }
+    return builder.build()
   }
 }

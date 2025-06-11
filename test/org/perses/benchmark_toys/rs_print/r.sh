@@ -12,8 +12,8 @@ readonly EXE="./hello"
 rustc "${SRC}" -o "${EXE}"
 
 rm "${STDOUT}" -vrf || true
-"${EXE}" 1>"${STDOUT}"
-if [[ "${?}" != 0 ]] ; then
+"${EXE}" 1> "${STDOUT}"
+if [[ "${?}" != 0 ]]; then
   exit 1
 fi
 grep "hello_world" "${STDOUT}"

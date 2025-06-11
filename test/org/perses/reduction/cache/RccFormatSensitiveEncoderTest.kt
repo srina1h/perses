@@ -103,7 +103,7 @@ class RccFormatSensitiveEncoderTest {
   fun testFormatCacheEviction() {
     // say variant program 2 becomes the new min
     formatEncoder.updateEncoder(multiLine)
-    assertThat(formatEncoder.persesLexemeIdArray.logicalSize).isEqualTo(firstLine.tokenCount())
+    assertThat(formatEncoder.persesLexemeIdArray.logicalSize).isEqualTo(firstLine.tokenCount)
 
     // entries to be evicted / refreshed have no encoding
     formatEncoder.reEncode(baseEncoding!!).let {

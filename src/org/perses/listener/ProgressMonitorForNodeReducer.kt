@@ -21,6 +21,8 @@ import com.google.common.base.Strings
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent.TestResultCacheHitEvent
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent.TestScriptExecutionCanceledEvent
+import org.perses.reduction.event.AdHocMessageEvent
+import org.perses.reduction.event.BestProgramUpdateEvent
 import org.perses.reduction.event.FixpointIterationStartEvent
 import org.perses.reduction.event.NodeEditActionSetCacheClearanceEvent
 import org.perses.reduction.event.NodeEditActionSetCacheHitEvent
@@ -56,6 +58,10 @@ class ProgressMonitorForNodeReducer(
       "The sanity check has been performed. The result is %s\n",
       event.sanityCheckResult,
     )
+  }
+
+  override fun onAdHocMessageEvent(event: AdHocMessageEvent) {
+    stream.println(event.message)
   }
 
   override fun onFixpointIterationStart(event: FixpointIterationStartEvent) {
@@ -147,6 +153,12 @@ class ProgressMonitorForNodeReducer(
     beforeSize = programSize
     stream.println("The current best program is the following\n")
     printCode(event.textualProgram.textualContent)
+    printEnd()
+  }
+
+  override fun onBestProgramUpdated(event: BestProgramUpdateEvent) {
+    printBegin("The best program is updated.")
+    stream.println("token count change ${event.programSizeBefore} -> ${event.programSize}")
     printEnd()
   }
 

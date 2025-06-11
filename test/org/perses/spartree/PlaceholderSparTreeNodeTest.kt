@@ -56,10 +56,10 @@ class PlaceholderSparTreeNodeTest {
         |               |___Token:) {id=16,slot_type=RightParen}
         |___Token:; {id=7,slot_type=Semi}
    */
-  private val intNode = tree.root.leafNodeSequence().first()
-  private val idNode = tree.root.leafNodeSequence().toImmutableList()[1]
-  private val parenthesisNode = tree.root.leafNodeSequence().toImmutableList()[2]
-  private val declarationNode = tree.root.getChild(0).getChild(0)
+  private val intNode = tree.realRoot.leafNodeSequence().first()
+  private val idNode = tree.realRoot.leafNodeSequence().toImmutableList()[1]
+  private val parenthesisNode = tree.realRoot.leafNodeSequence().toImmutableList()[2]
+  private val declarationNode = tree.realRoot.getChild(0).getChild(0)
 
   @Test
   fun testMatchingPlaceholderNode() {

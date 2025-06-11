@@ -30,7 +30,7 @@ class ConcurrentTokenSlicerFunctionalTest : AbstractReducerFunctionalTest() {
       reductionFolder = "test/org/perses/benchmark_toys/delta_1",
       testScript = "grep_based_r.sh",
       sourceFile = "t.c",
-      algorithmType = ConcurrentTokenSlicer.COMPOSITE_REDUCER,
+      algorithmType = ConcurrentTokenSlicer.CompositeReducerAnnotation,
       cmdCustomizer = {},
       // It is not possible to get only the string literal, because our token slicer
       // checks syntactical validity before each property test.
@@ -46,7 +46,7 @@ class ConcurrentTokenSlicerFunctionalTest : AbstractReducerFunctionalTest() {
       reductionFolder = "test/org/perses/benchmark_toys/delta_1",
       testScript = "grep_based_r.sh",
       sourceFile = "t.c",
-      algorithmType = LineBasedConcurrentTokenSlicer.COMPOSITE_REDUCER,
+      algorithmType = LineBasedConcurrentTokenSlicer.CompositeReducerAnnotation,
       cmdCustomizer = {},
       // It is not possible to get only the string literal, because our token slicer
       // checks syntactical validity before each property test.

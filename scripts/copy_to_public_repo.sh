@@ -4,13 +4,13 @@ set -o pipefail
 set -o nounset
 set -o xtrace
 
-if [[ ! -e "WORKSPACE" ]] ; then
+if [[ ! -e "WORKSPACE" ]]; then
   echo "The script needs to be run in the root of the perses project."
   exit 1
 fi
 
-if [[ "$#" != 1 ]] ; then
-  echo "Usage: ${0} <public repo directory>" 
+if [[ "$#" != 1 ]]; then
+  echo "Usage: ${0} <public repo directory>"
   exit 1
 fi
 
@@ -20,19 +20,19 @@ fi
 readonly PUBLIC_REPO_DIR=${1}
 
 # check folder existence
-if [ ! -d "$PUBLIC_REPO_DIR" ] ; then
+if [ ! -d "$PUBLIC_REPO_DIR" ]; then
   echo "Directory $PUBLIC_REPO_DIR does not exists."
   exit 2
 fi
 
 # check if git repo
-if ! git -C "$PUBLIC_REPO_DIR" rev-parse 2>/dev/null ; then
+if ! git -C "$PUBLIC_REPO_DIR" rev-parse 2> /dev/null; then
   echo "Directory $PUBLIC_REPO_DIR is not a Git repo."
   exit 3
 fi
 
 # check if repo points to "github.com/perses-project/perses"
-if ! ( git -C "$PUBLIC_REPO_DIR" ls-remote --get-url | grep 'perses-project/perses' &>/dev/null ) ; then
+if ! (git -C "$PUBLIC_REPO_DIR" ls-remote --get-url | grep 'perses-project/perses' &> /dev/null); then
   echo "Git remote repo should point to \"perses-project/perses\"."
   exit 4
 fi
@@ -48,7 +48,7 @@ for entry in $(git -C "$PUBLIC_REPO_DIR" ls-tree --name-only HEAD); do
   # delete the entry in the public repo.
   rm -rf "${PUBLIC_REPO_DIR}/${entry}"
   entry_basename="$(basename "${entry}")"
-  if [ -e "${entry_basename}" ] ; then
+  if [ -e "${entry_basename}" ]; then
     cp -rf "${entry_basename}" "${PUBLIC_REPO_DIR}/"
   fi
 done

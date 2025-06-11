@@ -25,7 +25,7 @@ class NodeReductionEndEvent internal constructor(
   program: TokenizedProgram,
   val node: AbstractSparTreeNode,
   val remainingQueueSize: Int,
-) : AbstractEndEvent<NodeReductionStartEvent>(startEvent, currentTimeMillis, program.tokenCount()) {
+) : AbstractEndEvent<NodeReductionStartEvent>(startEvent, currentTimeMillis, program.tokenCount) {
 
   val iteration = startEvent.iteration
 

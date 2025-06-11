@@ -22,13 +22,13 @@ import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.perses.antlr.ParseTreeUtil
 import org.perses.fuzzer.compilers.rust.RustcCrashDetector
 import org.perses.fuzzer.config.CmdFlags
 import org.perses.fuzzer.config.ProgramUnderTest
 import org.perses.fuzzer.config.SeedFolder
 import org.perses.fuzzer.config.TestingConfiguration
 import org.perses.fuzzer.reduction.DeltaFolder
-import org.perses.grammar.AbstractParserFacade
 import org.perses.grammar.SingleParserFacadeFactory
 import org.perses.grammar.rust.LanguageRust
 import org.perses.program.LanguageKind
@@ -176,7 +176,7 @@ class FuzzerDriverTest {
         .defaultParserFacade.create()
 
       val treeByOpt = parserFacade.parseFile(file.toPath())
-      val tokens = AbstractParserFacade.getTokens(treeByOpt.tree)
+      val tokens = ParseTreeUtil.getTokens(treeByOpt.tree)
       val tokenizedProgramFactory = TokenizedProgramFactory.createFactory(
         tokens,
         parserFacade.language,

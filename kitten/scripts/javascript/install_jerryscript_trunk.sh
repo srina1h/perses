@@ -5,7 +5,7 @@ set -o pipefail
 set -o xtrace
 set -o errexit
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <install dir>"
   exit 1
 fi
@@ -21,7 +21,6 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-
 readonly INSTALLROOT="$(readlink -f $1)"
 echo "Installing to ${INSTALLROOT}"
 readonly NCPUS="1"
@@ -29,7 +28,7 @@ readonly NCPUS="1"
 cd "${BUILDROOT}"
 
 rm -rf "${SRC_FOLDER}" || true # &> /dev/null
-git clone --depth 1 --recursive https://github.com/jerryscript-project/jerryscript.git|| exit 1
+git clone --depth 1 --recursive https://github.com/jerryscript-project/jerryscript.git || exit 1
 [[ -d "${SRC_FOLDER}" ]] || exit 1
 
 cd "${SRC_FOLDER}"
@@ -45,7 +44,7 @@ readonly SHORT_NAMES_FLAGS=(
 readonly NCPU=1
 
 readonly LENGTH="${#FLAGS[@]}"
-for (( i=0; i<"${LENGTH}"; i++ )); do
+for ((i = 0; i < "${LENGTH}"; i++)); do
   FLAG="${FLAGS[$i]}"
   SHORT_NAME="${SHORT_NAMES_FLAGS[$i]}"
 

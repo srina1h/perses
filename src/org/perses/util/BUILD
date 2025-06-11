@@ -60,9 +60,9 @@ kt_jvm_library(
 )
 
 kt_jvm_library(
-    name = "YamlUtil",
+    name = "Serialization",
     srcs = [
-        "YamlUtil.kt",
+        "Serialization.kt",
     ],
     deps = [
         "//:jackson",

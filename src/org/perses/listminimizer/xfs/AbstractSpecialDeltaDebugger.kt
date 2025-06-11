@@ -22,11 +22,10 @@ import org.perses.listminimizer.Configuration
 import org.perses.listminimizer.Partition
 import org.perses.listminimizer.PropertyTestResultWithPayload
 import org.perses.util.Util
-import org.perses.util.toImmutableList
 import java.util.ArrayDeque
 
 abstract class AbstractSpecialDeltaDebugger<T : Any, PropertyPayload>(
-  arguments: AbstractListInputMinimizer.Arguments<T, PropertyPayload>,
+  arguments: Arguments<T, PropertyPayload>,
 ) : AbstractListInputMinimizer<T, PropertyPayload>(arguments) {
 
   override fun reduceNonEmptyInput() {
@@ -36,7 +35,7 @@ abstract class AbstractSpecialDeltaDebugger<T : Any, PropertyPayload>(
     addToWorklist(worklist, startPartitions)
     while (worklist.isNotEmpty()) {
       val partition = pollFromWorklist(worklist)
-      val deletedInThisIteration = partition.asSequence().toImmutableList()
+      val deletedInThisIteration = partition.asImmutableList()
       val testResult = testProperty(
         Configuration(
           currentBest = null,

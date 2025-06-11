@@ -5,7 +5,7 @@ set -o pipefail
 set -o xtrace
 set -o errexit
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <install dir>"
   exit 1
 fi
@@ -19,7 +19,6 @@ function cleanup() {
   rm -rf "${BUILDROOT}" &> /dev/null || true
 }
 trap cleanup EXIT
-
 
 readonly INSTALLROOT="$(readlink -f $1)"
 echo "Installing to ${INSTALLROOT}"
@@ -36,7 +35,7 @@ readonly BUILD_FOLDER="${BUILDROOT}/slang-build"
 
 mkdir ${BUILD_FOLDER} || exit 1
 cd ${BUILD_FOLDER} || exit 1
-cmake -DCMAKE_CXX_COMPILER=afl-clang-fast++ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="${INSTALLROOT}" -DSLANG_SANITIZERS="address,undefined"  "${SRC_FOLDER}"
+cmake -DCMAKE_CXX_COMPILER=afl-clang-fast++ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="${INSTALLROOT}" -DSLANG_SANITIZERS="address,undefined" "${SRC_FOLDER}"
 make -j "${NCPUS}"
 make install
 

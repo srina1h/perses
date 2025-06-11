@@ -5,19 +5,17 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-if ! command -v afl-clang-fast &> /dev/null
-then
+if ! command -v afl-clang-fast &> /dev/null; then
   echo "afl-clang-fast could not be found"
   exit 1
 fi
 
-if ! command -v afl-clang-fast++ &> /dev/null
-then
+if ! command -v afl-clang-fast++ &> /dev/null; then
   echo "afl-clang-fast++ could not be found"
   exit 1
 fi
 
-if [[ "$#" != "1" ]] ; then
+if [[ "$#" != "1" ]]; then
   echo "$0 <install dir>"
   exit 1
 fi

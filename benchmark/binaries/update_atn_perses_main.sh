@@ -12,7 +12,7 @@ if ! [ -e "/tmp/binaries/atn_perses_main_deploy.jar" ]; then
   bazelisk build //atn/src/org/perses/reduction:atn_perses_main_deploy.jar
   mkdir -p /tmp/binaries
   ln -s "${BINARY_DIR}/../../bazel-bin/atn/src/org/perses/reduction/atn_perses_main_deploy.jar" \
-       "/tmp/binaries/atn_perses_main_deploy.jar"
+    "/tmp/binaries/atn_perses_main_deploy.jar"
   chmod a+X "/tmp/binaries/atn_perses_main_deploy.jar"
   popd
 fi

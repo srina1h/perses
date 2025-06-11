@@ -9,4 +9,3 @@
 for file in ./$LR_SYNTH_OUT_DIR/reports/timing/*.csv.rpt; do
   ./python/translate_timing_csv.py $file ./$LR_SYNTH_OUT_DIR/generated
 done
-

@@ -4,12 +4,12 @@ set -o pipefail
 set -o nounset
 set -o errexit
 
-if [[ ! -e "WORKSPACE" ]] ; then
+if [[ ! -e "WORKSPACE" ]]; then
   echo "ERROR: This script should be run in the root folder of the project."
   exit 1
 fi
 
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/configuration.sh" || exit 1
 
 export PATH="${SCRIPT_DIR}:${PATH}"

@@ -140,10 +140,10 @@ class PPRDiffUtilsTest {
       seedStr,
       LanguageC,
     )
-    val treeContext = PPRDiffUtils.sparTreeNode2TreeContext(sparTree.root).treeContext
+    val treeContext = PPRDiffUtils.sparTreeNode2TreeContext(sparTree.realRoot).treeContext
 
     val mappingQueue = SimpleQueue<Pair<AbstractSparTreeNode, Tree>>()
-    mappingQueue.add(Pair(sparTree.root, treeContext.root))
+    mappingQueue.add(Pair(sparTree.realRoot, treeContext.root))
 
     while (mappingQueue.isNotEmpty()) {
       val mapping = mappingQueue.remove()
@@ -176,12 +176,12 @@ class PPRDiffUtilsTest {
       seedStr,
       LanguageC,
     )
-    val treeContextInfo = PPRDiffUtils.sparTreeNode2TreeContext(sparTree.root)
+    val treeContextInfo = PPRDiffUtils.sparTreeNode2TreeContext(sparTree.realRoot)
     val treeContext = treeContextInfo.treeContext
     val nodeMapping = treeContextInfo.nodeMapping
 
     val mappingQueue = SimpleQueue<Pair<AbstractSparTreeNode, Tree>>()
-    mappingQueue.add(Pair(sparTree.root, treeContext.root))
+    mappingQueue.add(Pair(sparTree.realRoot, treeContext.root))
 
     while (mappingQueue.isNotEmpty()) {
       val mapping = mappingQueue.remove()
@@ -207,21 +207,25 @@ class PPRDiffUtilsTest {
       seedStr,
       LanguageC,
     )
-    val treeContextSeed = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeSeed.root).treeContext
+    val treeContextSeed = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeSeed.realRoot).treeContext
 
     val variantStr = "int b;"
     val sparTreeVariant = TestUtility.createSparTreeFromString(
       variantStr,
       LanguageC,
     )
-    val treeContextVariant = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeVariant.root).treeContext
+    val treeContextVariant = PPRDiffUtils.sparTreeNode2TreeContext(
+      sparTreeVariant.realRoot,
+    ).treeContext
 
     val commonStr = "int func();"
     val sparTreeCommon = TestUtility.createSparTreeFromString(
       commonStr,
       LanguageC,
     )
-    val treeContextCommon = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeCommon.root).treeContext
+    val treeContextCommon = PPRDiffUtils.sparTreeNode2TreeContext(
+      sparTreeCommon.realRoot,
+    ).treeContext
 
     val seedNodesList = ImmutableList.Builder<Tree>()
     seedNodesList.add(treeContextSeed.root)
@@ -251,7 +255,7 @@ class PPRDiffUtilsTest {
       seedStr,
       LanguageC,
     )
-    val treeContextSeedInfo = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeSeed.root)
+    val treeContextSeedInfo = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeSeed.realRoot)
     val treeContextSeed = treeContextSeedInfo.treeContext
     val nodeMapping = treeContextSeedInfo.nodeMapping
 
@@ -263,7 +267,9 @@ class PPRDiffUtilsTest {
       variantStr,
       LanguageC,
     )
-    val treeContextVariant = PPRDiffUtils.sparTreeNode2TreeContext(sparTreeVariant.root).treeContext
+    val treeContextVariant = PPRDiffUtils.sparTreeNode2TreeContext(
+      sparTreeVariant.realRoot,
+    ).treeContext
 
     // create and initialize matcher
     val matcher = Matchers.getInstance().getMatcherWithFallback(null)
@@ -306,7 +312,7 @@ class PPRDiffUtilsTest {
 
     // build the map
     val node2Diff = mutableMapOf<AbstractSparTreeNode, Boolean>()
-    PPRDiffUtils.sparTreeNode2Diff(sparTree.root, tokenDiffSetBuilder.build(), node2Diff)
+    PPRDiffUtils.sparTreeNode2Diff(sparTree.realRoot, tokenDiffSetBuilder.build(), node2Diff)
 
     // check diff flag of each node
     node2Diff.forEach { (node, isDiff) ->
@@ -342,7 +348,7 @@ class PPRDiffUtilsTest {
     tokenDiffSetBuilder.add(tokenList[11])
 
     val realDiffNodes = PPRDiffUtils.computeRealDiffNodes(
-      ImmutableList.of(sparTree.root),
+      ImmutableList.of(sparTree.realRoot),
       tokenDiffSetBuilder.build(),
     )
 

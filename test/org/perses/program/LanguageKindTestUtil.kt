@@ -17,6 +17,7 @@
 package org.perses.program
 
 import com.google.common.truth.Truth.assertThat
+import org.perses.antlr.ParseTreeUtil
 import org.perses.grammar.AbstractParserFacade
 import org.perses.program.TokenizedProgramFactory.Companion.createFactory
 import org.perses.program.printer.PrinterRegistry
@@ -35,7 +36,7 @@ class LanguageKindTestUtil {
       val language = facade.language
       val parseTree = facade.parseFile(program)
       val tokenizedProgramFactory = createFactory(
-        AbstractParserFacade.getTokens(parseTree.tree),
+        ParseTreeUtil.getTokens(parseTree.tree),
         language,
       )
       val sparTreeNodeFactory = SparTreeNodeFactory(

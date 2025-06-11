@@ -70,7 +70,7 @@ class AbstractTreeNodeTest {
   @Test
   fun testDeepCopy() {
     val node = l3_n11_n9
-    val copy = node.recursiveDeepCopy(ReuseNodeIdStrategy)
+    val copy = node.recursiveDeepCopy(ReuseNodeIdStrategy).result
     assertThat(copy).isNotSameInstanceAs(node)
     assertThat(node.nodeId).isEqualTo(copy.nodeId)
   }

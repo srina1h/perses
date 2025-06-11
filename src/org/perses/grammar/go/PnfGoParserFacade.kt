@@ -19,11 +19,9 @@ package org.perses.grammar.go
 import com.google.common.primitives.ImmutableIntArray
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.antlr.ParseTreeWithParser
 import org.perses.grammar.AbstractDefaultParserFacade
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.StringReader
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -31,37 +29,27 @@ import java.nio.file.Path
 
 class PnfGoParserFacade : AbstractDefaultParserFacade<GoLexer, PnfGoParser>(
   LanguageGo,
-  createSeparateAntlrGrammar("PnfGoParser.g4", "GoLexer.g4", PnfGoParserFacade::class.java),
+  createSeparateAntlrGrammar(
+    startRuleName = "sourceFile",
+    antlrParserGrammarFileName = "PnfGoParser.g4",
+    antlrLexerGrammarFileName = "GoLexer.g4",
+    classUnderSamePkg = PnfGoParserFacade::class.java,
+  ),
   GoLexer::class.java,
   PnfGoParser::class.java,
   ImmutableIntArray.of(GoLexer.IDENTIFIER),
 ) {
-  override fun createLexer(inputStream: CharStream): GoLexer {
-    return GoLexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfGoParser {
-    return PnfGoParser(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfGoParser): ParseTree {
-    return parser.sourceFile()
-  }
-
-  @Throws(IOException::class)
   fun parseWithOrigGoParser(file: Path): ParseTreeWithParser {
     Files.newBufferedReader(file, StandardCharsets.UTF_8)
       .use { reader -> return parseWithOrigGoParser(reader, file.toString()) }
   }
 
-  @Throws(IOException::class)
   fun parseWithOrigGoParser(goProgram: String?): ParseTreeWithParser {
     BufferedReader(
       StringReader(goProgram),
     ).use { reader -> return parseWithOrigGoParser(reader, "<in-memory>") }
   }
 
-  @Throws(IOException::class)
   fun parseWithOrigGoParser(goProgram: String?, fileName: String): ParseTreeWithParser {
     BufferedReader(
       StringReader(goProgram),
@@ -69,7 +57,6 @@ class PnfGoParserFacade : AbstractDefaultParserFacade<GoLexer, PnfGoParser>(
   }
 
   companion object {
-    @Throws(IOException::class)
     private fun parseWithOrigGoParser(
       reader: BufferedReader,
       fileName: String,

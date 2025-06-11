@@ -56,7 +56,7 @@ abstract class AbstractNodeReducer(
       return
     }
     val tree = fixpointReductionState.sparTree.getParsableTreeOrFail()
-    val root = tree.root
+    val root = tree.realRoot
     lazyAssert { SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(root) }
     val queue = createReductionQueue()
     initializeReductionQueue(queue, tree)
@@ -91,7 +91,7 @@ abstract class AbstractNodeReducer(
   }
 
   protected open fun initializeReductionQueue(queue: Queue<AbstractSparTreeNode>, tree: SparTree) {
-    queue.addAll(tree.root.immutableChildView)
+    queue.addAll(tree.realRoot.immutableChildView)
   }
 
   private fun createReductionQueue() = reductionQueueStrategy.createQueue()

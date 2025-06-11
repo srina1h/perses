@@ -33,6 +33,7 @@ import org.perses.program.EnumFormatControl
 import org.perses.program.PersesTokenFactory.PersesToken
 import org.perses.program.TokenizedProgram
 import org.perses.program.printer.PrinterRegistry
+import org.perses.util.transformToImmutableList
 import java.nio.file.Paths
 
 @RunWith(JUnit4::class)
@@ -76,12 +77,30 @@ class ParserFacadeTest {
   }
 
   @Test
-  fun testTokenize() {
-    val tokens = cFacade.parseIntoTokens(Paths.get("test_data/misc/t1.c"))
-    val tokenTexts = tokens.stream().map { it.text }.collect(ImmutableList.toImmutableList())
+  fun testTokenizeFile() {
+    val tokens = cFacade.tokenizeFile(Paths.get("test_data/misc/t1.c"))
+    val tokenTexts = tokens.transformToImmutableList { it.text }
     assertThat(tokenTexts)
       .containsExactly("int", "a", ";", "int", "b", ";", "int", "a", ",", "b", ";")
       .inOrder()
+  }
+
+  @Test
+  fun testTokenizeString() {
+    val tokens = cFacade.tokenizeString(
+      content = "a b c",
+      fileName = "<in-memory>",
+    )
+    assertThat(tokens.map { it.text }).containsExactly("a", "b", "c").inOrder()
+  }
+
+  @Test
+  fun testTokenizeEmptyString() {
+    val tokens = cFacade.tokenizeString(
+      content = "",
+      fileName = "<in-memory>",
+    )
+    assertThat(tokens).isEmpty()
   }
 
   @Test
@@ -147,10 +166,35 @@ class ParserFacadeTest {
     ).isFalse()
   }
 
+  @Test
+  fun testPartialParsing() {
+    val result = cFacade.parseString(
+      string = "int a; int b;",
+      filename = "",
+      startRuleName = "declaration",
+    )
+    assertThat(result.lazyAllTokens.map { it.text }.joinToString(separator = " ")).isEqualTo(
+      "int a ; int b ;",
+    )
+    assertThat(result.isInputCompletelyConsumed()).isFalse()
+  }
+
+  @Test
+  fun testCompleteParsing() {
+    val result = cFacade.parseString(
+      string = """
+        struct Student {
+          char name[50];
+          int age;
+        };
+      """.trimIndent(),
+      filename = "",
+      startRuleName = null,
+    )
+    assertThat(result.isInputCompletelyConsumed()).isTrue()
+  }
+
   companion object {
-    private fun toAntlrTokens(tokens: ImmutableList<PersesToken>): ImmutableList<String?> {
-      return tokens.stream().map { it.text }.collect(ImmutableList.toImmutableList())
-    }
 
     private fun projectProgram(
       program: TokenizedProgram,

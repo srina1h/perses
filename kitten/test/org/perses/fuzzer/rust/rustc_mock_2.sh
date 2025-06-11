@@ -3,7 +3,7 @@
 set -o pipefail
 set -o nounset
 
-if [[ "$@" == *"--version"* ]] ; then
+if [[ "$@" == *"--version"* ]]; then
   echo "rustc mock 1"
   exit 0
 fi

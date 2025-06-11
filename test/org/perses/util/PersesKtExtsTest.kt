@@ -17,6 +17,7 @@
 package org.perses.util
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableSet
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,6 +57,11 @@ class PersesKtExtsTest {
         }.toList(),
       ).containsExactly("a-1", "b-2")
     }
+  }
+
+  @Test
+  fun testToImmutableSet() {
+    assertThat(listOf(1, 2, 3, 1, 1).toImmutableSet()).isEqualTo(ImmutableSet.of(1, 2, 3))
   }
 
   @Test

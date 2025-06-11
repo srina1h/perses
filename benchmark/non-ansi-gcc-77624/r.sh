@@ -5,7 +5,6 @@ BADCC=('gcc-5.1 -c -O3')
 GOODCC=('gcc-4.9 -c ')
 CFILE=small.c
 
-
 set -o pipefail
 set -o nounset
 
@@ -24,35 +23,31 @@ rm -f out*.txt
 # use indent to sanitize the program
 #############################
 readonly INDENT_TEMP_OUTPUT="temp.indent.output.tmp"
-if ! indent ${CFILE} -o ${INDENT_TEMP_OUTPUT} ; then
+if ! indent ${CFILE} -o ${INDENT_TEMP_OUTPUT}; then
   exit 1
 fi
-
-
-
 
 #############################
 # iterate over the good ones
 #############################
 
-for cc in "${GOODCC[@]}" ; do
+for cc in "${GOODCC[@]}"; do
   rm -f ./t ./out1.txt
 
-  (timeout -s 9 $TIMEOUTCC $cc $CFLAG $CFILE > out1.txt 2>&1) >& /dev/null
+  (timeout -s 9 $TIMEOUTCC $cc $CFLAG $CFILE > out1.txt 2>&1) >&/dev/null
   ret=$?
 
-  if [ $GOODCOMP -eq 1 ] ; then # does compile
-    if [ $ret -ne 0 ] ; then
+  if [ $GOODCOMP -eq 1 ]; then # does compile
+    if [ $ret -ne 0 ]; then
       exit 1
     fi
   else # does not compile, so make sure it doesn't ICE
-    if grep 'internal compiler error: ' out1.txt ||\
-      grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out1.txt
-    then
+    if grep 'internal compiler error: ' out1.txt \
+      || grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out1.txt; then
       exit 1
     fi
     if grep ':[0-9]*: error: ' out1.txt \
-      | grep -F -v -f ${GOOD_INCLUSIVE_ERROR_MSG_FILE} ; then
+      | grep -F -v -f ${GOOD_INCLUSIVE_ERROR_MSG_FILE}; then
       exit 1
     fi
   fi
@@ -62,27 +57,23 @@ done
 # iterate over the bad ones
 #############################
 
-for cc in "${BADCC[@]}" ; do
+for cc in "${BADCC[@]}"; do
   rm -f ./t ./out2.txt
 
-  (timeout -s 9 $TIMEOUTCC $cc $CFILE > out2.txt 2>&1) >& /dev/null
+  (timeout -s 9 $TIMEOUTCC $cc $CFILE > out2.txt 2>&1) >&/dev/null
 
-  if [ $WHICH -eq 1 ] ; then # clang
-    if ! grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt ||\
-      ! grep "${ICE_MSG}" out2.txt
-    then
+  if [ $WHICH -eq 1 ]; then # clang
+    if ! grep 'PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT' out2.txt \
+      || ! grep "${ICE_MSG}" out2.txt; then
       exit 1
     fi
-  elif [ $WHICH -eq 0 ] ; then  # gcc
-    if ! grep 'internal compiler error: ' out2.txt
-
-    then
+  elif [ $WHICH -eq 0 ]; then # gcc
+    if ! grep 'internal compiler error: ' out2.txt; then
       exit 1
     fi
-  elif [ $WHICH -eq 2 ] ; then # CompCert
-    if ! grep "Fatal error: " out2.txt || \
-      ! grep "${ICE_MSG}" out2.txt
-    then
+  elif [ $WHICH -eq 2 ]; then # CompCert
+    if ! grep "Fatal error: " out2.txt \
+      || ! grep "${ICE_MSG}" out2.txt; then
       exit 1
     fi
   else

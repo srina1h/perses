@@ -29,12 +29,12 @@ import org.perses.grammar.c.LanguageC
 import org.perses.program.EnumFormatControl
 import org.perses.reduction.AbstractProgramReductionDriver.Companion.boolToString
 import org.perses.reduction.AbstractProgramReductionDriver.Companion.createConfiguration
-import org.perses.reduction.AbstractProgramReductionDriver.StatsOfFilesBeingReduced
-import org.perses.reduction.ReducerScheduler.ReducerCallEvent
-import org.perses.reduction.ReducerScheduler.StatsSnapshotEvent
 import org.perses.reduction.cache.EnumQueryCachingControl
 import org.perses.reduction.io.RegularReductionInputs
 import org.perses.reduction.reducer.PersesNodePrioritizedDfsReducer
+import org.perses.reduction.scheduler.ReducerScheduler
+import org.perses.reduction.scheduler.ReducerScheduler.ReducerCallEvent
+import org.perses.reduction.scheduler.ReducerScheduler.StatsSnapshotEvent
 import org.perses.util.Util
 import org.perses.util.shell.Shells
 import java.nio.file.Files
@@ -101,7 +101,7 @@ class RegularProgramReductionDriverTest {
   }
 
   @Test
-  fun test_backupMainFile() {
+  fun testBackupMainFile() {
     val cmd = CommandOptions().apply {
       inputFlags.inputFile = sourceFile
       inputFlags.testScript = scriptFile
@@ -218,18 +218,27 @@ class RegularProgramReductionDriverTest {
   fun testStatsSnapshotEventEqualityAndHashcode() {
     val stats = StatsOfFilesBeingReduced(
       tokenCount = 1,
+      characterCount = 1,
       fileContents = ImmutableList.of(),
     )
-    val e1 = StatsSnapshotEvent(stats)
-    val e2 = StatsSnapshotEvent(stats)
+    val e1 = StatsSnapshotEvent(
+      stats,
+      numberOfNonDeletionIterations = 0,
+      fileContentChangedWrtPrevious = true,
+    )
+    val e2 = StatsSnapshotEvent(
+      stats,
+      numberOfNonDeletionIterations = 0,
+      fileContentChangedWrtPrevious = true,
+    )
     assertThat(e1).isNotEqualTo(e2)
   }
 
   @Test
   fun testReducerCallEventEquality() {
     val reducer = PersesNodePrioritizedDfsReducer.META
-    val e1 = ReducerCallEvent(reducer)
-    val e2 = ReducerCallEvent(reducer)
+    val e1 = ReducerCallEvent(reducer, treeAfterReduction = null)
+    val e2 = ReducerCallEvent(reducer, treeAfterReduction = null)
     assertThat(e1).isNotEqualTo(e2)
   }
 
@@ -237,19 +246,40 @@ class RegularProgramReductionDriverTest {
   fun testReducerSchedulerGetAllReducerEventsBetween() {
     val stats = StatsOfFilesBeingReduced(
       tokenCount = 1,
+      characterCount = 1,
       fileContents = ImmutableList.of(),
     )
     val reducer = PersesNodePrioritizedDfsReducer.META
 
     val history = ReducerScheduler.SchedulerEventHistory()
-    val s1 = StatsSnapshotEvent(stats)
-    val s2 = StatsSnapshotEvent(stats)
-    val s3 = StatsSnapshotEvent(stats)
-    val s4 = StatsSnapshotEvent(stats)
+    val s1 =
+      StatsSnapshotEvent(
+        stats,
+        numberOfNonDeletionIterations = 0,
+        fileContentChangedWrtPrevious = true,
+      )
+    val s2 =
+      StatsSnapshotEvent(
+        stats,
+        numberOfNonDeletionIterations = 0,
+        fileContentChangedWrtPrevious = true,
+      )
+    val s3 =
+      StatsSnapshotEvent(
+        stats,
+        numberOfNonDeletionIterations = 0,
+        fileContentChangedWrtPrevious = true,
+      )
+    val s4 =
+      StatsSnapshotEvent(
+        stats,
+        numberOfNonDeletionIterations = 0,
+        fileContentChangedWrtPrevious = true,
+      )
 
-    val r1 = ReducerCallEvent(reducer)
-    val r2 = ReducerCallEvent(reducer)
-    val r3 = ReducerCallEvent(reducer)
+    val r1 = ReducerCallEvent(reducer, treeAfterReduction = null)
+    val r2 = ReducerCallEvent(reducer, treeAfterReduction = null)
+    val r3 = ReducerCallEvent(reducer, treeAfterReduction = null)
 
     history.add(s1)
     history.add(r1)
@@ -259,8 +289,8 @@ class RegularProgramReductionDriverTest {
     history.add(r3)
     history.add(s4)
 
-    assertThat(history.getAllReducerEventsBetween(s1, s4)).containsExactly(r1, r2, r3).inOrder()
-    assertThat(history.getAllReducerEventsBetween(s2, s3)).containsExactly(r2).inOrder()
+    assertThat(history.findAllReducerEventsBetween(s1, s4)).containsExactly(r1, r2, r3).inOrder()
+    assertThat(history.findAllReducerEventsBetween(s2, s3)).containsExactly(r2).inOrder()
   }
 
   @Test
@@ -278,14 +308,26 @@ class RegularProgramReductionDriverTest {
     val history = ReducerScheduler.SchedulerEventHistory()
     history.add(
       StatsSnapshotEvent(
-        StatsOfFilesBeingReduced(tokenCount = 1, fileContents = ImmutableList.of()),
+        StatsOfFilesBeingReduced(
+          tokenCount = 1,
+          characterCount = 1,
+          fileContents = ImmutableList.of(),
+        ),
+        numberOfNonDeletionIterations = 0,
+        fileContentChangedWrtPrevious = true,
       ),
     )
-    history.add(ReducerCallEvent(reducer))
+    history.add(ReducerCallEvent(reducer, treeAfterReduction = null))
     val exception = assertThrows(Exception::class.java) {
       history.add(
         StatsSnapshotEvent(
-          StatsOfFilesBeingReduced(tokenCount = 100, fileContents = ImmutableList.of()),
+          StatsOfFilesBeingReduced(
+            tokenCount = 100,
+            characterCount = 100,
+            fileContents = ImmutableList.of(),
+          ),
+          numberOfNonDeletionIterations = 0,
+          fileContentChangedWrtPrevious = true,
         ),
       )
     }

@@ -5,7 +5,7 @@ set -o pipefail
 set -o xtrace
 set -o errexit
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <install dir>"
   exit 1
 fi
@@ -26,7 +26,7 @@ echo "Installing to ${INSTALLROOT}"
 cd "${BUILDROOT}"
 
 rm -rf "${SRC_FOLDER}" || true # &> /dev/null
-git clone --depth 1 -b 1.58.1 https://github.com/rust-lang/rust|| exit 1
+git clone --depth 1 -b 1.58.1 https://github.com/rust-lang/rust || exit 1
 [[ -d "${SRC_FOLDER}" ]] || exit 1
 
 cd "${SRC_FOLDER}"
@@ -38,4 +38,3 @@ sed -i "s+#prefix = \"/usr/local\"+prefix = \"${INSTALLROOT}\"+" config.toml
 sed -i "s/#ninja = true/ninja = false/" config.toml
 
 ./x.py build && ./x.py install
-

@@ -29,6 +29,7 @@ kt_jvm_library(
         "PersesNodePrioritizedBfsReducer.kt",
         "PersesNodePrioritizedDfsReducer.kt",
         "PersesNodeReducer.kt",
+        "SparTreeRootReplacementReducer.kt",
         "TreeSlicer.kt",
     ],
     deps = [

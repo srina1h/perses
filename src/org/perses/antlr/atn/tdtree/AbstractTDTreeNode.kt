@@ -65,11 +65,6 @@ sealed class AbstractTDTreeNode(
     return resultBuilder.build()
   }
 
-  @Deprecated("Call the other addChild method.", ReplaceWith("addChild(child)"))
-  override fun addChild(child: AbstractTDTreeNode, payload: Any) {
-    error("Should not call this method.")
-  }
-
   fun addChild(child: AbstractTDTreeNode) {
     super.addChild(child, EMPTY_PAYLOAD)
   }

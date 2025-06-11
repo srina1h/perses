@@ -56,7 +56,7 @@ class ContentLexemeIdQueryCache(
     override fun encode(program: TokenizedProgram): ContentLexemeIdEncoding? {
       return encode(
         program.tokens.stream().mapToInt(PersesTokenFactory.PersesToken::persesLexemeId).iterator(),
-        program.tokenCount(),
+        program.tokenCount,
       )
     }
 

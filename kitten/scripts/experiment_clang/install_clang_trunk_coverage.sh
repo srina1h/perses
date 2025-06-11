@@ -5,7 +5,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-if [[ "$#" != "1" ]] ; then
+if [[ "$#" != "1" ]]; then
   echo "$0 <install dir>"
   exit 1
 fi

@@ -19,7 +19,6 @@ package org.perses.program.printer
 import org.perses.program.PersesTokenFactory.PersesToken
 import org.perses.program.TokenizedProgram
 import org.perses.util.FastStringBuilder
-import org.perses.util.Util.lazyAssert
 
 abstract class AbstractOrigFormatPrintingVisitor(
   program: TokenizedProgram,
@@ -40,13 +39,6 @@ abstract class AbstractOrigFormatPrintingVisitor(
     }
 
     val lineNumber = tokenPositionProvider.getLine(line.first())
-    lazyAssert({
-      line.asSequence().map {
-        tokenPositionProvider.getLine(it)
-      }.distinct().count() == 1
-    }) {
-      line
-    }
     val builder = result
     while (lineNumber > currentLineNumber) {
       if (keepBlankLines || (builder.isNotEmpty() && builder.lastChar() != '\n')) {

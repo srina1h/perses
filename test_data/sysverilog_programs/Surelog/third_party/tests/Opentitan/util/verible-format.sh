@@ -21,13 +21,13 @@ REPORT_FILE="verible-style-format.rpt"
 git add -u
 
 # get all system verilog files and pipe through style formatter
-find hw/{ip,vendor,top_earlgrey} -type f -name "*.sv" -o -name "*.svh" | \
-    xargs -n 1 -P $NUM_PROCS /tools/verible/verilog_format               \
+find hw/{ip,vendor,top_earlgrey} -type f -name "*.sv" -o -name "*.svh" \
+  | xargs -n 1 -P $NUM_PROCS /tools/verible/verilog_format \
     --inplace
 
 # report changed files
-git status                  | \
-    grep modified           | \
-    grep dv                 | \
-    awk -F ' ' '{print $2}' | \
-    tee $REPORT_FILE
+git status \
+  | grep modified \
+  | grep dv \
+  | awk -F ' ' '{print $2}' \
+  | tee $REPORT_FILE

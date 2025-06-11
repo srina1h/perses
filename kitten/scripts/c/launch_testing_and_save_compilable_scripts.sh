@@ -4,12 +4,12 @@ set -o pipefail
 set -o nounset
 set -o errexit
 
-if [[ ! -e "WORKSPACE" ]] ; then
+if [[ ! -e "WORKSPACE" ]]; then
   echo "ERROR: This script should be run in the root folder of the project."
   exit 1
 fi
 
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/configuration.sh" || exit 1
 
 bazelisk build //kitten/src/org/perses/fuzzer:kitten_deploy.jar || exit 1
@@ -21,4 +21,3 @@ java -Xmx210G -Xms30G -jar "bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy
   --extension-script "${SCRIPT_DIR}/collect_compilable_scripts.sh" \
   --extension-result-folder "${CAMPAIGN_ROOT_DIR}/compilable_programs" \
   --finding-folder "${FINDING_FOLDER}" 2>&1 | tee "${LOG_FILE}"
-

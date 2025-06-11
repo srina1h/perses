@@ -1,5 +1,6 @@
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library", "kt_jvm_test")
-load("//test/org/perses:test.bzl", "copy", "golden_test")
+load("//:perses.bzl", "copy")
+load("//test/org/perses:test.bzl", "golden_test")
 
 package(default_visibility = [
     "//fuzzer/org/perses:__subpackages__",
@@ -25,6 +26,7 @@ kt_jvm_library(
         "//:guava",
         "//:truth",
         "//src/org/perses/antlr:parse_tree_with_parser",
+        "//src/org/perses/antlr:util",
         "//src/org/perses/grammar:facade_factory",
         "//src/org/perses/grammar:grammar_facade",
         "//src/org/perses/grammar/adhoc:adhoc_grammar_inaller_lib",
@@ -88,6 +90,21 @@ golden_test(
     name = "golden_test_perses_supported_language_list",
     golden_file = "golden_perses_supported_language_list.txt",
     test_file = "perses_supported_language_list.txt",
+)
+
+genrule(
+    name = "get_perses_supported_redunction_algorithm_list",
+    outs = ["perses_supported_reduction_algorithm_list.txt"],
+    cmd = "$(location //src/org/perses:perses) --list-algs > \"$@\" ",
+    tools = [
+        "//src/org/perses",
+    ],
+)
+
+golden_test(
+    name = "golden_test_perses_supported_reduction_algorithm_list",
+    golden_file = "golden_perses_supported_reduction_algorithm_list.txt",
+    test_file = "perses_supported_reduction_algorithm_list.txt",
 )
 
 genrule(

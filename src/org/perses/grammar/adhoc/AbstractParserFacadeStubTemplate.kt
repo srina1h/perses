@@ -40,9 +40,13 @@ abstract class AbstractParserFacadeStubTemplate(
   override fun classFullName() = "$packageName.${classSimpleName()}"
 
   private val createAntlrGrammar = if (lexerFile == null) {
-    """createCombinedAntlrGrammar("${parserFile.fileName}", ${classSimpleName()}.class)"""
+    """createCombinedAntlrGrammar(
+        "$startRuleName", 
+        "${parserFile.fileName}", 
+        ${classSimpleName()}.class)"""
   } else {
     """createSeparateAntlrGrammar(
+        "$startRuleName",
         "${parserFile.fileName}", 
         "${lexerFile.fileName}", 
         ${classSimpleName()}.class)"""
@@ -81,21 +85,6 @@ public final class ${classSimpleName()}
         $identifierTokens);
   }
 
-  @Override
-  protected $lexerClassSimpleName createLexer(CharStream inputStream) {
-    return new $lexerClassSimpleName(inputStream);
-  }
-
-  @Override
-  protected $parserClassSimpleName createParser(CommonTokenStream tokens) {
-    return new $parserClassSimpleName(tokens);
-  }
-
-  @Override
-  protected ParseTree startParsing($parserClassSimpleName parser) {
-    return parser.$startRuleName();
-  }
- 
   public static LanguageKind $fieldNameLanguage;
   
   ${createLanguageKind()}

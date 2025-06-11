@@ -20,6 +20,7 @@ kt_jvm_library(
         "CacheControlFlagGroup.kt",
         "ExperimentFlagGroup.kt",
         "InputFlagGroup.kt",
+        "LPRFlagGroup.kt",
         "OutputFlagGroup.kt",
         "OutputRefiningFlagGroup.kt",
         "ProfilingFlagGroup.kt",

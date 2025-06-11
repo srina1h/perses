@@ -18,7 +18,11 @@ package org.perses.grammar
 
 import java.lang.RuntimeException
 
-class AntlrFailureException(cause: Throwable?, file: String, details: String) : RuntimeException(
+class AntlrFailureException(
+  cause: Throwable?,
+  val file: String,
+  val details: String,
+) : RuntimeException(
   """Error in parsing file: $file
     |Details: $details
     |

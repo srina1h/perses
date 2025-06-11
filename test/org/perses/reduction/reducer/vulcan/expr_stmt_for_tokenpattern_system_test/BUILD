@@ -15,7 +15,7 @@ reduction_golden_test(
     golden_progress_file = "golden_reduction_progress.txt",
     golden_reduced_file = "golden_reduced_t.c",
     other_flags = {
-        "--on-demand-reducer-classes": "org.perses.reduction.reducer.vulcan.pattern.LocalExhaustivePatternReducer",
+        "--on-demand-fine-grit-reducer-annotations": "org.perses.reduction.reducer.vulcan.pattern.LocalExhaustivePatternReducer\\$$META",
         "--verbosity": "FINE",
     },
     perses_bin = "//src/org/perses:perses",

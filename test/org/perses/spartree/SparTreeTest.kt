@@ -27,6 +27,7 @@ import org.perses.antlr.ast.PersesRuleReferenceAst
 import org.perses.grammar.c.LanguageC
 import org.perses.program.printer.PrinterRegistry
 import org.perses.spartree.AbstractTreeNode.NodeIdCopyStrategy.ReuseNodeIdStrategy
+import org.perses.util.transformToImmutableList
 import java.nio.file.Paths
 
 @RunWith(JUnit4::class)
@@ -39,7 +40,7 @@ class SparTreeTest {
   private val nodeToTokensMap = TestUtility.createNodeToTokensMap(tree)
 
   @Test
-  fun test_getRemainingLexerRuleNodes() {
+  fun testGetRemainingLexerRuleNodes() {
     val tree = TestUtility.createSparTreeFromString(
       """
       int c;
@@ -53,6 +54,19 @@ class SparTreeTest {
       .let {
         assertThat(it).contains("int c ;")
       }
+  }
+
+  @Test
+  fun testIsDummyNode() {
+    val tree = TestUtility.createSparTreeFromString(
+      sourceCode = ";",
+      languageKind = LanguageC,
+      simplifyTree = false,
+    )
+    val token = tree.remainingLexerRuleNodes.single()
+    assertThat(tree.isDummyNode(token)).isFalse()
+    assertThat(tree.isDummyNode(token.prevLexerRuleTreeNode!!)).isTrue()
+    assertThat(tree.isDummyNode(token.nextLexerRuleTreeNode!!)).isTrue()
   }
 
   @Test
@@ -97,6 +111,21 @@ class SparTreeTest {
   }
 
   @Test
+  fun testDetachRootNodeShouldYieldNoTokenSequence() {
+    val tree = TestUtility.createSparTreeFromString(
+      sourceCode = ";",
+      languageKind = LanguageC,
+    )
+    tree.leafNodeSequence().transformToImmutableList { it.token.text }.let {
+      assertThat(it).containsExactly(";").inOrder()
+    }
+    tree.detachRootFromTree()
+    tree.leafNodeSequence().transformToImmutableList { it.token.text }.let {
+      assertThat(it).hasSize(0)
+    }
+  }
+
+  @Test
   fun testReplaceRootNode() {
     assertThat(
       tree.programSnapshot.tokens.joinToString(separator = "") {
@@ -110,7 +139,7 @@ class SparTreeTest {
     ).detachRootFromTree()
     tree.createAnyNodeReplacementEdit(
       NodeReplacementActionSet.createByReplacingSingleNode(
-        tree.root,
+        tree.realRoot,
         newRootNode,
         "replacement",
       ),
@@ -202,7 +231,7 @@ class SparTreeTest {
     )
     val node2 = nodeToTokensMap.getNode(node2Key, "compoundStatement")
 
-    val replacingNode = node2.recursiveDeepCopy(ReuseNodeIdStrategy)
+    val replacingNode = node2.recursiveDeepCopy(ReuseNodeIdStrategy).result
 
     // remove inputNode out of the tree
     val builder = NodeDeletionActionSet.Builder("edit 1")
@@ -227,6 +256,48 @@ class SparTreeTest {
     assertThat(programByEdit.tokens)
       .containsExactlyElementsIn(programByTree.tokens)
       .inOrder()
+  }
+
+  @Test
+  fun testDeepCopy() {
+    val tree = TestUtility.createSparTreeFromString(
+      sourceCode = "int a;",
+      languageKind = LanguageC,
+      simplifyTree = true,
+    )
+    val copy = tree.deepCopy(ReuseNodeIdStrategy)
+    assertThat(tree.printTreeStructure()).isEqualTo(copy.result.printTreeStructure())
+    tree.realRoot.preOrderVisit { origNode ->
+      val copyNode = copy.getCopyNode(origNode)!!
+      assertThat(copy.getOrigNode(copyNode)).isSameInstanceAs(origNode)
+      assertThat(origNode.printTreeStructure()).isEqualTo(copyNode.printTreeStructure())
+      assertThat(origNode).isNotSameInstanceAs(copyNode)
+      origNode.immutableChildView.forEach { origChild ->
+        val copyChild = copy.getCopyNode(origChild)!!
+        val copyParent = copyChild.parent!!
+        assertThat(copy.getOrigNode(copyParent)).isEqualTo(origNode)
+      }
+      origNode.immutableChildView
+    }
+  }
+
+  @Test
+  fun testCreateRootReplacementEdit() {
+    val tree = TestUtility.createSparTreeFromString(
+      sourceCode = "int a;",
+      languageKind = LanguageC,
+      simplifyTree = true,
+    )
+    val copy = tree.deepCopy(ReuseNodeIdStrategy)
+    val origTreeDump = tree.printTreeStructure()
+    val origRoot = tree.realRoot
+    val edit = tree.createRootReplacementEdit(
+      copy.result.detachRootFromTree(),
+      actionsDescription = "test",
+    )
+    tree.applyEdit(edit)
+    assertThat(tree.printTreeStructure()).isEqualTo(origTreeDump)
+    assertThat(tree.realRoot).isNotSameInstanceAs(origRoot)
   }
 
   @Test

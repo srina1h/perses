@@ -90,7 +90,7 @@ abstract class AbstractRccProgramEncoder protected constructor(
         | afterList size = ${afterList.size}
         """.trimMargin()
       }
-      val size = restored.tokenCount()
+      val size = restored.tokenCount
       for (i in 0 until size) {
         check(origList[i].persesLexemeId == afterList[i].persesLexemeId)
       }

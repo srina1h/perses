@@ -57,14 +57,15 @@ FLAGS_reconfigure=""
 FLAGS_keep_includes=false
 while getopts 'r?:f?:K?:A?' flag; do
   case "${flag}" in
-    f) FLAGS_force=true;;
-    r) FLAGS_reconfigure="--reconfigure";;
-    A) FLAGS_assert=true;;
-    K) FLAGS_keep_includes=true;;
-    ?) usage && exit 1;;
-    *) usage
-       error "Unexpected option ${flag}"
-       ;;
+    f) FLAGS_force=true ;;
+    r) FLAGS_reconfigure="--reconfigure" ;;
+    A) FLAGS_assert=true ;;
+    K) FLAGS_keep_includes=true ;;
+    ?) usage && exit 1 ;;
+    *)
+      usage
+      error "Unexpected option ${flag}"
+      ;;
   esac
 done
 
@@ -144,6 +145,6 @@ for platform in ${PLATFORMS[@]}; do
     -Dhost_bin_dir="$HOST_BIN_DIR" \
     --cross-file="$CROSS_FILE" \
     "$obj_dir"
-  { set +x; } 2>/dev/null
+  { set +x; } 2> /dev/null
   purge_includes "$obj_dir"
 done

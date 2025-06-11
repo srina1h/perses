@@ -28,11 +28,10 @@ class TokenizedProgramTest {
 
   @Test
   fun testCountCharsOfAllTokens() {
-    val tokens = listOf("string", "a", "=", "\" \"", ";")
     val p = TestUtility.createTokenizedProgramFromString(
-      tokens.joinToString(separator = " "),
+      sourceCode = "int a ; ",
       LanguageC,
     )
-    assertThat(p.countCharsOfAllTokens()).isEqualTo(tokens.sumOf { it.length })
+    assertThat(p.totalCharacterCount).isEqualTo(5)
   }
 }

@@ -27,7 +27,7 @@ mkdir -p "$LR_SYNTH_OUT_DIR/log"
 mkdir -p "$LR_SYNTH_OUT_DIR/reports/timing"
 
 for file in ../rtl/*.sv; do
-  module=`basename -s .sv $file`
+  module=$(basename -s .sv $file)
   sv2v \
     --define=SYNTHESIS \
     ../rtl/*_pkg.sv \

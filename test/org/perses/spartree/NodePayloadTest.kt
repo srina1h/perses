@@ -29,6 +29,7 @@ import org.perses.util.toImmutableList
 class NodePayloadTest {
 
   val hierarchy = GrammarHierarchy.createFromString(
+    startRuleName = "a",
     """
       grammar T;
       a : 'a';

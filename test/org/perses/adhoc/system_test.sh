@@ -4,7 +4,7 @@ set -o pipefail
 set -o nounset
 set -o xtrace
 
-if [[ "$#" != 4 ]] ; then
+if [[ "$#" != 4 ]]; then
   echo "${0} <adhoc generator> <grammar file> <yaml config> <perses bin>"
   exit 1
 fi
@@ -43,9 +43,9 @@ chmod +x "${FILE_SCRIPT}"
 
 cd "${ROOT}" || exit 1
 java -jar "${BIN_PERSES}" \
-    --test-script "${FILE_SCRIPT}" \
-    --input-file "${FILE_SOURCE}" \
-    --language-ext-jars "${FILE_JAR}" || exit 1
+  --test-script "${FILE_SCRIPT}" \
+  --input-file "${FILE_SOURCE}" \
+  --language-ext-jars "${FILE_JAR}" || exit 1
 cd "perses_result" || exit 1
 grep "int" && exit 1
 exit 0

@@ -22,6 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import org.perses.program.TokenizedProgram
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent.TestScriptExecutionEvent
+import org.perses.reduction.event.AdHocMessageEvent
 import org.perses.reduction.event.BestProgramUpdateEvent
 import org.perses.reduction.event.FixpointIterationEndEvent
 import org.perses.reduction.event.FixpointIterationStartEvent
@@ -44,7 +45,6 @@ import org.perses.spartree.AbstractActionSet
 import org.perses.spartree.AbstractSparTreeEdit
 import org.perses.util.DaemonThreadPool
 import org.perses.util.FileNameContentPair
-import org.perses.util.ktSevere
 import java.io.Closeable
 
 class AsyncReductionListenerManager(
@@ -60,17 +60,14 @@ class AsyncReductionListenerManager(
 
   private fun submitEvent(action: (AbstractReductionListener) -> Unit): ListenableFuture<*> {
     return executorService.submit {
-      try {
-        for (listener in listeners) {
-          action(listener)
-        }
-      } catch (e: Throwable) {
-        // Note this exception handling is necessary, because
-        logger.ktSevere {
-          "An exception has been thrown during the execution of the events. $e"
-        }
+      for (listener in listeners) {
+        action(listener)
       }
     }
+  }
+
+  fun onAdHocMessageEvent(event: AdHocMessageEvent) {
+    submitEvent { listener -> listener.onAdHocMessageEvent(event) }
   }
 
   fun onReductionStart(event: ReductionStartEvent) {

@@ -31,7 +31,7 @@ cp build/formal_0/src/*/*/*.sv build/formal_0/src/*/*/*/*.sv syn_out
 cd syn_out
 
 for file in *.sv; do
-  module=`basename -s .sv $file`
+  module=$(basename -s .sv $file)
   echo $file
   sv2v --define=VERILATOR --define=SYNTHESIS *_pkg.sv prim_assert.sv $file > ${module}.v
 
@@ -50,15 +50,15 @@ done
 printf "\n\nLEC RESULTS:\n"
 cd ../../hw/formal
 for file in ../../util/syn_out/*.v; do
-  module=`basename -s .v $file`
+  module=$(basename -s .v $file)
   lec_sv2v ../../util/syn_out $module > /dev/null 2>&1
 
   # summarize results
-  result=`grep "Compare Results" lec_${module}.log`
+  result=$(grep "Compare Results" lec_${module}.log)
   if [ $? -ne 0 ]; then
     result="CRASH"
   else
-    result=`echo $result | awk '{ print $4 }'`
+    result=$(echo $result | awk '{ print $4 }')
   fi
   printf "%-25s %s\n" $module $result
 done

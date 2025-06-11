@@ -44,4 +44,3 @@ EOT
 
 /opt/Xilinx/Vivado/2014.4/bin/vivado -mode batch -nojournal -log lm32/gen/vivado_rtl.log -source lm32/gen/vivado_rtl.tcl
 /opt/Xilinx/Vivado/2014.4/bin/vivado -mode batch -nojournal -log lm32/gen/vivado_yosys.log -source lm32/gen/vivado_yosys.tcl
-

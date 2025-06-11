@@ -37,7 +37,7 @@ class PristineHDDReducer(
   override fun internalReduce(fixpointReductionState: FixpointReductionState) {
     val tree = fixpointReductionState.sparTree.getTreeRegardlessOfParsability()
     SparTreeSimplifier.simplify(tree)
-    var currentLevel = ImmutableList.of(tree.root)
+    var currentLevel = ImmutableList.of(tree.realRoot)
     while (currentLevel.isNotEmpty()) {
       val debugger = PristineDeltaDebugger(
         createDeltaArguments(
@@ -52,23 +52,21 @@ class PristineHDDReducer(
     }
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext) = ImmutableList.of<AbstractTokenReducer>(
+      PristineHDDReducer(
+        reducerContext,
+      ),
+    )
+  }
   companion object {
 
     const val NAME = "pristine_hdd"
-
-    @JvmStatic
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext) = ImmutableList.of<AbstractTokenReducer>(
-        PristineHDDReducer(
-          reducerContext,
-        ),
-      )
-    }
 
     fun moveToNextLevel(
       current: ImmutableList<AbstractSparTreeNode>,

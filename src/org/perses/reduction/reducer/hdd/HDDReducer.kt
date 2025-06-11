@@ -25,19 +25,18 @@ import org.perses.reduction.ReducerContext
 class HDDReducer(reducerContext: ReducerContext) :
   AbstractLevelBasedReducer(META, reducerContext) {
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "A variant of HDD.",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(HDDReducer(reducerContext))
+    }
+  }
+
   companion object {
     const val NAME = "hdd"
-
-    @JvmField
-    val META: ReducerAnnotation = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "A variant of HDD.",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(HDDReducer(reducerContext))
-      }
-    }
   }
 }

@@ -19,6 +19,7 @@ package org.perses
 import org.perses.cmd.CacheControlFlagGroup
 import org.perses.cmd.ExperimentFlagGroup
 import org.perses.cmd.InputFlagGroup
+import org.perses.cmd.LPRFlagGroup
 import org.perses.cmd.LanguageControlFlagGroup
 import org.perses.cmd.OutputFlagGroup
 import org.perses.cmd.OutputRefiningFlagGroup
@@ -55,6 +56,8 @@ open class CommandOptions : AbstractCommandOptions() {
   val cacheControlFlags = registerFlags(CacheControlFlagGroup())
 
   val experimentFlags = registerFlags(ExperimentFlagGroup())
+
+  val lprFlags = registerFlags(LPRFlagGroup())
 
   open fun createInputFlags() = InputFlagGroup()
 }

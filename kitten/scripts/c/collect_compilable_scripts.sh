@@ -17,10 +17,8 @@ readonly RESULT_FOLDER="${2}"
 mkdir -p "${RESULT_FOLDER}"
 [[ -d "${RESULT_FOLDER}" ]] || exit "${ERROR_CODE}"
 
-
-
-if timeout -s 9 60 gcc-trunk -c -O3 -g "${FILE}" && \
-   timeout -s 9 60 clang-trunk -c -O3 -g "${FILE}" ; then
+if timeout -s 9 60 gcc-trunk -c -O3 -g "${FILE}" \
+  && timeout -s 9 60 clang-trunk -c -O3 -g "${FILE}"; then
 
   readonly PID="$$"
   readonly SAVED_FILE_PATH="${RESULT_FOLDER}/$(date +"%y-%m-%d_%H-%M-%s")_${PID}_${RANDOM}.c"

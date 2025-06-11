@@ -10,10 +10,10 @@
 # doing it wrong.
 
 if [[ "$1" == "--help" || "$1" == "-h" || "$1" == "" || "$2" == "" ]]; then
-    echo "usage: $0 <build-directory> <relative-path-to-rs-files>"
-    echo ""
-    echo "For example:"
-    echo "   $0 ../../../build/x86_64-apple-darwin/test/ui *.rs */*.rs"
+  echo "usage: $0 <build-directory> <relative-path-to-rs-files>"
+  echo ""
+  echo "For example:"
+  echo "   $0 ../../../build/x86_64-apple-darwin/test/ui *.rs */*.rs"
 fi
 
 MYDIR=$(dirname "$0")
@@ -22,23 +22,23 @@ BUILD_DIR="$1"
 shift
 
 while [[ "$1" != "" ]]; do
-    STDERR_NAME="${1/%.rs/.stderr}"
-    STDOUT_NAME="${1/%.rs/.stdout}"
-    FIXED_NAME="${1/%.rs/.fixed}"
-    shift
-    if [[ -f "$BUILD_DIR"/"$STDOUT_NAME" ]] && \
-           ! (cmp -s -- "$BUILD_DIR"/"$STDOUT_NAME" "$MYDIR"/"$STDOUT_NAME"); then
-        echo updating "$MYDIR"/"$STDOUT_NAME"
-        cp "$BUILD_DIR"/"$STDOUT_NAME" "$MYDIR"/"$STDOUT_NAME"
-    fi
-    if [[ -f "$BUILD_DIR"/"$STDERR_NAME" ]] && \
-           ! (cmp -s -- "$BUILD_DIR"/"$STDERR_NAME" "$MYDIR"/"$STDERR_NAME"); then
-        echo updating "$MYDIR"/"$STDERR_NAME"
-        cp "$BUILD_DIR"/"$STDERR_NAME" "$MYDIR"/"$STDERR_NAME"
-    fi
-    if [[ -f "$BUILD_DIR"/"$FIXED_NAME" ]] && \
-           ! (cmp -s -- "$BUILD_DIR"/"$FIXED_NAME" "$MYDIR"/"$FIXED_NAME"); then
-        echo updating "$MYDIR"/"$FIXED_NAME"
-        cp "$BUILD_DIR"/"$FIXED_NAME" "$MYDIR"/"$FIXED_NAME"
-    fi
+  STDERR_NAME="${1/%.rs/.stderr}"
+  STDOUT_NAME="${1/%.rs/.stdout}"
+  FIXED_NAME="${1/%.rs/.fixed}"
+  shift
+  if [[ -f "$BUILD_DIR"/"$STDOUT_NAME" ]] \
+    && ! (cmp -s -- "$BUILD_DIR"/"$STDOUT_NAME" "$MYDIR"/"$STDOUT_NAME"); then
+    echo updating "$MYDIR"/"$STDOUT_NAME"
+    cp "$BUILD_DIR"/"$STDOUT_NAME" "$MYDIR"/"$STDOUT_NAME"
+  fi
+  if [[ -f "$BUILD_DIR"/"$STDERR_NAME" ]] \
+    && ! (cmp -s -- "$BUILD_DIR"/"$STDERR_NAME" "$MYDIR"/"$STDERR_NAME"); then
+    echo updating "$MYDIR"/"$STDERR_NAME"
+    cp "$BUILD_DIR"/"$STDERR_NAME" "$MYDIR"/"$STDERR_NAME"
+  fi
+  if [[ -f "$BUILD_DIR"/"$FIXED_NAME" ]] \
+    && ! (cmp -s -- "$BUILD_DIR"/"$FIXED_NAME" "$MYDIR"/"$FIXED_NAME"); then
+    echo updating "$MYDIR"/"$FIXED_NAME"
+    cp "$BUILD_DIR"/"$FIXED_NAME" "$MYDIR"/"$FIXED_NAME"
+  fi
 done

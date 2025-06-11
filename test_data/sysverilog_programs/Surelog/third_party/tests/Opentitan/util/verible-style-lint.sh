@@ -13,7 +13,7 @@ REPORT_FILE="verible-style-lint.rpt"
 EXCLUDED_RULES="-macro-name-style"
 
 # get all system verilog files and pipe through style linter
-find hw/{ip,vendor,top_earlgrey} -type f -name "*.sv" -o -name "*.svh" |  \
-    xargs -n 1 -P $NUM_PROCS /tools/verible/verilog_lint                  \
-    --rules=$EXCLUDED_RULES                                               \
-    | tee $REPORT_FILE
+find hw/{ip,vendor,top_earlgrey} -type f -name "*.sv" -o -name "*.svh" \
+  | xargs -n 1 -P $NUM_PROCS /tools/verible/verilog_lint \
+    --rules=$EXCLUDED_RULES \
+  | tee $REPORT_FILE

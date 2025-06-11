@@ -10,8 +10,10 @@ readonly MAIN_TARGET="//antlrrdc/src/org/perses/antlr/reducer:main"
 
 bazelisk build "${MAIN_TARGET}"
 
-readonly WORKSPACE_ROOT="$(cd ../../../../../ ; pwd)"
-
+readonly WORKSPACE_ROOT="$(
+  cd ../../../../../
+  pwd
+)"
 
 [[ -f "${WORKSPACE_ROOT}/WORKSPACE" ]] || exit 1
 

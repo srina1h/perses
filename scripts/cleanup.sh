@@ -4,7 +4,7 @@ set -o nounset
 set -o pipefail
 set -o errexit
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 source "${SCRIPT_DIR}/constants.sh" || exit 1
 

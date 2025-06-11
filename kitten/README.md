@@ -19,6 +19,10 @@ As of February 2025, Kitten has detected over **300 bugs**, many of which have b
 This repository contains the source code for **Kitten**, along with installation
 and usage instructions.
 
+A demonstration video illustrating its usage is available below:
+[![Watch the video](https://img.youtube.com/vi/hVqZBxRTr_4/maxresdefault.jpg)](https://youtu.be/hVqZBxRTr_4)
+
+
 ## Table of Contents
 - [Getting Started](#getting-started)
   - [Build From Source](#build-from-source)

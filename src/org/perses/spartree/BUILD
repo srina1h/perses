@@ -4,7 +4,7 @@ package(default_visibility = [
     "//visibility:public",
 ])
 
-# TODO: need to split this target. It is too big. For example, tree_node, tree_edit_actions, tree_and_tree_edit
+# TODO(cnsun): need to split this target. It is too big. For example, tree_node, tree_edit_actions, tree_and_tree_edit
 
 kt_jvm_library(
     name = "tree_node_filter_result",
@@ -29,8 +29,11 @@ kt_jvm_library(
         "AbstractTreeNode.kt",
         "AbstractUnmodifiableSparTree.kt",
         "AnyNodeReplacementTreeEdit.kt",
+        "DeepCopyResult.kt",
         "DescendantHoistingTreeEdit.kt",
         "ErrorMessage.kt",
+        "GroupingSparTreeNode.kt",
+        "ISparTreeAntlrTreeMapping.kt",
         "LatraGeneralActionSet.kt",
         "LatraGeneralTreeEdit.kt",
         "LexerRuleSparTreeNode.kt",

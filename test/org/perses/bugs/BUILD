@@ -1,4 +1,4 @@
-load("//test/org/perses:test.bzl", "copy")
+load("//:perses.bzl", "copy")
 
 package(default_visibility = [
     "//fuzzer/org/perses:__subpackages__",

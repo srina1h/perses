@@ -23,9 +23,16 @@ import org.perses.antlr.protobuf.GrammarHierarchyOuterClass
 
 /** This is the rule hierarchy, which can be used as an approximation of the class hierarchy.  */
 class GrammarHierarchy internal constructor(
+  startRuleName: String,
   val ruleList: ImmutableList<RuleHierarchyEntry>,
   private val nameToRuleMap: ImmutableMap<String, RuleHierarchyEntry>,
 ) {
+
+  val startRule = getRuleHierarchyEntryWithNameOrThrow(startRuleName)
+
+  val reachabilityGraph: RuleReachabilityGraph by lazy {
+    RuleReachabilityGraph(startRule, ruleList, nameToRuleMap)
+  }
 
   fun getRuleHierarchyEntryOrNull(tokenRuleName: String): RuleHierarchyEntry? {
     return nameToRuleMap[tokenRuleName]
@@ -44,12 +51,13 @@ class GrammarHierarchy internal constructor(
   }
 
   companion object {
+
     @JvmStatic
-    fun createFromString(content: String): GrammarHierarchy {
+    fun createFromString(startRuleName: String, content: String): GrammarHierarchy {
       val rawAst = AntlrGrammarParser.parseRawGrammarASTFromString(content)
       val persesGrammar = PersesAstBuilder(rawAst).grammar
       return createFromCombinedAntlrGrammar(
-        AbstractAntlrGrammar.CombinedAntlrGrammar(persesGrammar),
+        AbstractAntlrGrammar.CombinedAntlrGrammar(startRuleName, persesGrammar),
       )
     }
 

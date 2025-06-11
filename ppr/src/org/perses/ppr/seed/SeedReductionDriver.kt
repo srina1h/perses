@@ -101,7 +101,7 @@ class SeedReductionDriver private constructor(
       val seedPersesTokens = seedTree.programSnapshot.tokens
 
       // parse variant file into tokens
-      val variantTokens = parserFacade.parseIntoTokens(cmd.seedInputFlags.variantFile!!)
+      val variantTokens = parserFacade.tokenizeFile(cmd.seedInputFlags.variantFile!!)
         .filter { it.channel == Token.DEFAULT_CHANNEL }
       val variantTokenizedProgramFactory = TokenizedProgramFactory
         .createFactory(variantTokens, languageKind)

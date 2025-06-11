@@ -7,7 +7,7 @@
 # This script converts all SystemVerilog RTL files to Verilog
 # using sv2v and then runs LEC (Cadence Conformal) to check if
 # the generated Verilog is logically equivalent to the original
-# SystemVerilog.  A similar script is used in OpenTitan, any updates 
+# SystemVerilog.  A similar script is used in OpenTitan, any updates
 # or fixes here may need to be reflected in the OpenTitan script as well
 # https://github.com/lowRISC/opentitan/blob/master/util/syn_yosys.sh
 #
@@ -45,7 +45,7 @@ sed 's/.sv/.v/' flist_gold | grep -v "_pkg.v" > flist_rev
 printf "\nSV2V ERRORS:\n"
 
 for file in *.sv; do
-  module=`basename -s .sv $file`
+  module=$(basename -s .sv $file)
   sv2v --define=SYNTHESIS *_pkg.sv prim_assert.sv $file > ${module}.v
 done
 
@@ -62,20 +62,20 @@ cp ../rtl/prim_clock_gating.v prim_clock_gating.sv
 printf "\n\nLEC RESULTS:\n"
 
 for file in *.v; do
-  export LEC_TOP=`basename -s .v $file`
+  export LEC_TOP=$(basename -s .v $file)
 
   # run Conformal LEC
   lec -xl -nogui -nobanner \
-    -dofile  ../lec_sv2v.do \
+    -dofile ../lec_sv2v.do \
     -logfile lec_${LEC_TOP}.log \
     <<< "exit -force" > /dev/null 2>&1
 
   # summarize results
-  check=`grep "Compare Results" lec_${LEC_TOP}.log`
+  check=$(grep "Compare Results" lec_${LEC_TOP}.log)
   if [ $? -ne 0 ]; then
     result="CRASH"
   else
-    result=`echo $check | awk '{ print $4 }'`
+    result=$(echo $check | awk '{ print $4 }')
   fi
   printf "%-25s %s\n" $LEC_TOP $result
 done

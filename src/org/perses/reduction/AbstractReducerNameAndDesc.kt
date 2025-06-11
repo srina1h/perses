@@ -16,4 +16,17 @@
  */
 package org.perses.reduction
 
-open class AbstractReducerNameAndDesc(val shortName: String, val description: String)
+import com.google.common.base.MoreObjects
+
+open class AbstractReducerNameAndDesc(val shortName: String, val description: String) {
+  override fun toString(): String {
+    return MoreObjects.toStringHelper(this)
+      .add("shortName", shortName)
+      .add("description", description)
+      .also { extraToString(it) }
+      .toString()
+  }
+
+  protected open fun extraToString(stringHelper: MoreObjects.ToStringHelper) {
+  }
+}

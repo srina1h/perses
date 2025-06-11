@@ -227,8 +227,8 @@ object PPRDiffUtils {
     seedSparTree: SparTree,
     variantSparTree: SparTree,
   ): DiffNodes {
-    val seedTreeContextInfo = sparTreeNode2TreeContext(seedSparTree.root)
-    val variantTreeContextInfo = sparTreeNode2TreeContext(variantSparTree.root)
+    val seedTreeContextInfo = sparTreeNode2TreeContext(seedSparTree.realRoot)
+    val variantTreeContextInfo = sparTreeNode2TreeContext(variantSparTree.realRoot)
 
     val seedTree = seedTreeContextInfo.treeContext
     val variantTree = variantTreeContextInfo.treeContext

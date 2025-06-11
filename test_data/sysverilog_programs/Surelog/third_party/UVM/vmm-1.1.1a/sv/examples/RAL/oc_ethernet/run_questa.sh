@@ -1,27 +1,27 @@
 #!/bin/sh
 
-if [ "$1" = clean ] ; then
-  rm -rf *.log *.log.filtered *.wlf transcript* work questa.do ral_oc_ethernet.sv; exit
+if [ "$1" = clean ]; then
+  rm -rf *.log *.log.filtered *.wlf transcript* work questa.do ral_oc_ethernet.sv
+  exit
 fi
 
-if [ -z "$1" ] ; then
-LIST="hw_reset bit_bash reg_access mem_walk"
+if [ -z "$1" ]; then
+  LIST="hw_reset bit_bash reg_access mem_walk"
 else
-LIST=$1
+  LIST=$1
 fi
 
-if [ -z "$VMM_HOME" ] ; then
-${VMM_HOME:=../../../..}
+if [ -z "$VMM_HOME" ]; then
+  ${VMM_HOME:=../../../..}
 fi
 
-if [ -z "$VMM_DPI_DIR" ] ; then
-${VMM_DPI_DIR:=$VMM_HOME/shared/lib/linux_x86_64}
+if [ -z "$VMM_DPI_DIR" ]; then
+  ${VMM_DPI_DIR:=$VMM_HOME/shared/lib/linux_x86_64}
 fi
-
 
 #internal use only
-check () {
-  if [ -n "$INTEROP_REGRESS" ] ; then
+check() {
+  if [ -n "$INTEROP_REGRESS" ]; then
     perl $VMM_HOME/sv/examples/regress/regress_passfail.pl $EXAMPLE.log "RAL/oc_ethernet" $VMM_HOME/sv/examples/results.log
   fi
 }

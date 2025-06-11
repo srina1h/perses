@@ -52,8 +52,8 @@ class TreeDiffReductionDriver private constructor(
   listenerManager,
 ) {
 
-  override fun createMainReducer(): ReducerAnnotation {
-    return CustomizedTreeNodesReducer.Companion.ExtendedReducerAnnotation(treeDiff)
+  override fun createMainReducerCreator(): ReducerAnnotation {
+    return CustomizedTreeNodesReducer.ExtendedReducerAnnotation(treeDiff)
   }
 
   companion object {

@@ -3,14 +3,14 @@
 set -o nounset
 set -o pipefail
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <log file>"
   exit 1
 fi
 
 readonly FILE="$1"
 
-if grep --quiet 'Fixpoint\[0\]' "${FILE}" ; then
+if grep --quiet 'Fixpoint\[0\]' "${FILE}"; then
   echo "Fixpoint iterations should start with 1, but not 0"
   exit 1
 fi

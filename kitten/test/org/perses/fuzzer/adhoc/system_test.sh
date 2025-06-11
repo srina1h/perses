@@ -4,7 +4,7 @@ set -o pipefail
 set -o nounset
 set -o xtrace
 
-if [[ "$#" != 4 ]] ; then
+if [[ "$#" != 4 ]]; then
   echo "${0} <adhoc generator> <grammar file> <yaml config> <fuzzer bin>"
   exit 1
 fi

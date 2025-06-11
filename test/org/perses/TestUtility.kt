@@ -22,6 +22,7 @@ import org.antlr.v4.runtime.CommonToken
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNode
+import org.perses.antlr.ParseTreeUtil
 import org.perses.antlr.ParseTreeWithParser
 import org.perses.grammar.AbstractParserFacade
 import org.perses.grammar.SingleParserFacadeFactory
@@ -375,8 +376,15 @@ object TestUtility {
   fun createTokenizedProgramFromString(
     sourceCode: String,
     languageKind: LanguageKind,
+    simplifyTree: Boolean = true,
+    sparTreeNodeFactory: SparTreeNodeFactory? = null,
   ): TokenizedProgram {
-    return createSparTreeFromString(sourceCode, languageKind).programSnapshot
+    return createSparTreeFromString(
+      sourceCode,
+      languageKind,
+      simplifyTree,
+      sparTreeNodeFactory,
+    ).programSnapshot
   }
 
   @JvmStatic
@@ -388,29 +396,35 @@ object TestUtility {
     sourceCode: String,
     languageKind: LanguageKind,
     simplifyTree: Boolean = true,
+    sparTreeNodeFactory: SparTreeNodeFactory? = null,
   ): SparTree {
     val facade = getFacade(languageKind)
-    return createSparTreeFromString(sourceCode, facade, simplifyTree)
+    return createSparTreeFromString(sourceCode, facade, simplifyTree, sparTreeNodeFactory)
   }
 
   fun createSparTreeFromString(
     sourceCode: String,
     facade: AbstractParserFacade,
     simplifyTree: Boolean,
+    sparTreeNodeFactory: SparTreeNodeFactory? = null,
   ): SparTree {
     val languageKind = facade.language
     val parseTreeWithParser = facade.parseString(sourceCode)
-    val factory = createFactory(
-      AbstractParserFacade.getTokens(parseTreeWithParser.tree),
-      languageKind,
-    )
-    val sparTreeNodeFactory = SparTreeNodeFactory(
-      facade.metaTokenInfoDb,
-      factory,
-      facade.ruleHierarchy,
-    )
+    val realSparTreeNodeFactory = if (sparTreeNodeFactory == null) {
+      val factory = createFactory(
+        ParseTreeUtil.getTokens(parseTreeWithParser.tree),
+        languageKind,
+      )
+      SparTreeNodeFactory(
+        facade.metaTokenInfoDb,
+        factory,
+        facade.ruleHierarchy,
+      )
+    } else {
+      sparTreeNodeFactory
+    }
     return SparTreeBuilder(
-      sparTreeNodeFactory,
+      realSparTreeNodeFactory,
       parseTreeWithParser,
       simplifyTree = simplifyTree,
     ).result
@@ -420,7 +434,7 @@ object TestUtility {
   fun createSparTreeFromFile(file: Path): SparTree {
     val (parseTree) = parseFile(file)
     val factory = createFactory(
-      AbstractParserFacade.getTokens(parseTree),
+      ParseTreeUtil.getTokens(parseTree),
       parserFacadeFactory.computeLanguageKindWithFileName(file)!!,
     )
     return createSparTreeFromFile(file, factory)
@@ -525,7 +539,7 @@ object TestUtility {
 
   fun createNodeToTokensMap(tree: SparTree): NodeToTokensMap {
     val builder = HashMap<AbstractSparTreeNode, ImmutableList<String>>()
-    recursiveCreateNodeToTokensMap(builder, tree.root)
+    recursiveCreateNodeToTokensMap(builder, tree.realRoot)
     return NodeToTokensMap(ImmutableMap.copyOf(builder))
   }
 

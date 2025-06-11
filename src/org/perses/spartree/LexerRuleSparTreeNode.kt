@@ -32,6 +32,12 @@ class LexerRuleSparTreeNode internal constructor(
   @PublishedApi
   internal var next: LexerRuleSparTreeNode? = null
 
+  val prevLexerRuleTreeNode: LexerRuleSparTreeNode?
+    get() = prev
+
+  val nextLexerRuleTreeNode: LexerRuleSparTreeNode?
+    get() = next
+
   override val labelPrefix: String
     get() = "Token:" + token.text
 
@@ -43,7 +49,11 @@ class LexerRuleSparTreeNode internal constructor(
     return LexerRuleSparTreeNode(computedNewNodeId, token, antlrRule)
   }
 
-  override fun addChild(child: AbstractSparTreeNode, payload: AbstractNodePayload) {
+  override fun addChildAtIndex(
+    index: Int,
+    child: AbstractSparTreeNode,
+    payload: AbstractNodePayload,
+  ) {
     error("Cannot call this method on a token node.")
   }
 

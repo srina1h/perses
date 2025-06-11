@@ -32,19 +32,19 @@ if [ "$SET_HARD_RLIMIT_STACK" = "1" ]; then
   fi
 fi
 
-ci_dir=`cd $(dirname $0) && pwd`
+ci_dir=$(cd $(dirname $0) && pwd)
 source "$ci_dir/shared.sh"
 
 if command -v python > /dev/null; then
-    PYTHON="python"
+  PYTHON="python"
 elif command -v python3 > /dev/null; then
-    PYTHON="python3"
+  PYTHON="python3"
 else
-    PYTHON="python2"
+  PYTHON="python2"
 fi
 
 if ! isCI || isCiBranch auto || isCiBranch beta; then
-    RUST_CONFIGURE_ARGS="$RUST_CONFIGURE_ARGS --set build.print-step-timings --enable-verbose-tests"
+  RUST_CONFIGURE_ARGS="$RUST_CONFIGURE_ARGS --set build.print-step-timings --enable-verbose-tests"
 fi
 
 RUST_CONFIGURE_ARGS="$RUST_CONFIGURE_ARGS --enable-sccache"
@@ -101,7 +101,7 @@ else
 fi
 
 if [ "$RUST_RELEASE_CHANNEL" = "nightly" ] || [ "$DIST_REQUIRE_ALL_TOOLS" = "" ]; then
-    RUST_CONFIGURE_ARGS="$RUST_CONFIGURE_ARGS --enable-missing-tools"
+  RUST_CONFIGURE_ARGS="$RUST_CONFIGURE_ARGS --enable-missing-tools"
 fi
 
 export COMPILETEST_NEEDS_ALL_LLVM_COMPONENTS=1
@@ -115,7 +115,7 @@ datecheck() {
   date
   echo -n "  network time: "
   curl -fs --head http://detectportal.firefox.com/success.txt | grep ^Date: \
-      | sed 's/Date: //g' || true
+    | sed 's/Date: //g' || true
   echo "== end clock drift check =="
 }
 datecheck
@@ -143,13 +143,13 @@ make check-bootstrap
 # Display the CPU and memory information. This helps us know why the CI timing
 # is fluctuating.
 if isMacOS; then
-    system_profiler SPHardwareDataType || true
-    sysctl hw || true
-    ncpus=$(sysctl -n hw.ncpu)
+  system_profiler SPHardwareDataType || true
+  sysctl hw || true
+  ncpus=$(sysctl -n hw.ncpu)
 else
-    cat /proc/cpuinfo || true
-    cat /proc/meminfo || true
-    ncpus=$(grep processor /proc/cpuinfo | wc -l)
+  cat /proc/cpuinfo || true
+  cat /proc/meminfo || true
+  ncpus=$(grep processor /proc/cpuinfo | wc -l)
 fi
 
 if [ ! -z "$SCRIPT" ]; then

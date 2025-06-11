@@ -24,6 +24,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.perses.util.Util.EnumStopCriterion
 import org.perses.util.Util.NonEmptyInternal
 import org.perses.util.Util.SpaceSize
 import org.perses.util.Util.computeDifference
@@ -31,6 +32,7 @@ import org.perses.util.Util.computePercentage
 import org.perses.util.Util.createAppendablePrintStream
 import org.perses.util.Util.createNonAppendablePrintStream
 import org.perses.util.Util.ensureDirExists
+import org.perses.util.Util.fixpoint
 import org.perses.util.Util.globWithFileNameExts
 import org.perses.util.Util.hashListOfStrings
 import org.perses.util.Util.isEmptyDirectory
@@ -48,6 +50,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.LinkedList
 import java.util.function.Predicate
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
 import kotlin.io.path.name
@@ -60,11 +63,42 @@ class UtilTest {
 
   private var tempDir: Path = Files.createTempDirectory(this::class.qualifiedName)
 
+  @OptIn(ExperimentalPathApi::class)
   @After
   fun teardown() {
     tempDir.deleteRecursively()
   }
 
+  @Test
+  fun testFixpoint() {
+    val initial = 0
+    val max = 2
+    val history = mutableListOf<Int>()
+    val result = fixpoint(
+      initial = initial,
+    ) { value ->
+      history.add(value)
+      if (value == max) {
+        max
+      } else {
+        value + 1
+      }
+    }
+    assertThat(result).isEqualTo(max)
+    assertThat(history).isEqualTo(
+      (0..max).toList(),
+    )
+  }
+
+  @Test
+  fun testFixpointStopCriterion() {
+    assertThat(EnumStopCriterion.stopIfTrue(true)).isEqualTo(EnumStopCriterion.STOP)
+    assertThat(EnumStopCriterion.stopIfTrue(false)).isEqualTo(EnumStopCriterion.CONTINUE)
+    assertThat(EnumStopCriterion.continueIfTrue(true)).isEqualTo(EnumStopCriterion.CONTINUE)
+    assertThat(EnumStopCriterion.continueIfTrue(false)).isEqualTo(EnumStopCriterion.STOP)
+  }
+
+  @OptIn(ExperimentalPathApi::class)
   @Test
   fun testCreateTempDir() {
     val dir = Util.createTempDirFor(this)

@@ -16,9 +16,10 @@
  */
 package org.perses.program
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSet
-import org.perses.util.YamlUtil
+import org.perses.util.Serialization
 import org.perses.util.shell.ShellCommandOnPath
 import org.perses.util.shell.ShellCommandOnPath.IShellCommandOnPathCreator
 import org.perses.util.toImmutableList
@@ -55,7 +56,7 @@ class SerializableLanguageKind internal constructor(
   ) {
 
     fun toYamlString(): String {
-      return YamlUtil.toYamlString(this)
+      return Serialization.toYamlString(this)
     }
 
     fun toLanguageKind(): SerializableLanguageKind = SerializableLanguageKind(this)
@@ -80,7 +81,9 @@ class SerializableLanguageKind internal constructor(
   companion object {
     @JvmStatic
     fun fromYamlString(yaml: String): SerializableLanguageKind {
-      return SerializableLanguageKind(YamlUtil.fromYamlString(yaml, LanguageKindData::class.java))
+      return SerializableLanguageKind(
+        Serialization.fromYamlString(yaml, object : TypeReference<LanguageKindData>() {}),
+      )
     }
   }
 }

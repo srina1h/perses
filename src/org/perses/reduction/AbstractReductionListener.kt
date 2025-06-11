@@ -17,6 +17,7 @@
 package org.perses.reduction
 
 import org.perses.reduction.event.AbstractTestScriptExecutionEvent
+import org.perses.reduction.event.AdHocMessageEvent
 import org.perses.reduction.event.BestProgramUpdateEvent
 import org.perses.reduction.event.FixpointIterationEndEvent
 import org.perses.reduction.event.FixpointIterationStartEvent
@@ -91,4 +92,6 @@ abstract class AbstractReductionListener : AutoCloseable {
   abstract fun onBestProgramUpdated(event: BestProgramUpdateEvent)
   abstract fun onReductionSkipped(event: ReductionSkippedEvent)
   abstract fun onSanityCheck(event: SanityCheckEvent)
+
+  abstract fun onAdHocMessageEvent(event: AdHocMessageEvent)
 }

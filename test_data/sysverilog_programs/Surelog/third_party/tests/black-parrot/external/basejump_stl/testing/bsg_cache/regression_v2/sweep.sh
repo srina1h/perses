@@ -3,12 +3,12 @@
 echo "start test" > test_result.log
 run_test() {
   make clean
-  make -j8  YUMI_MIN_DELAY_P=$1  \
-            YUMI_MAX_DELAY_P=$2  \
-            DMA_READ_DELAY_P=$3  \
-            DMA_WRITE_DELAY_P=$4 \
-            DMA_REQ_DELAY_P=$5   \
-            DMA_DATA_DELAY_P=$6
+  make -j8 YUMI_MIN_DELAY_P=$1 \
+    YUMI_MAX_DELAY_P=$2 \
+    DMA_READ_DELAY_P=$3 \
+    DMA_WRITE_DELAY_P=$4 \
+    DMA_REQ_DELAY_P=$5 \
+    DMA_DATA_DELAY_P=$6
   echo "################" >> test_result.log
   echo $1 $2 $3 $4 $5 $6 >> test_result.log
   make summary >> test_result.log

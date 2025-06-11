@@ -85,13 +85,29 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses: null
+  onDemandFineGritReducerAnnotationClasses: []
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.python3.Python3ParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<fixpoint>
+body: !<atomic>
+  reducer: perses_node_priority_with_dfs_delta
+condition: smaller
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -194,15 +210,63 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@1
+    --file: hello.py--
+    def main():
+        a = True
+        if a:
+            print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        a = True
+        if a:
+            print("hello world")
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@2
+    --file: hello.py--
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@1
+    --file: hello.py--
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@1
+    --file: hello.py--
+    def main():
+        a = True
+        if a:
+            print("hello world")
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        a = True
+        if a:
+            print("hello world")
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ===========TestScriptExecutionCacheEntryEviction============
 
 0 entries are removed: 0 --> 0.
@@ -212,6 +276,12 @@ The current best program is the following
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 36 -> 35
 ------------------------------------------------------------
 
 
@@ -238,24 +308,99 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    a = True
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    a = True
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    if a:
+        print("hello world")
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    if a:
+        print("hello world")
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]kleene replacement
+    --file: hello.py--
+    a = True
+    if a:
+        print("hello world")
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    a = True
+    if a:
+        print("hello world")
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 79
@@ -279,12 +424,51 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+    a = True
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+    a = True
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+    print("hello world")
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+    print("hello world")
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    if __name__ == '__main__':
+        main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    if __name__ == '__main__':
+        main()
+------------------------------------------------------------
+
+
 ===========TestScriptExecutionCacheEntryEviction============
 
 0 entries are removed: 0 --> 0.
@@ -294,6 +478,12 @@ The current best program is the following
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 35 -> 25
 ------------------------------------------------------------
 
 
@@ -318,18 +508,67 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: [regular_node]kleene replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main()
+------------------------------------------------------------
+
+
 ============Test script execution is cancelled.=============
 
 It took less than 1 second to cancel the task.
+
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main()
+------------------------------------------------------------
+
 
 ===========TestScriptExecutionCacheEntryEviction============
 
@@ -340,6 +579,12 @@ It took less than 1 second to cancel the task.
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 25 -> 17
 ------------------------------------------------------------
 
 
@@ -369,8 +614,8 @@ The current best program is the following
     main()
     --file: <formatted tokenized program in its original format>--
     def main():
-            print("hello world")
-        main())
+    print("hello world")
+    main()
 ------------------------------------------------------------
 
 
@@ -428,12 +673,45 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print
+    main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        "hello world"
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        "hello world"
+    main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        "hello world"
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        "hello world"
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 123
@@ -454,6 +732,15 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_plus:kleene_plus__suite_1]can be epsilon
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 15
@@ -474,6 +761,15 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 18
@@ -494,6 +790,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__atom_expr_2]dd@1
+    --file: hello.py--
+    def main():
+        print
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 125
@@ -514,6 +821,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 127
@@ -534,6 +852,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 38
@@ -571,6 +900,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__atom_expr_2]dd@1
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 40
@@ -591,6 +931,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 42
@@ -679,6 +1030,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__decorator_1]dd@1
+    --file: hello.py--
+    def main():
+        print(             )
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print(             )
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 129
@@ -699,6 +1061,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_plus:kleene_plus__atom_5]can be epsilon
+    --file: hello.py--
+    def main():
+        print(             )
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print(             )
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 150
@@ -926,6 +1299,8 @@ Failed to reduce node 20
 ------------------------------------------------------------
 
 
+Rebuilding spar-tree: The spartree is rebuilt.
+
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -992,6 +1367,15 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@1
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@2
@@ -1015,6 +1399,17 @@ The current best program is the following
 ============Testing the following program: pass=============
 
 // edit action set type: [kleene_star:kleene_star__file_input_2]dd@1
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main()
+------------------------------------------------------------
+
+
 ===========TestScriptExecutionCacheEntryEviction============
 
 0 entries are removed: 0 --> 0.
@@ -1024,6 +1419,12 @@ The current best program is the following
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 18 -> 17
 ------------------------------------------------------------
 
 
@@ -1081,7 +1482,7 @@ The current best program is the following
     print("hello world")
     main()
     --file: <formatted tokenized program in its original format>--
-        print("hello world")
+    print("hello world")
     main()
 ------------------------------------------------------------
 
@@ -1093,7 +1494,7 @@ The current best program is the following
     print("hello world")
     main()
     --file: <formatted tokenized program in its original format>--
-        print("hello world")
+    print("hello world")
     main()
 ------------------------------------------------------------
 
@@ -1124,7 +1525,7 @@ The current best program is the following
     main()
     --file: <formatted tokenized program in its original format>--
     def main():
-        print("hello world")
+    print("hello world")
     main()
 ------------------------------------------------------------
 
@@ -1183,12 +1584,45 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print
+    main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        "hello world"
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        "hello world"
+    main()
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        "hello world"
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        "hello world"
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 288
@@ -1209,9 +1643,27 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 227
@@ -1232,6 +1684,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__atom_expr_2]dd@1
+    --file: hello.py--
+    def main():
+        print
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 290
@@ -1252,6 +1715,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 292
@@ -1272,6 +1746,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 247
@@ -1309,6 +1794,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__atom_expr_2]dd@1
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 249
@@ -1329,6 +1825,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular_node]can be epsilon
+    --file: hello.py--
+    def main():
+        print("hello world")
+    main
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print("hello world")
+    main
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 251
@@ -1417,6 +1924,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__decorator_1]dd@1
+    --file: hello.py--
+    def main():
+        print(             )
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print(             )
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 294
@@ -1437,6 +1955,17 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_plus:kleene_plus__atom_5]can be epsilon
+    --file: hello.py--
+    def main():
+        print(             )
+    main()
+    --file: <formatted tokenized program in its original format>--
+    def main():
+        print(             )
+    main()
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Failed to reduce node 315
@@ -1664,9 +2193,66 @@ Failed to reduce node 229
 ------------------------------------------------------------
 
 
-#test success = 0
-#test failure = 11
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 36
+  characterCount: 95
+  fileContents:
+  - fileName: "hello.py"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 17
+  characterCount: 48
+  fileContents:
+  - fileName: "hello.py"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[3]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 17
+  characterCount: 44
+  fileContents:
+  - fileName: "hello.py"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+
+#test success = 4
+#test failure = 51
 #test result cache hits = 0
-#test execution cancelled = 0
+#test execution cancelled = 1
 #node edit action set cache hits = 0
 #external test execution cache hits = 0

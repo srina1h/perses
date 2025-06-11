@@ -137,7 +137,11 @@ fun <T : Comparable<T>> Iterable<T>.isSortedAscendingly(): Boolean {
 }
 
 fun <T> Iterable<T>.toImmutableList(): ImmutableList<T> {
-  return ImmutableList.copyOf(this)
+  return if (this is ImmutableList) {
+    this
+  } else {
+    ImmutableList.copyOf(this)
+  }
 }
 
 fun <T> Array<T>.toImmutableList(): ImmutableList<T> {
@@ -162,6 +166,10 @@ fun <T : Any> Sequence<T>.toImmutableList(): ImmutableList<T> {
   }.build()
 }
 
+fun <T : Any> Iterable<T>.toImmutableSet(): ImmutableSet<T> {
+  return ImmutableSet.copyOf(this)
+}
+
 fun <T : Any> Sequence<T>.toImmutableSet(): ImmutableSet<T> {
   return fold(ImmutableSet.builder<T>()) { builder, e ->
     builder.add(e)
@@ -177,6 +185,15 @@ fun <K : Any, V : Any> Sequence<Map.Entry<K, V>>.toImmutableMap(): ImmutableMap<
 fun <K : Any, V : Any> Iterable<Pair<K, V>>.toImmutableMap(): ImmutableMap<K, V> {
   return fold(ImmutableMap.builder<K, V>()) { builder, e ->
     builder.put(e.first, e.second)
+  }.build()
+}
+
+fun <K : Any, V : Any, T> Iterable<T>.toImmutableMap(
+  keyFunc: (T) -> K,
+  valueFunc: (T) -> V,
+): ImmutableMap<K, V> {
+  return fold(ImmutableMap.builder<K, V>()) { builder, e ->
+    builder.put(keyFunc(e), valueFunc(e))
   }.build()
 }
 

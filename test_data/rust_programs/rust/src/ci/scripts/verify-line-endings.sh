@@ -14,11 +14,11 @@ IFS=$'\n\t'
 source "$(cd "$(dirname "$0")" && pwd)/../shared.sh"
 
 if isWindows; then
-    # print out the git configuration so we can better investigate failures in
-    # the following
-    git config --list --show-origin
-    dos2unix -ih Cargo.lock src/tools/rust-installer/install-template.sh
-    endings=$(dos2unix -ic Cargo.lock src/tools/rust-installer/install-template.sh)
-    # if endings has non-zero length, error out
-    if [ -n "$endings" ]; then exit 1 ; fi
+  # print out the git configuration so we can better investigate failures in
+  # the following
+  git config --list --show-origin
+  dos2unix -ih Cargo.lock src/tools/rust-installer/install-template.sh
+  endings=$(dos2unix -ic Cargo.lock src/tools/rust-installer/install-template.sh)
+  # if endings has non-zero length, error out
+  if [ -n "$endings" ]; then exit 1; fi
 fi

@@ -36,17 +36,17 @@ endmodule
 EOT
 
 if ../../yosys -q -p 'verific -sv chparam1.sv'; then
-	../../yosys -q -p 'verific -sv chparam1.sv; hierarchy -chparam X 123123123 -top top; prep -flatten' \
-			-p 'sat -verify -prove-asserts -show-ports -set din[0] 1' \
-			-p 'sat -falsify -prove-asserts -show-ports -set din[0] 0'
+  ../../yosys -q -p 'verific -sv chparam1.sv; hierarchy -chparam X 123123123 -top top; prep -flatten' \
+    -p 'sat -verify -prove-asserts -show-ports -set din[0] 1' \
+    -p 'sat -falsify -prove-asserts -show-ports -set din[0] 0'
 
-	../../yosys -q -p 'verific -sv chparam2.sv; hierarchy -chparam X 123123123 -top top; prep -flatten' \
-			-p 'sat -verify -prove-asserts -show-ports -set din[0] 1' \
-			-p 'sat -falsify -prove-asserts -show-ports -set din[0] 0'
+  ../../yosys -q -p 'verific -sv chparam2.sv; hierarchy -chparam X 123123123 -top top; prep -flatten' \
+    -p 'sat -verify -prove-asserts -show-ports -set din[0] 1' \
+    -p 'sat -falsify -prove-asserts -show-ports -set din[0] 0'
 fi
 ../../yosys -q -p 'read_verilog -sv chparam2.sv; hierarchy -chparam X 123123123 -top top; prep -flatten' \
-		-p 'sat -verify -prove-asserts -show-ports -set din[0] 1' \
-		-p 'sat -falsify -prove-asserts -show-ports -set din[0] 0'
+  -p 'sat -verify -prove-asserts -show-ports -set din[0] 1' \
+  -p 'sat -falsify -prove-asserts -show-ports -set din[0] 0'
 
 rm chparam1.sv
 rm chparam2.sv

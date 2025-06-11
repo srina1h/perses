@@ -13,18 +13,18 @@ function disassemble {
   output="${2}"
   sections=$(objdump --section-headers "${object_file}" | grep ".text" | awk '{ print $2 }')
   rm -f "${output}" &> /dev/null || true
-  for section in ${sections} ; do
+  for section in ${sections}; do
     ${CMD_OBJDUMP} --section="${section}" "${object_file}" >> "${output}"
   done
 }
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echoerr "Usage: ${0} <rust-file>"
 fi
 
 readonly RUSTC="rustc +nightly"
 
-if [[ "${1}" == "--verbose-version" ]] ; then 
+if [[ "${1}" == "--verbose-version" ]]; then
   $RUSTC --verbose --version
   exit 0
 fi
@@ -52,11 +52,8 @@ rm -rf "${OBJECT_FILE}" > /dev/null 2>&1 || true
 timeout -s 9 "${TIMEOUT}" ${RUSTC} ${DEFAULT_FLAGS} ${DEBUG_FLAGS} "-o" "${OBJECT_FILE}" "${RUST_FILE_AS_LIB}" || exit 3
 disassemble "${OBJECT_FILE}" "${DIS_DEBUG_FILE}" || exit 4
 
-if ! diff "${DIS_NO_DEBUG_FILE}" "${DIS_DEBUG_FILE}" ; then
+if ! diff "${DIS_NO_DEBUG_FILE}" "${DIS_DEBUG_FILE}"; then
   echoerr "thread compilation consistency modulo debug info panicked"
   exit 134
 fi
 exit 0
-
-
-

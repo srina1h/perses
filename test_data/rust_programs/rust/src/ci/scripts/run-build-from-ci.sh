@@ -15,7 +15,7 @@ export SRC=.
 # the environment
 rustup self uninstall -y || true
 if [ -z "${IMAGE+x}" ]; then
-    src/ci/run.sh
+  src/ci/run.sh
 else
-    src/ci/docker/run.sh "${IMAGE}"
+  src/ci/docker/run.sh "${IMAGE}"
 fi

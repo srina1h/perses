@@ -1,3 +1,3 @@
 int    main(){
-    return __alignof__(signed) ;
+    return _Alignof   (int  )  ;
 }

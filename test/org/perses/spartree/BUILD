@@ -17,6 +17,14 @@ DEFAULT_DEPS = [
 ]
 
 kt_jvm_test(
+    name = "SparTreeNodeFactoryTest",
+    srcs = [
+        "SparTreeNodeFactoryTest.kt",
+    ],
+    deps = DEFAULT_DEPS,
+)
+
+kt_jvm_test(
     name = "PhpSparTreeBuildTest",
     srcs = [
         "PhpSparTreeBuildTest.kt",

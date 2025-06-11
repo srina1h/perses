@@ -79,6 +79,17 @@ kt_jvm_library(
 )
 
 kt_jvm_library(
+    name = "stats_of_files_under_reduction",
+    srcs = [
+        "StatsOfFilesBeingReduced.kt",
+    ],
+    deps = [
+        "//:guava",
+        "//src/org/perses/util",
+    ],
+)
+
+kt_jvm_library(
     name = "reduction_configuration",
     srcs = ["ReductionConfiguration.kt"],
     deps = [
@@ -108,6 +119,9 @@ kt_jvm_library(
 kt_jvm_library(
     name = "reducer_name_and_desc",
     srcs = ["AbstractReducerNameAndDesc.kt"],
+    deps = [
+        "//:guava",
+    ],
 )
 
 kt_jvm_library(
@@ -220,7 +234,9 @@ kt_jvm_library(
         "//:guava",
         "//src/org/perses/reduction/reducer:node_based_reducer",
         "//src/org/perses/reduction/reducer/hdd:level_based_reducers",
+        "//src/org/perses/reduction/reducer/lpr",
         "//src/org/perses/reduction/reducer/token:token_slicer",
+        "//src/org/perses/reduction/reducer/vulcan",
     ],
 )
 
@@ -273,7 +289,6 @@ kt_jvm_library(
     name = "reduction_driver",
     srcs = [
         "AbstractProgramReductionDriver.kt",
-        "ReducerScheduler.kt",
         "RegularProgramReductionDriver.kt",
     ],
     deps = [
@@ -283,6 +298,7 @@ kt_jvm_library(
         ":reducer_factory",
         ":reduction_configuration",
         ":reduction_driver_interface",
+        ":stats_of_files_under_reduction",
         ":test_script_executor_service",
         "//:antlr_runtime",
         "//:antlr_tool",
@@ -301,8 +317,10 @@ kt_jvm_library(
         "//src/org/perses/reduction/io/token:regular_output_manager_factory",
         "//src/org/perses/reduction/io/token:token_output_manager_factory_interface",
         "//src/org/perses/reduction/io/token:token_reduction_io_manager",
+        "//src/org/perses/reduction/reducer/lpr",
         "//src/org/perses/reduction/reducer/trec",
         "//src/org/perses/reduction/reducer/vulcan",
+        "//src/org/perses/reduction/scheduler",
         "//src/org/perses/spartree",
         "//src/org/perses/util",
         "//src/org/perses/util:timeutil",

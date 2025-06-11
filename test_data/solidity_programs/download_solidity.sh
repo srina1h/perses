@@ -15,7 +15,7 @@ readonly TEMP_NAME="temp"
 mv "${DIR_NAME}" "${TEMP_NAME}"
 
 rsync --recursive --progress --prune-empty-dirs \
-  --include "*/"  --include="*.sol" --exclude="*" \
+  --include "*/" --include="*.sol" --exclude="*" \
   "${TEMP_NAME}/" "${DIR_NAME}"
 
 cp "${TEMP_NAME}/LICENSE.txt" "${DIR_NAME}"

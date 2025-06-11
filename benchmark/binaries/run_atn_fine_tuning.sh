@@ -16,7 +16,7 @@ java ${JVM_FLAGS:=''} -jar "/tmp/binaries/atn_perses_main_deploy.jar" ${PERSES_F
   --output-dir "${TMP}" \
   --threads "${THREADS}" \
   --query-caching false \
-  --on-demand-reducer-classes "org.perses.reduction.reducer.AtnFineTuningTokenReducer"
+  --on-demand-fine-grit-reducer-annotations "org.perses.reduction.reducer.AtnFineTuningTokenReducer"
 
 readonly RET_CODE="$?"
 readonly END_TIME=$(date +%s)

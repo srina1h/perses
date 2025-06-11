@@ -16,13 +16,12 @@
  */
 package org.perses.reduction
 
+import com.google.common.collect.ImmutableList
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.perses.reduction.ReducerFactory.allReducerAlgorithms
-import org.perses.reduction.ReducerFactory.getAnnotationWithName
-import org.perses.reduction.ReducerFactory.getReductionAlgorithm
 import org.perses.reduction.ReducerFactory.isValidReducerName
 import org.perses.reduction.reducer.PersesNodeBfsReducer
 import org.perses.reduction.reducer.PersesNodeDfsReducer
@@ -38,17 +37,73 @@ import org.perses.reduction.reducer.token.ConcurrentTokenSlicer
 import org.perses.reduction.reducer.token.DeltaDebuggingReducer
 import org.perses.reduction.reducer.token.LineBasedConcurrentTokenSlicer
 import org.perses.reduction.reducer.token.TokenSlicer
-import java.util.stream.Collectors
+import org.perses.util.toImmutableList
 
 @RunWith(JUnit4::class)
 class ReducerFactoryTest {
+
+  /**
+   * Note that the following is intended to be a class but not an object.
+   */
+  class TestReducerAnnotationAsClass : ReducerAnnotation(
+    shortName = "test annotation that is a class but not an object",
+    description = "Test reducer annotation",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      TODO("not meant to be called.")
+    }
+  }
+
+  class TestReducerAnnotationAsObject : ReducerAnnotation(
+    shortName = "test annotation that is an object but not a class",
+    description = "Test reducer annotation",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_INCREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      TODO("not meant to be called.")
+    }
+  }
+
   @Test
-  fun testGetAnnotationWithName() {
+  fun testAnnotationClassCanBeLoadedWithName() {
+    val annotation = ReducerFactory.getReducerAnnotationWithReducerClassName(
+      TestReducerAnnotationAsClass::class.java.name,
+    )
+    assertThat(annotation).isInstanceOf(TestReducerAnnotationAsClass::class.java)
+  }
+
+  @Test
+  fun testAnnotationObjectCanBeLoadedWithName() {
+    val annotation = ReducerFactory.getReducerAnnotationWithReducerClassName(
+      TestReducerAnnotationAsObject::class.java.name,
+    )
+    assertThat(annotation).isInstanceOf(TestReducerAnnotationAsObject::class.java)
+  }
+
+  @Test
+  fun testGetAnnotationWithSimpleName() {
     testGetAnnotationWithName(HDDReducer.NAME)
     testGetAnnotationWithName(PersesNodeBfsReducer.NAME)
     testGetAnnotationWithName(PersesNodeDfsReducer.NAME)
     testGetAnnotationWithName(PersesNodePrioritizedBfsReducer.NAME)
     testGetAnnotationWithName(PersesNodePrioritizedDfsReducer.NAME)
+  }
+
+  @Test
+  fun testGetAnnotationWithAnnotationClassName() {
+    val klass = PersesNodeBfsReducer.META::class
+    val result = ReducerFactory.getReductionAlgorithm(klass.java.name)
+    assertThat(result).isSameInstanceAs(PersesNodeBfsReducer.META)
+  }
+
+  @Test
+  fun testAllReducerAnnotationsCanBeLoadedWithClassNames() {
+    ReducerFactory.registeredReductionAlgorithms.values.forEach { alg ->
+      assertWithMessage(alg::class.toString()).that(alg::class.qualifiedName).isNotNull()
+    }
   }
 
   @Test
@@ -60,15 +115,15 @@ class ReducerFactoryTest {
 
   @Test
   fun testGetReductionAlgorithm() {
-    val hdd = getReductionAlgorithm(HDDReducer.NAME)
+    val hdd = ReducerFactory.getReductionAlgorithm(HDDReducer.NAME)
     assertThat(hdd).isEqualTo(HDDReducer.META)
   }
 
   @Test
   fun testGetAllReducerAlgorithms() {
-    val names = allReducerAlgorithms.stream()
-      .map { obj: ReducerAnnotation -> obj.shortName }
-      .collect(Collectors.toList())
+    val names = ReducerFactory.registeredReductionAlgorithms.values
+      .map { it.shortName }
+      .toImmutableList()
     assertThat(names)
       .containsAtLeast(
         DeltaDebuggingReducer.NAME,
@@ -98,7 +153,7 @@ class ReducerFactoryTest {
 
   companion object {
     private fun testGetAnnotationWithName(name: String) {
-      val annotation = getAnnotationWithName(name)!!
+      val annotation = ReducerFactory.registeredReductionAlgorithms[name]!!
       assertThat(annotation.shortName).isEqualTo(name)
     }
   }

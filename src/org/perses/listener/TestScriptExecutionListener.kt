@@ -36,7 +36,7 @@ class TestScriptExecutionListener(
       ExecutionStatistics(
         result.elapsedMilliseconds,
         result.isInteresting,
-        program.tokenCount(),
+        program.tokenCount,
       ),
     )
   }

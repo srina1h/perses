@@ -18,10 +18,57 @@ package org.perses.antlr
 
 import org.antlr.v4.runtime.Lexer
 import org.antlr.v4.runtime.Parser
+import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.ParseTree
+import org.perses.util.toImmutableList
 
 data class ParseTreeWithParser(
   val tree: ParseTree,
   val parser: Parser,
   val lexer: Lexer,
-)
+) {
+
+  val lazyAllTokens by lazy {
+    lexer.reset()
+    lexer.allTokens.filter {
+      it.channel == Token.DEFAULT_CHANNEL && it.type != Token.EOF
+    }.toImmutableList()
+  }
+
+  /**
+   * TODO(cnsun): Note that this method does not work for Python, as Python introduces
+   *   extra tokens in the parse tree.
+   */
+  fun isInputCompletelyConsumed(): Boolean {
+    val tokensInTree = ParseTreeUtil.getTokens(tree)
+    val treeIterator = tokensInTree.iterator()
+    val inputIterator = lazyAllTokens.iterator()
+
+    while (treeIterator.hasNext() && inputIterator.hasNext()) {
+      val treeToken = treeIterator.next()
+      val inputToken = inputIterator.next()
+      check(treeToken.text == inputToken.text) {
+        """
+          | $tokensInTree
+          | $lazyAllTokens
+        """.trimMargin()
+      }
+    }
+    while (treeIterator.hasNext()) {
+      val token = treeIterator.next()
+      check(token.type == Token.EOF) {
+        """$token
+          |$tokensInTree
+        """.trimMargin()
+      }
+    }
+    while (inputIterator.hasNext()) {
+      val token = inputIterator.next()
+      if (token.type != Token.EOF) {
+        // unprocessed input tokens found.
+        return false
+      }
+    }
+    return true
+  }
+}

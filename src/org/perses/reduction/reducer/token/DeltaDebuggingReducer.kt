@@ -48,24 +48,22 @@ class DeltaDebuggingReducer(
     deltaDebugger.reduce()
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(
+        DeltaDebuggingReducer(
+          reducerContext,
+        ),
+      )
+    }
+  }
   companion object {
 
     const val NAME = "ddmin"
-
-    @JvmStatic
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(
-          DeltaDebuggingReducer(
-            reducerContext,
-          ),
-        )
-      }
-    }
   }
 }

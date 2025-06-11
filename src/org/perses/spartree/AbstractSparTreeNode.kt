@@ -22,6 +22,7 @@ import org.perses.antlr.RuleHierarchyEntry
 import org.perses.antlr.RuleType
 import org.perses.util.Util.lazyAssert
 import org.perses.util.toImmutableList
+import org.perses.util.transformToImmutableList
 import java.io.IOError
 import java.io.IOException
 import java.io.StringWriter
@@ -57,6 +58,9 @@ sealed class AbstractSparTreeNode(
         it.ruleName
       }
     }
+
+  val tokenListCostlyComputed: ImmutableList<String>
+    get() = slowCollectLeavesWithPostorder().transformToImmutableList { it.token.text }
 
   fun isSentinelRoot() = this is SparTreeSentinelRootNode
 
@@ -115,12 +119,17 @@ sealed class AbstractSparTreeNode(
     }
   }
 
-  private fun checkLeafLinkIntegrity(): ErrorMessage? {
+  fun checkLeafLinkIntegrity(): ErrorMessage? {
     val errors = ImmutableList.builder<String>()
-    val leaves = collectLeavesWithPostorder()
+    val leaves = slowCollectLeavesWithPostorder()
     val anotherLeaves = internalLeafNodeSequence().toImmutableList()
     if (leaves.toList() != anotherLeaves.toList()) {
-      errors.add("leaf node links are not updated.")
+      errors.add(
+        """leaf node links are not updated.
+        |leaves via links    : ${anotherLeaves.map { it.token.text }}
+        |leaves via postorder: ${leaves.map { it.token.text }}
+        """.trimMargin(),
+      )
     }
     if (leaves.size != anotherLeaves.size) {
       errors.add("leaf node links are not updated.")
@@ -143,14 +152,14 @@ sealed class AbstractSparTreeNode(
     return null
   }
 
-  private fun collectLeavesWithPostorder(): MutableList<LexerRuleSparTreeNode> {
-    val leaves = mutableListOf<LexerRuleSparTreeNode>()
+  fun slowCollectLeavesWithPostorder(): ImmutableList<LexerRuleSparTreeNode> {
+    val leaves = ImmutableList.builder<LexerRuleSparTreeNode>()
     postOrderVisit { node ->
       if (node is LexerRuleSparTreeNode) {
         leaves.add(node)
       }
     }
-    return leaves
+    return leaves.build()
   }
 
   fun buildTokenIntervalInfoRecursive() {
@@ -184,11 +193,19 @@ sealed class AbstractSparTreeNode(
     return printTreeStructure(this)
   }
 
-  override fun recursiveDeepCopy(nodeIdCopyStrategy: NodeIdCopyStrategy): AbstractSparTreeNode {
-    val copyNode = super.recursiveDeepCopy(nodeIdCopyStrategy)
-    copyNode.buildTokenIntervalInfoRecursive()
-    copyNode.linkLeafNodes()
-    return copyNode
+  override fun recursiveDeepCopy(
+    nodeIdCopyStrategy: NodeIdCopyStrategy,
+  ): DeepCopyResult<AbstractSparTreeNode, AbstractSparTreeNode> {
+    val copyResult = super.recursiveDeepCopy(nodeIdCopyStrategy)
+    copyResult.result.buildTokenIntervalInfoRecursive()
+    copyResult.result.linkLeafNodes()
+    return copyResult
+  }
+
+  fun fixLinkIntegrity() {
+    // TODO(cnsun): optimize this
+    linkLeafNodes()
+    buildTokenIntervalInfoRecursive()
   }
 
   fun linkLeafNodes() {

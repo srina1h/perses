@@ -118,7 +118,7 @@ abstract class AbstractSparTreeGenerator(
       grammarHierarchy,
     )
     return SparTree(
-      generatedNode,
+      realRoot = generatedNode,
       sparTreeNodeFactory,
     )
   }

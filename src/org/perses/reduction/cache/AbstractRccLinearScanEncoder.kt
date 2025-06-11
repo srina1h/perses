@@ -28,13 +28,13 @@ abstract class AbstractRccLinearScanEncoder protected constructor(
   enableCompression: Boolean,
 ) : AbstractRccProgramEncoder(baseProgram, profiler, enableCompression) {
 
-  internal var persesLexemeIdArray = LogicalSizedArray.createWithSize(baseProgram.tokenCount())
-  protected val refreshThreshold = Math.max(1000, baseProgram.tokenCount() * 5 / 100)
+  internal var persesLexemeIdArray = LogicalSizedArray.createWithSize(baseProgram.tokenCount)
+  protected val refreshThreshold = Math.max(1000, baseProgram.tokenCount * 5 / 100)
 
   init {
     val nanoDuration = measureNanoTime {
       fillLexemeIdArray(baseProgram.tokens, persesLexemeIdArray)
-      lazyAssert { persesLexemeIdArray.logicalSize == baseProgram.tokenCount() }
+      lazyAssert { persesLexemeIdArray.logicalSize == baseProgram.tokenCount }
     }
     profiler.onCreatingEncoder(baseProgram.tokens, nanoDuration)
   }
@@ -60,7 +60,7 @@ abstract class AbstractRccLinearScanEncoder protected constructor(
       refreshThreshold,
     )
     fillLexemeIdArray(encoderBaseProgram.tokens, persesLexemeIdArray)
-    lazyAssert { encoderBaseProgram.tokenCount() == persesLexemeIdArray.logicalSize }
+    lazyAssert { encoderBaseProgram.tokenCount == persesLexemeIdArray.logicalSize }
   }
 
   companion object {
@@ -85,7 +85,7 @@ abstract class AbstractRccLinearScanEncoder protected constructor(
       baseProgram: TokenizedProgram,
       refreshThreshold: Int,
     ): LogicalSizedArray {
-      val tokenCount = baseProgram.tokenCount()
+      val tokenCount = baseProgram.tokenCount
       return if (array.maxLogicalSize - tokenCount >= refreshThreshold) {
         LogicalSizedArray.createWithSize(tokenCount)
       } else {

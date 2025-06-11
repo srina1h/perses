@@ -51,7 +51,7 @@ class ContentZipBasedQueryCache(
         .map { it.text }
         .joinToString("\n")
       val zip: ByteArray = Util.zipCompress(rawContent)
-      return ContentZipEncoding(zip, program.tokenCount())
+      return ContentZipEncoding(zip, program.tokenCount)
     }
 
     override fun reEncode(previousEncoding: ContentZipEncoding): ContentZipEncoding? {

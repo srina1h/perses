@@ -30,6 +30,10 @@ class DescendantHoistingTreeEdit internal constructor(
   override fun internalApplyToTree() {
     val action = actionSet.actions.single()
     action.replacingNode.let { descendantToHoist ->
+      checkNotNull(descendantToHoist.parent) {
+        "The replacing child has no parent. This action is for hoisting a descendant. " +
+          "You may want to use ${AnyNodeReplacementTreeEdit::class} instead"
+      }
       descendantToHoist.parent!!.removeChild(descendantToHoist)
       check(descendantToHoist.parent == null)
     }

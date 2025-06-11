@@ -44,7 +44,7 @@ There are three ways to obtain Perses.
   for example,
 
   ```bash
-  wget https://github.com/uw-pluverse/perses/releases/download/v2.3/perses_deploy.jar
+  wget https://github.com/uw-pluverse/perses/releases/download/v2.4/perses_deploy.jar
   java -jar perses_deploy.jar [options]? --test-script <test-script.sh> --input-file <program file>
   ```
 
@@ -224,6 +224,17 @@ Usage: org.perses.Main [options]
       Whether to enable lightweight refreshing
       Default: true
 
+[LPR Reducer Control]  Options:
+    --enable-lpr
+      Enable LPR (LLM-based transformations to improve reduction results).
+      Default: false
+    --lpr-fixpoint
+      Enable lpr fixpoint. Everytime a transformation makes progress, go to 
+      the next transformation.
+      Default: false
+    --llm-client-script
+      The script to invoke LLM.
+
 [Verbosity]  Options:
     --verbosity
       verbosity of logging
@@ -326,5 +337,31 @@ This repository contains the implementations of the techniques proposed in the f
   journal={ACM Transactions on Software Engineering and Methodology},
   year={2024},
   publisher={ACM New York, NY}
+}
+```
+
+##### 7. WDD: Weighted Delta Debugging (ICSE, [pdf](./doc/publication/2025_wdd_icse.pdf))
+
+```
+@article{perses-wdd,
+  title={WDD: Weighted Delta Debugging},
+  author={Zhou, Xintong and Xu, Zhenyang and Zhang, Mengxiao and Tian, Yongqiang and Sun, Chengnian},
+  booktitle={Proceedings of the 47th International Conference on Software Engineering},
+  year={2025},
+  doi = {10.1109/ICSE55347.2025.00071},
+  publisher = {IEEE Computer Society},
+}
+```
+
+##### 8. Toward a Better Understanding of Probabilistic Delta Debugging (ICSE, [pdf](./doc/publication/2025_cdd_icse.pdf))
+
+```
+@article{perses-cdd,
+  title={Toward a Better Understanding of Probabilistic Delta Debugging},
+  author={Zhou, Xintong and Xu, Zhenyang and Zhang, Mengxiao and Tian, Yongqiang and Sun, Chengnian},
+  booktitle={Proceedings of the 47th International Conference on Software Engineering},
+  year={2025},
+  doi = {10.1109/ICSE55347.2025.00117},
+  publisher = {IEEE Computer Society},
 }
 ```

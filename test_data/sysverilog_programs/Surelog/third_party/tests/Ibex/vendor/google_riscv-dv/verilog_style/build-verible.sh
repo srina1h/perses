@@ -64,5 +64,3 @@ sudo install bazel-bin/verilog/tools/formatter/verilog_format $INSTALL_DIR
 sudo install bazel-bin/verilog/tools/lint/verilog_lint $INSTALL_DIR
 
 echo "done"
-
-

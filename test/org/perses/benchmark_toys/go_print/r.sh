@@ -12,17 +12,17 @@ readonly SRC="small.go"
 
 rm "${OUTPUT}" || true
 
-if ! command -v "go" ; then
+if ! command -v "go"; then
   echo "No go on the path"
   exit 1
 fi
 go run "${SRC}" &> "${OUTPUT}"
 
-if [[ "${?}" != 0 ]] ; then
+if [[ "${?}" != 0 ]]; then
   exit 1
 fi
 
-if ! grep "golang" "${OUTPUT}" ; then
+if ! grep "golang" "${OUTPUT}"; then
   exit 1
 fi
 

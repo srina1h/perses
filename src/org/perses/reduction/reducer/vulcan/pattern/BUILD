@@ -10,15 +10,13 @@ package(default_visibility = [
 kt_jvm_library(
     name = "pattern",
     srcs = [
-        "EnumOperation.kt",
         "LocalExhaustivePatternReducer.kt",
         "LocalExhaustivePatternReducerAnnotation.kt",
-        "NumOfDeletesToPatterns.kt",
-        "TokenEditPattern.kt",
     ],
     deps = [
         "//:guava",
         "//src/org/perses/antlr:antlr_hierarchy",
+        "//src/org/perses/listminimizer/localexhaust",
         "//src/org/perses/reduction:abstract_reducer",
         "//src/org/perses/reduction/reducer/hdd:level_based_reducers",
         "//src/org/perses/reduction/reducer/token:concurrent_slicing_tasks",

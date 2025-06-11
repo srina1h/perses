@@ -126,6 +126,15 @@ kt_binary_for_genrule(
     ],
 )
 
+kt_jvm_test(
+    name = "RuleReachabilityGraphTest",
+    srcs = ["RuleReachabilityGraphTest.kt"],
+    deps = [
+        "//:truth",
+        "//test/org/perses:test_util",
+    ],
+)
+
 kt_jvm_library(
     name = "AbstractAntlrrdcTest",
     srcs = [
@@ -145,11 +154,17 @@ genrule(
         "pnfc_rule_hierarchy.txt",
         "pnfgo_rule_hierarchy.txt",
         "pnfscala_rule_hierarchy.txt",
+        "pnfc_rule_graph.txt",
+        "pnfgo_rule_graph.txt",
+        "pnfscala_rule_graph.txt",
     ],
     cmd = "$(location :GrammarHierarchyDumpMain) " +
           " -c $(location pnfc_rule_hierarchy.txt)" +
           " -go $(location pnfgo_rule_hierarchy.txt)" +
-          " -scala $(location pnfscala_rule_hierarchy.txt)",
+          " -scala $(location pnfscala_rule_hierarchy.txt)" +
+          " -graph-c $(location pnfc_rule_graph.txt)" +
+          " -graph-go $(location pnfgo_rule_graph.txt)" +
+          " -graph-scala $(location pnfscala_rule_graph.txt)",
     tools = [":GrammarHierarchyDumpMain"],
 )
 
@@ -169,4 +184,22 @@ golden_test(
     name = "golden_test_pnfscala_rule_hierarchy",
     golden_file = "golden_pnfscala_rule_hierarchy.txt",
     test_file = "pnfscala_rule_hierarchy.txt",
+)
+
+golden_test(
+    name = "golden_test_pnfc_rule_graph",
+    golden_file = "golden_pnfc_rule_graph.txt",
+    test_file = "pnfc_rule_graph.txt",
+)
+
+golden_test(
+    name = "golden_test_pnfgo_rule_graph",
+    golden_file = "golden_pnfgo_rule_graph.txt",
+    test_file = "pnfgo_rule_graph.txt",
+)
+
+golden_test(
+    name = "golden_test_pnfscala_rule_graph",
+    golden_file = "golden_pnfscala_rule_graph.txt",
+    test_file = "pnfscala_rule_graph.txt",
 )

@@ -3,7 +3,7 @@
 set -o pipefail
 set -o nounset
 
-if [[ "$#" != 2 ]] ; then
+if [[ "$#" != 2 ]]; then
   echo "USAGE: $0 <input> <output>"
   exit 1
 fi
@@ -35,8 +35,8 @@ ALTS=("rustfmt"
 readonly TMP=$(mktemp)
 trap "rm ${TMP}" TRAP
 cp "${1}" "${TMP}"
-for alt in "${ALTS[@]}" ; do
-  if ${alt} "${TMP}" ; then
+for alt in "${ALTS[@]}"; do
+  if ${alt} "${TMP}"; then
     cp "${TMP}" "${2}"
     exit 0
   fi

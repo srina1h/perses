@@ -46,7 +46,7 @@ class CompactQueryCacheBenchmark {
     println("Start to run...")
     var totalIterations = 0
     val start = System.currentTimeMillis()
-    while (currentBaseProgram.tokenCount() > 100) {
+    while (currentBaseProgram.tokenCount > 100) {
       if (++totalIterations >= MAX_ITERATIONS) {
         break
       }

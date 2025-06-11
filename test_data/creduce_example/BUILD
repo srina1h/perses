@@ -1,4 +1,4 @@
-load("//src/org/perses:reduction.bzl", "reduce")
+load("//:perses.bzl", "reduce")
 
 package(default_visibility = ["//test/org/perses:__subpackages__"])
 

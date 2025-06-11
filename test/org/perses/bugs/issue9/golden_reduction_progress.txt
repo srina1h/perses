@@ -16,12 +16,12 @@ versionFlags:
 inputFlags:
   groupName: "Inputs"
   testScript: "r.sh"
-  inputFile: "T.java"
+  inputFile: "T.java.txt"
   deps: []
-  sourceFile: "T.java"
+  sourceFile: "T.java.txt"
 resultOutputFlags:
   groupName: "Outputs"
-  outputDir: "result_reduction_golden_test_perses_node_priority_with_dfs_delta_T.java"
+  outputDir: "result_reduction_golden_test_perses_node_priority_with_dfs_delta_T.java.txt"
 reductionControlFlags:
   groupName: "General Reduction Control"
   fixpoint: true
@@ -49,7 +49,7 @@ algorithmControlFlags:
   stopAtFirstCompatibleChildForRegularRuleNode: false
 languageControlFlags:
   groupName: "Language Control"
-  languageName: ""
+  languageName: "java"
   listLangs: false
   designatedParserFacadeClassName: ""
   listParserFacades: false
@@ -85,13 +85,29 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses: null
+  onDemandFineGritReducerAnnotationClasses: []
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.java.Java8ParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<fixpoint>
+body: !<atomic>
+  reducer: perses_node_priority_with_dfs_delta
+condition: smaller
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -216,7 +232,7 @@ compilationUnit {id=1,slot_type=compilationUnit}
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -233,7 +249,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__compilationUnit_3]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     --file: <formatted tokenized program in its original format>--
 ------------------------------------------------------------
 
@@ -248,7 +264,7 @@ Failed to reduce node 2
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -278,7 +294,7 @@ Failed to reduce node 5
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -302,7 +318,7 @@ Failed to reduce node 9
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -319,7 +335,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__classBody_1]dd@2
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
     }
     --file: <formatted tokenized program in its original format>--
@@ -331,7 +347,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__classBody_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -349,7 +365,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__classBody_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args) {
         for (int i = 0; i < counter(); ++i) {
@@ -378,7 +394,7 @@ Failed to reduce node 11
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -401,7 +417,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -425,7 +441,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -460,7 +476,7 @@ Failed to reduce node 15
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -477,7 +493,7 @@ The current best program is the following
 ============Testing the following program: pass=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -512,6 +528,12 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 58 -> 40
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Succeeded to reduce node 19 from 58 to 40
@@ -522,7 +544,7 @@ Succeeded to reduce node 19 from 58 to 40
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -545,7 +567,7 @@ Failed to reduce node 37
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -561,7 +583,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__block_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -592,7 +614,7 @@ Failed to reduce node 39
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -621,7 +643,7 @@ Failed to reduce node 41
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -636,7 +658,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -667,7 +689,7 @@ Failed to reduce node 45
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       private static int counter() {
         return 100;
@@ -683,7 +705,7 @@ The current best program is the following
 ============Testing the following program: pass=============
 
 // edit action set type: [regular_node]can be epsilon
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -704,7 +726,7 @@ The current best program is the following
 
 It took less than 1 second to cancel the task.
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
                                    {
         return 100;
@@ -739,6 +761,12 @@ It took less than 1 second to cancel the task.
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 40 -> 29
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Succeeded to reduce node 220 from 40 to 29
@@ -749,7 +777,7 @@ Succeeded to reduce node 220 from 40 to 29
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -769,7 +797,7 @@ Failed to reduce node 48
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -789,7 +817,7 @@ Failed to reduce node 51
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -809,7 +837,7 @@ Failed to reduce node 17
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -829,7 +857,7 @@ Failed to reduce node 192
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -849,7 +877,7 @@ Failed to reduce node 54
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -862,7 +890,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__methodDeclarator_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(             )
                                             {
@@ -889,7 +917,7 @@ Failed to reduce node 195
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -915,7 +943,7 @@ Failed to reduce node 200
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -928,7 +956,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__explicitConstructorInvocation_2]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -955,7 +983,7 @@ Failed to reduce node 57
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -974,7 +1002,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -994,7 +1022,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1021,7 +1049,7 @@ Failed to reduce node 68
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1034,7 +1062,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String   args)
                                             {
@@ -1061,7 +1089,7 @@ Failed to reduce node 204
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1073,7 +1101,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1100,7 +1128,7 @@ Failed to reduce node 70
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1126,7 +1154,7 @@ Failed to reduce node 71
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1139,7 +1167,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1159,7 +1187,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1186,7 +1214,7 @@ Failed to reduce node 52
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1206,7 +1234,7 @@ Failed to reduce node 207
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1226,7 +1254,7 @@ Failed to reduce node 208
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1238,7 +1266,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1265,7 +1293,7 @@ Failed to reduce node 97
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1291,7 +1319,7 @@ Failed to reduce node 99
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1311,7 +1339,7 @@ Failed to reduce node 84
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1324,7 +1352,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__methodDeclaration_1]dd@2
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
                     void main(String[] args)
                                             {
@@ -1344,7 +1372,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__methodDeclaration_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public        void main(String[] args)
                                             {
@@ -1364,7 +1392,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__methodDeclaration_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
              static void main(String[] args)
                                             {
@@ -1391,7 +1419,7 @@ Failed to reduce node 16
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1411,7 +1439,7 @@ Failed to reduce node 219
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1431,7 +1459,7 @@ Failed to reduce node 218
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1451,7 +1479,7 @@ Failed to reduce node 215
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1471,7 +1499,7 @@ Failed to reduce node 214
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1491,7 +1519,7 @@ Failed to reduce node 210
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1511,7 +1539,7 @@ Failed to reduce node 209
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1531,7 +1559,7 @@ Failed to reduce node 203
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1551,7 +1579,7 @@ Failed to reduce node 196
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1571,7 +1599,7 @@ Failed to reduce node 194
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1591,7 +1619,7 @@ Failed to reduce node 193
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1611,7 +1639,7 @@ Failed to reduce node 102
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1631,7 +1659,7 @@ Failed to reduce node 101
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1651,7 +1679,7 @@ Failed to reduce node 98
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1671,7 +1699,7 @@ Failed to reduce node 96
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1691,7 +1719,7 @@ Failed to reduce node 86
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1711,7 +1739,7 @@ Failed to reduce node 85
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1731,7 +1759,7 @@ Failed to reduce node 83
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1751,7 +1779,7 @@ Failed to reduce node 56
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1771,7 +1799,7 @@ Failed to reduce node 55
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1791,7 +1819,7 @@ Failed to reduce node 53
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1811,7 +1839,7 @@ Failed to reduce node 50
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1831,7 +1859,7 @@ Failed to reduce node 47
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1851,7 +1879,7 @@ Failed to reduce node 40
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1871,7 +1899,7 @@ Failed to reduce node 38
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1891,7 +1919,7 @@ Failed to reduce node 12
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1911,7 +1939,7 @@ Failed to reduce node 10
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1931,7 +1959,7 @@ Failed to reduce node 8
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1951,7 +1979,7 @@ Failed to reduce node 7
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
     public class T {
       public static void main(String[] args)
                                             {
@@ -1964,7 +1992,7 @@ The current best program is the following
 ============Testing the following program: pass=============
 
 // edit action set type: [kleene_star:kleene_star__normalClassDeclaration_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -1993,11 +2021,19 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 29 -> 28
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Succeeded to reduce node 6 from 29 to 28
 ------------------------------------------------------------
 
+
+Rebuilding spar-tree: The spartree is rebuilt.
 
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
@@ -2066,7 +2102,7 @@ compilationUnit {id=272,slot_type=compilationUnit}
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2078,7 +2114,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
     --file: <formatted tokenized program in its original format>--
 ------------------------------------------------------------
 
@@ -2093,7 +2129,7 @@ Failed to reduce node 273
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2119,7 +2155,7 @@ Failed to reduce node 276
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2139,7 +2175,7 @@ Failed to reduce node 279
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2152,7 +2188,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__classBody_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
     }
     --file: <formatted tokenized program in its original format>--
@@ -2171,7 +2207,7 @@ Failed to reduce node 281
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2190,7 +2226,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
            class T {
                                             {
           System.out.println(1 << 2);
@@ -2215,7 +2251,7 @@ Failed to reduce node 284
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2235,7 +2271,7 @@ Failed to reduce node 288
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2248,7 +2284,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__block_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2273,7 +2309,7 @@ Failed to reduce node 290
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2299,7 +2335,7 @@ Failed to reduce node 292
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2311,7 +2347,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2336,7 +2372,7 @@ Failed to reduce node 296
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2356,7 +2392,7 @@ Failed to reduce node 299
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2376,7 +2412,7 @@ Failed to reduce node 302
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2396,7 +2432,7 @@ Failed to reduce node 286
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2416,7 +2452,7 @@ Failed to reduce node 355
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2436,7 +2472,7 @@ Failed to reduce node 305
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2449,7 +2485,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__methodDeclarator_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(             )
                                             {
@@ -2476,7 +2512,7 @@ Failed to reduce node 358
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2502,7 +2538,7 @@ Failed to reduce node 363
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2515,7 +2551,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:optional__explicitConstructorInvocation_2]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2542,7 +2578,7 @@ Failed to reduce node 308
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2561,7 +2597,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2581,7 +2617,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2608,7 +2644,7 @@ Failed to reduce node 319
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2621,7 +2657,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String   args)
                                             {
@@ -2648,7 +2684,7 @@ Failed to reduce node 367
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2660,7 +2696,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2687,7 +2723,7 @@ Failed to reduce node 321
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2713,7 +2749,7 @@ Failed to reduce node 322
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2726,7 +2762,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2746,7 +2782,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [regular node]compatible replacement
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2773,7 +2809,7 @@ Failed to reduce node 303
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2793,7 +2829,7 @@ Failed to reduce node 370
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2813,7 +2849,7 @@ Failed to reduce node 371
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2825,7 +2861,7 @@ The current best program is the following
 
 =========Cache hit for the following program: fail==========
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2852,7 +2888,7 @@ Failed to reduce node 348
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2878,7 +2914,7 @@ Failed to reduce node 350
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2898,7 +2934,7 @@ Failed to reduce node 335
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2911,7 +2947,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__methodDeclaration_1]dd@2
-    --file: T.java--
+    --file: T.java.txt--
            class T {
                     void main(String[] args)
                                             {
@@ -2931,7 +2967,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__methodDeclaration_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public        void main(String[] args)
                                             {
@@ -2951,7 +2987,7 @@ The current best program is the following
 ============Testing the following program: fail=============
 
 // edit action set type: [kleene_star:kleene_star__methodDeclaration_1]dd@1
-    --file: T.java--
+    --file: T.java.txt--
            class T {
              static void main(String[] args)
                                             {
@@ -2978,7 +3014,7 @@ Failed to reduce node 285
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -2998,7 +3034,7 @@ Failed to reduce node 382
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3018,7 +3054,7 @@ Failed to reduce node 381
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3038,7 +3074,7 @@ Failed to reduce node 378
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3058,7 +3094,7 @@ Failed to reduce node 377
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3078,7 +3114,7 @@ Failed to reduce node 373
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3098,7 +3134,7 @@ Failed to reduce node 372
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3118,7 +3154,7 @@ Failed to reduce node 366
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3138,7 +3174,7 @@ Failed to reduce node 359
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3158,7 +3194,7 @@ Failed to reduce node 357
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3178,7 +3214,7 @@ Failed to reduce node 356
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3198,7 +3234,7 @@ Failed to reduce node 353
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3218,7 +3254,7 @@ Failed to reduce node 352
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3238,7 +3274,7 @@ Failed to reduce node 349
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3258,7 +3294,7 @@ Failed to reduce node 347
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3278,7 +3314,7 @@ Failed to reduce node 337
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3298,7 +3334,7 @@ Failed to reduce node 336
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3318,7 +3354,7 @@ Failed to reduce node 334
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3338,7 +3374,7 @@ Failed to reduce node 307
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3358,7 +3394,7 @@ Failed to reduce node 306
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3378,7 +3414,7 @@ Failed to reduce node 304
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3398,7 +3434,7 @@ Failed to reduce node 301
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3418,7 +3454,7 @@ Failed to reduce node 298
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3438,7 +3474,7 @@ Failed to reduce node 291
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3458,7 +3494,7 @@ Failed to reduce node 289
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3478,7 +3514,7 @@ Failed to reduce node 282
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3498,7 +3534,7 @@ Failed to reduce node 280
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3518,7 +3554,7 @@ Failed to reduce node 278
 
 The current best program is the following
 
-    --file: T.java--
+    --file: T.java.txt--
            class T {
       public static void main(String[] args)
                                             {
@@ -3532,6 +3568,63 @@ The current best program is the following
 
 Failed to reduce node 277
 ------------------------------------------------------------
+
+
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 58
+  characterCount: 141
+  fileContents:
+  - fileName: "T.java.txt"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 28
+  characterCount: 69
+  fileContents:
+  - fileName: "T.java.txt"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[3]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 28
+  characterCount: 69
+  fileContents:
+  - fileName: "T.java.txt"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
 
 
 #test success = 3

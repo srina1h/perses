@@ -9,7 +9,7 @@
 # See all `update-references.sh`, if you just want to update a single test.
 
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    echo "usage: $0"
+  echo "usage: $0"
 fi
 
 CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-$PWD/target}

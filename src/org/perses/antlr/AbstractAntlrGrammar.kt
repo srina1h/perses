@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList
 import org.perses.antlr.ast.AbstractPersesRuleDefAst
 import org.perses.antlr.ast.PersesGrammar
 
-abstract class AbstractAntlrGrammar {
+abstract class AbstractAntlrGrammar(val startRuleName: String) {
 
   abstract val isCombined: Boolean
 
@@ -36,8 +36,10 @@ abstract class AbstractAntlrGrammar {
     throw UnsupportedOperationException()
   }
 
-  class CombinedAntlrGrammar(val grammar: PersesGrammar) :
-    AbstractAntlrGrammar() {
+  class CombinedAntlrGrammar(
+    startRuleName: String,
+    val grammar: PersesGrammar,
+  ) : AbstractAntlrGrammar(startRuleName) {
 
     override val isCombined = true
 
@@ -50,8 +52,11 @@ abstract class AbstractAntlrGrammar {
     override fun asCombined() = this
   }
 
-  class SeparateAntlrGrammar(val parserGrammar: PersesGrammar, val lexerGrammar: PersesGrammar) :
-    AbstractAntlrGrammar() {
+  class SeparateAntlrGrammar(
+    startRuleName: String,
+    val parserGrammar: PersesGrammar,
+    val lexerGrammar: PersesGrammar,
+  ) : AbstractAntlrGrammar(startRuleName) {
 
     override val isCombined = false
 

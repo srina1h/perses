@@ -17,27 +17,16 @@
 package org.perses.grammar.c
 
 import com.google.common.primitives.ImmutableIntArray
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.grammar.AbstractDefaultParserFacade
 
 class PnfCParserFacade : AbstractDefaultParserFacade<PnfCLexer, PnfCParser>(
   LanguageC,
-  createCombinedAntlrGrammar("PnfC.g4", PnfCParserFacade::class.java),
+  createCombinedAntlrGrammar(
+    startRuleName = "translationUnit",
+    antlrGrammarFileName = "PnfC.g4",
+    PnfCParserFacade::class.java,
+  ),
   PnfCLexer::class.java,
   PnfCParser::class.java,
   ImmutableIntArray.of(PnfCLexer.Identifier),
-) {
-  override fun createLexer(inputStream: CharStream): PnfCLexer {
-    return PnfCLexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfCParser {
-    return PnfCParser(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfCParser): ParseTree {
-    return parser.translationUnit()
-  }
-}
+)

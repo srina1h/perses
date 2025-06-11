@@ -23,6 +23,7 @@ import org.apache.commons.exec.DefaultExecutor
 import org.apache.commons.exec.ExecuteException
 import org.apache.commons.exec.ExecuteWatchdog
 import org.apache.commons.exec.PumpStreamHandler
+import org.perses.util.Util
 import org.perses.util.ktFine
 import org.perses.util.ktSevere
 import java.io.IOException
@@ -50,23 +51,22 @@ class Shells(
     environment: ImmutableMap<String, String>,
   ): CmdOutput {
     return if (captureOutput) {
-      val stdout = ShellOutputStream()
-      val stderr = ShellOutputStream()
-      val exitCode = stdout.use {
-        stderr.use {
-          runAndGetExitCode(
-            cmd,
-            workingDirectory,
-            stdout,
-            stderr,
-            environment,
-          )
-        }
+      val resultTuple = Util.useResources(
+        creatorA = { ShellOutputStream() },
+        creatorB = { ShellOutputStream() },
+      ) { stdout, stderr ->
+        runAndGetExitCode(
+          cmd,
+          workingDirectory,
+          stdout,
+          stderr,
+          environment,
+        )
       }
       CmdOutput(
-        exitCode,
-        stdout = stdout.toOutputStringList(),
-        stderr = stderr.toOutputStringList(),
+        exitCode = resultTuple.result,
+        stdout = resultTuple.resourceA.toOutputStringList(),
+        stderr = resultTuple.resourceB.toOutputStringList(),
       )
     } else {
       val exitCode = shellPolicyDiscardingOutput.runAndGetExitCode(

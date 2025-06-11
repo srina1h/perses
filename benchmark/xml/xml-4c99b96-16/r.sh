@@ -44,28 +44,25 @@ if [ $ret != 0 ]; then
 fi
 
 # process saxon result
-grep -o 'id="[^"]*"' ${reference}_raw_result.xml | \
-  grep -v '^[[:space:]]*$' > ${reference}_processed_result.txt
+grep -o 'id="[^"]*"' ${reference}_raw_result.xml \
+  | grep -v '^[[:space:]]*$' > ${reference}_processed_result.txt
 
 # process basex_bad result
-grep -o 'id="[^"]*"' ${target_basex_bad}_raw_result.xml | \
-  grep -v '^[[:space:]]*$' > ${target_basex_bad}_processed_result.txt
+grep -o 'id="[^"]*"' ${target_basex_bad}_raw_result.xml \
+  | grep -v '^[[:space:]]*$' > ${target_basex_bad}_processed_result.txt
 
 # process basex_good result
-grep -o 'id="[^"]*"' ${target_basex_good}_raw_result.xml | \
-  grep -v '^[[:space:]]*$' > ${target_basex_good}_processed_result.txt
-
+grep -o 'id="[^"]*"' ${target_basex_good}_raw_result.xml \
+  | grep -v '^[[:space:]]*$' > ${target_basex_good}_processed_result.txt
 
 # the output of bad basex version should be different from the output of reference
 if diff ${reference}_processed_result.txt ${target_basex_bad}_processed_result.txt > /dev/null 2>&1; then
-    exit 1
+  exit 1
 fi
 
 # the output of good basex version should be the same as the output of reference
 if ! diff ${reference}_processed_result.txt ${target_basex_good}_processed_result.txt > /dev/null 2>&1; then
-    exit 1
+  exit 1
 fi
 
 exit 0
-
-

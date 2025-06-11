@@ -4,19 +4,19 @@ set -o pipefail
 
 readonly OUTPUT="temp_compilation_output.tmp.txt"
 
-if timeout -s 9 30 scalac-trunk  mutant.scala &> "${OUTPUT}" ; then
+if timeout -s 9 30 scalac-trunk mutant.scala &> "${OUTPUT}"; then
   exit 1
 fi
 
-if ! grep --quiet --fixed-strings "at dotty.tools.dotc.ast.Trees\$Tree.tpe" "${OUTPUT}" ; then
+if ! grep --quiet --fixed-strings "at dotty.tools.dotc.ast.Trees\$Tree.tpe" "${OUTPUT}"; then
   exit 1
 fi
 
-if ! grep --quiet --fixed-strings "at dotty.tools.dotc.ast.tpd\$.tpes" "${OUTPUT}" ; then
+if ! grep --quiet --fixed-strings "at dotty.tools.dotc.ast.tpd\$.tpes" "${OUTPUT}"; then
   exit 1
 fi
 
-if ! grep --quiet --fixed-strings "at dotty.tools.dotc.core.TypeOps\$.boundsViolations" "${OUTPUT}" ; then
+if ! grep --quiet --fixed-strings "at dotty.tools.dotc.core.TypeOps\$.boundsViolations" "${OUTPUT}"; then
   exit 1
 fi
 exit 0

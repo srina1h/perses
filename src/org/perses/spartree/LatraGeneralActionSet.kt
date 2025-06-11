@@ -33,20 +33,25 @@ class LatraGeneralActionSet private constructor(
     private val deletedNodeUpToNow = HashSet<AbstractSparTreeNode>()
     private val actionSetBuilder = ImmutableList.Builder<AbstractTreeEditAction>()
 
-    fun deleteNode(targetNode: AbstractSparTreeNode) {
+    fun deleteNode(targetNode: AbstractSparTreeNode): Builder {
       actionSetBuilder.add(NodeDeletionAction(targetNode))
       check(deletedNodeUpToNow.add(targetNode))
+      return this
     }
 
-//   checking here might be expensive
-    fun replaceNode(targetNode: AbstractSparTreeNode, replacingNode: AbstractSparTreeNode) {
-      for (node in deletedNodeUpToNow) {
-        val targetNodeCommonAncestor = AbstractTreeNode.findLowestAncestor(node, targetNode)
-        check(targetNodeCommonAncestor != node)
-        check(replacingNode.parent == null)
+    fun replaceNode(
+      targetNode: AbstractSparTreeNode,
+      replacingNode: AbstractSparTreeNode,
+    ): Builder {
+      check(replacingNode.parent == null)
+      // checking here might be expensive
+      for (deleted in deletedNodeUpToNow) {
+        val targetNodeCommonAncestor = AbstractTreeNode.findLowestAncestor(deleted, targetNode)
+        check(targetNodeCommonAncestor != deleted)
       }
       deletedNodeUpToNow.add(targetNode)
       actionSetBuilder.add(NodeReplacementAction(targetNode, replacingNode))
+      return this
     }
 
     fun build(): LatraGeneralActionSet? {

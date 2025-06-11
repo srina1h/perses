@@ -1,4 +1,5 @@
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain", "kt_kotlinc_options")
+load("//test/org/perses:test.bzl", "golden_test")
 
 package(
     default_visibility = ["//visibility:public"],
@@ -134,8 +135,6 @@ define_kt_toolchain(
 )
 
 exports_files(["README.md"])
-
-load("//test/org/perses:test.bzl", "copy", "golden_test")
 
 golden_test(
     name = "readme_golden_test",

@@ -12,8 +12,8 @@ set -o errexit
 # run token counter on given file
 
 if [ $# -le 0 ]; then
-    echo "Expect arguments $0 SOURCE_FILE"
-    exit 1
+  echo "Expect arguments $0 SOURCE_FILE"
+  exit 1
 fi
 
 readonly BINARY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

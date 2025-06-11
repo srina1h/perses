@@ -11,26 +11,26 @@ readonly EXE="Hello"
 
 rm "${OUTPUT}" || true
 
-if ! command -v "scalac" ; then
+if ! command -v "scalac"; then
   echo "No scalac on the path"
   exit 1
 fi
-if ! command -v "scala" ; then
+if ! command -v "scala"; then
   echo "No scala on the path"
   exit 1
 fi
 
-if ! scalac "${SRC}" ; then
+if ! scalac "${SRC}"; then
   exit 1
 fi
 
 scala "${EXE}" &> "${OUTPUT}"
 
-if [[ "${?}" != 0 ]] ; then
+if [[ "${?}" != 0 ]]; then
   exit 1
 fi
 
-if ! grep "Hello, world" "${OUTPUT}" ; then
+if ! grep "Hello, world" "${OUTPUT}"; then
   exit 1
 fi
 

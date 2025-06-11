@@ -1,14 +1,4 @@
-def copy(name, src, dest):
-    native.genrule(
-        name = name,
-        outs = [
-            dest,
-        ],
-        srcs = [
-            src,
-        ],
-        cmd = "cp $< $@",
-    )
+load("//:perses.bzl", "copy")
 
 def golden_test(name, golden_file, test_file):
     rule_cp_diff_sh = "%s_copy_diff_script" % name

@@ -85,13 +85,29 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses: null
+  onDemandFineGritReducerAnnotationClasses: []
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<fixpoint>
+body: !<atomic>
+  reducer: ddmin
+condition: smaller
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 ============Fixpoint iteration 1. Reducer: ddmin============
 
 The spar-tree is the following.
@@ -642,6 +658,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 16 -> 14
+------------------------------------------------------------
+
+
 =========Cache hit for the following program: fail==========
 
     --file: t.c--
@@ -1149,6 +1171,8 @@ translationUnit {id=1,slot_type=translationUnit}
       return a    ;
 ------------------------------------------------------------
 
+
+Rebuilding spar-tree: The spartree is rebuilt.
 
 ============Fixpoint iteration 2. Reducer: ddmin============
 
@@ -2331,6 +2355,63 @@ translationUnit {id=105,slot_type=translationUnit}
 
     NodeDeletionAction{target_node=114}
 ------------------------------------------------------------
+
+
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 16
+  characterCount: 29
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  shortName: "ddmin"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 14
+  characterCount: 27
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[3]: ReducerCallEvent
+---
+reducer:
+  shortName: "ddmin"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 14
+  characterCount: 27
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
 
 
 #test success = 1

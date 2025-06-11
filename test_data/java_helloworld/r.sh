@@ -5,4 +5,4 @@ set -o nounset
 
 rm t.class
 javac t.java \
-&& timeout -s 9 5 java t | grep -q 'hello world'
+  && timeout -s 9 5 java t | grep -q 'hello world'

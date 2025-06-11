@@ -18,6 +18,9 @@ package org.perses.reduction.reducer.vulcan.pattern
 
 import com.google.common.collect.ImmutableList
 import com.google.common.flogger.FluentLogger
+import org.perses.listminimizer.localexhaust.ElementEditPattern
+import org.perses.listminimizer.localexhaust.EnumOperation
+import org.perses.listminimizer.localexhaust.NumOfDeletesToPatterns
 import org.perses.reduction.AbstractTokenReducer
 import org.perses.reduction.EditTestPayload
 import org.perses.reduction.ReducerAnnotation
@@ -71,21 +74,20 @@ class LocalExhaustivePatternReducer internal constructor(
       }
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME_PREFIX,
+    description = "traverse all the sets that contain a fixed number (pattern size) of " +
+      "consecutive nodes in each level of the parse tree, " +
+      "and try all possible patterns of deletions.",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(LocalExhaustivePatternReducer(reducerContext))
+    }
+  }
   companion object {
     internal const val NAME_PREFIX = "token_pattern_reducer"
-
-    val META = object : ReducerAnnotation(
-      shortName = NAME_PREFIX,
-      description = "traverse all the sets that contain a fixed number (pattern size) of " +
-        "consecutive nodes in each level of the parse tree, " +
-        "and try all possible patterns of deletions.",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(LocalExhaustivePatternReducer(reducerContext))
-      }
-    }
 
     private val PATTERNS = (3..6).asSequence()
       .map { it to NumOfDeletesToPatterns.createDeletionPatterns(totalNumberOfOperations = it) }
@@ -96,7 +98,7 @@ class LocalExhaustivePatternReducer internal constructor(
       slicingGranularity: Int,
     ): Sequence<ImmutableList<AbstractSparTreeNode>> {
       return sequence {
-        var nodesInCurrentLevel = tree.root.immutableChildView.toImmutableList()
+        var nodesInCurrentLevel = tree.realRoot.immutableChildView.toImmutableList()
         if (nodesInCurrentLevel.size > slicingGranularity) {
           yield(nodesInCurrentLevel)
         }
@@ -131,9 +133,9 @@ class LocalExhaustivePatternReducer internal constructor(
   // The code can be merged with [TokenSlicingTask]
   inner class TokenPatternDeleteTask(
     tree: SparTree,
-    private val nodeList: ImmutableList<out AbstractSparTreeNode>,
-    private val startIndex: Int,
-    private val tokenEditPattern: TokenEditPattern,
+    nodeList: ImmutableList<out AbstractSparTreeNode>,
+    startIndex: Int,
+    private val tokenEditPattern: ElementEditPattern,
   ) : AbstractSlicingTask(
     tree,
     reducerContext,

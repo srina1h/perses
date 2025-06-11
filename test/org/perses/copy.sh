@@ -10,12 +10,12 @@ echo "cwd: $(pwd)" 1>&2
 echo "src: ${SOURCE}" 1>&2
 echo "desc: ${DESC}" 1>&2
 
-if [[ "${SOURCE}" == "${DESC}" ]] ; then
+if [[ "${SOURCE}" == "${DESC}" ]]; then
   echo "Both files point to the same file. ${DESC}" 1>&2
   exit 1
 fi
 
-if cp "${SOURCE}" "${DESC}" ; then
+if cp "${SOURCE}" "${DESC}"; then
   echo "==Success=="
 else
   echo "==Failure=="

@@ -84,7 +84,7 @@ abstract class AbstractRealQueryCache<
     currentBestProgram: TokenizedProgram,
   ): Boolean {
     val oldSize = programInEncoder.size
-    val newSize = currentBestProgram.tokenCount()
+    val newSize = currentBestProgram.tokenCount
     return oldSize - newSize >= refreshStep
   }
 
@@ -116,7 +116,7 @@ abstract class AbstractRealQueryCache<
     val startNanoTime = System.nanoTime()
     val newKeys = ArrayList<Encoding>()
     val newValues = ArrayList<PropertyTestResult>()
-    val bestTokenCount = best.tokenCount()
+    val bestTokenCount = best.tokenCount
     val cacheSizeBefore = cache.size
     val oldTokensInOrigin: ImmutableList<PersesTokenFactory.PersesToken> =
       encoder.tokensInBaseProgram
@@ -162,7 +162,7 @@ abstract class AbstractRealQueryCache<
 
   private fun lightweightCleanup(best: TokenizedProgram) {
     val iter: MutableIterator<Map.Entry<Encoding, PropertyTestResult>> = cache.entries.iterator()
-    val tokenCount = best.tokenCount()
+    val tokenCount = best.tokenCount
     while (iter.hasNext()) {
       val (key) = iter.next()
       if (key.tokenCount >= tokenCount) {
@@ -183,6 +183,6 @@ abstract class AbstractRealQueryCache<
       tokensInOrigin = tokenizedProgram.tokens,
       nanoDuration = nanoDuration,
     )
-    refreshStep = configuration.refreshStepFraction.multiply(tokenizedProgram.tokenCount())
+    refreshStep = configuration.refreshStepFraction.multiply(tokenizedProgram.tokenCount)
   }
 }

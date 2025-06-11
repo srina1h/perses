@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ -n "${CARGO_HOME}" ]] ; then
+if [[ -n "${CARGO_HOME}" ]]; then
   echo "Does not support CARGO_HOME yet."
   exit 1
 fi
@@ -19,7 +19,7 @@ function install_rustup() {
 readonly BIN="${HOME}/.cargo/bin"
 readonly RUSTUP="${BIN}/rustup"
 
-if ! [[ -f "${RUSTUP}" ]] ; then
+if ! [[ -f "${RUSTUP}" ]]; then
   echo "Installing rustup, as it does not exist."
   install_rustup || exit 1
 fi

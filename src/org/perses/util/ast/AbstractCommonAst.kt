@@ -39,6 +39,7 @@ abstract class AbstractCommonAst<Self : AbstractCommonAst<Self>> :
 
   protected open val extraLabelForTreeStructurePrinting: String
     get() = ""
+
   abstract val childCount: Int
 
   abstract fun toSourceCode(stream: PrintStream, indent: Indent, multiLineMode: Boolean)

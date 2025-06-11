@@ -34,6 +34,7 @@ import org.perses.reduction.io.RegularReductionInputs
 import org.perses.reduction.io.token.RegularOutputManagerFactory
 import org.perses.reduction.io.token.TokenReductionIOManager
 import org.perses.util.AutoDeletableFolder
+import org.perses.util.Util
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -68,6 +69,20 @@ class ReductionFolderManagerTest {
   @After
   fun teardown() {
     tempDir.close()
+  }
+
+  @Test
+  fun testCreateTempDirectory() {
+    val prefix = "prefix"
+    val postfix = "suffix"
+    val result = (1..5).map {
+      manager.createTempDirectory(prefix, postfix)
+    }.toList()
+    result.forEach {
+      assertThat(it.fileName.toString()).startsWith(prefix)
+      assertThat(it.fileName.toString()).endsWith(postfix)
+      assertThat(Util.isEmptyDirectory(it)).isTrue()
+    }
   }
 
   @Test

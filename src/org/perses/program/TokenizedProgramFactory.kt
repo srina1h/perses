@@ -43,7 +43,9 @@ class TokenizedProgramFactory private constructor(
     val persesTokens = tokens
       .asSequence()
       .map {
-        check(tokenFactory.doesLexemeExist(it.text))
+        check(tokenFactory.doesLexemeExist(it.text)) {
+          "$it does not exist in the token factory $tokenFactory"
+        }
         tokenFactory.createPersesToken(it)
       }.toImmutableList()
     return TokenizedProgram(persesTokens, this)

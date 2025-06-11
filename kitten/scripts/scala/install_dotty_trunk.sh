@@ -5,7 +5,7 @@ set -o pipefail
 set -o xtrace
 set -o errexit
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <install dir>"
   exit 1
 fi
@@ -38,7 +38,7 @@ cd "${SRC_FOLDER}"
 
 INSTALL_DIR="${INSTALLROOT}/scala_dotty"
 rm -rf "${INSTALL_DIR}"
-mv  "${SRC_FOLDER}" "${INSTALL_DIR}"
+mv "${SRC_FOLDER}" "${INSTALL_DIR}"
 
 ABS_SCALAC="${INSTALL_DIR}/bin/scalac"
 
@@ -51,4 +51,3 @@ ${ABS_SCALAC} "\$@"
 EOF
 
 chmod +x "${SCALAC_LINK}"
-

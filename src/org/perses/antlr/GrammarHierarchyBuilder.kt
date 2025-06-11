@@ -34,7 +34,7 @@ import org.perses.antlr.ast.RuleEpsilonComputer.Companion.computeEpsilonableRule
 import org.perses.util.toImmutableList
 import java.util.ArrayDeque
 
-class GrammarHierarchyBuilder(grammar: AbstractAntlrGrammar) {
+class GrammarHierarchyBuilder(private val grammar: AbstractAntlrGrammar) {
   private val combinedRules = grammar.getCombinedRules()
   private val epsilonInfo: EpsilonInfo = computeEpsilonableRules(combinedRules)
   private val indexToRuleMap = combinedRules.asSequence()
@@ -154,7 +154,7 @@ class GrammarHierarchyBuilder(grammar: AbstractAntlrGrammar) {
 
   fun build(): GrammarHierarchy {
     buildTransitiveSubtypingRule()
-    return GrammarHierarchy(indexToRuleMap, nameToRuleMap)
+    return GrammarHierarchy(startRuleName = grammar.startRuleName, indexToRuleMap, nameToRuleMap)
   }
 
   private fun buildTransitiveSubtypingRule() {

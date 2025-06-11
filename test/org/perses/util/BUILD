@@ -57,13 +57,13 @@ kt_jvm_test(
 )
 
 kt_jvm_test(
-    name = "YamlUtilTest",
+    name = "SerializationTest",
     srcs = [
-        "YamlUtilTest.kt",
+        "SerializationTest.kt",
     ],
     deps = [
         "//:truth",
-        "//src/org/perses/util:YamlUtil",
+        "//src/org/perses/util:Serialization",
     ],
 )
 

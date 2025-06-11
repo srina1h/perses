@@ -1,1 +1,1 @@
-(declare-fun hello_world ()success            )
+(declare-fun hello_world ()sat                )

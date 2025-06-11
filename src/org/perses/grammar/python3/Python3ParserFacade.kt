@@ -19,7 +19,6 @@ package org.perses.grammar.python3
 import com.google.common.primitives.ImmutableIntArray
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.antlr.ParseTreeWithParser
 import org.perses.grammar.AbstractDefaultParserFacade
 import java.io.StringReader
@@ -27,26 +26,15 @@ import java.io.StringReader
 class Python3ParserFacade : AbstractDefaultParserFacade<Python3Lexer, PnfPython3Parser>(
   LanguagePython3,
   createSeparateAntlrGrammar(
-    "PnfPython3Parser.g4",
-    "Python3Lexer.g4",
+    startRuleName = "file_input",
+    antlrParserGrammarFileName = "PnfPython3Parser.g4",
+    antlrLexerGrammarFileName = "Python3Lexer.g4",
     Python3ParserFacade::class.java,
   ),
   Python3Lexer::class.java,
   PnfPython3Parser::class.java,
   ImmutableIntArray.of(Python3Lexer.NAME),
 ) {
-  override fun createLexer(inputStream: CharStream): Python3Lexer {
-    return Python3Lexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfPython3Parser {
-    return PnfPython3Parser(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfPython3Parser): ParseTree {
-    return parser.file_input()
-  }
-
   fun parseWithOrigParser(program: String?): ParseTreeWithParser {
     StringReader(program).use { reader ->
       return parseReader(
@@ -54,7 +42,7 @@ class Python3ParserFacade : AbstractDefaultParserFacade<Python3Lexer, PnfPython3
         reader,
         { charStream: CharStream? -> Python3Lexer(charStream) },
         { commonTokenStream: CommonTokenStream? -> PnfPython3Parser(commonTokenStream) },
-      ) { obj: PnfPython3Parser -> obj.file_input() }
+      ) { obj -> obj.file_input() }
     }
   }
 }

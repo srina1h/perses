@@ -37,7 +37,7 @@ search space by avoiding generating syntactically invalid programs.</p>
 <li>
 <p>Download a prebuilt release JAR file from our <a href="https://github.com/perses-project/perses/releases">release page</a>,
 for example,</p>
-<pre><code class="language-bash">wget https://github.com/uw-pluverse/perses/releases/download/v2.3/perses_deploy.jar
+<pre><code class="language-bash">wget https://github.com/uw-pluverse/perses/releases/download/v2.4/perses_deploy.jar
 java -jar perses_deploy.jar [options]? --test-script &lt;test-script.sh&gt; --input-file &lt;program file&gt;
 </code></pre>
 </li>
@@ -213,6 +213,17 @@ if the specific language can be parsed by an Antlr parser.</p>
       Whether to enable lightweight refreshing
       Default: true
 
+[LPR Reducer Control]  Options:
+    --enable-lpr
+      Enable LPR (LLM-based transformations to improve reduction results).
+      Default: false
+    --lpr-fixpoint
+      Enable lpr fixpoint. Everytime a transformation makes progress, go to 
+      the next transformation.
+      Default: false
+    --llm-client-script
+      The script to invoke LLM.
+
 [Verbosity]  Options:
     --verbosity
       verbosity of logging
@@ -293,5 +304,25 @@ if the specific language can be parsed by an Antlr parser.</p>
   journal={ACM Transactions on Software Engineering and Methodology},
   year={2024},
   publisher={ACM New York, NY}
+}
+</code></pre>
+<h5>7. WDD: Weighted Delta Debugging (ICSE, <a href="./doc/publication/2025_wdd_icse.pdf">pdf</a>)</h5>
+<pre><code>@article{perses-wdd,
+  title={WDD: Weighted Delta Debugging},
+  author={Zhou, Xintong and Xu, Zhenyang and Zhang, Mengxiao and Tian, Yongqiang and Sun, Chengnian},
+  booktitle={Proceedings of the 47th International Conference on Software Engineering},
+  year={2025},
+  doi = {10.1109/ICSE55347.2025.00071},
+  publisher = {IEEE Computer Society},
+}
+</code></pre>
+<h5>8. Toward a Better Understanding of Probabilistic Delta Debugging (ICSE, <a href="./doc/publication/2025_cdd_icse.pdf">pdf</a>)</h5>
+<pre><code>@article{perses-cdd,
+  title={Toward a Better Understanding of Probabilistic Delta Debugging},
+  author={Zhou, Xintong and Xu, Zhenyang and Zhang, Mengxiao and Tian, Yongqiang and Sun, Chengnian},
+  booktitle={Proceedings of the 47th International Conference on Software Engineering},
+  year={2025},
+  doi = {10.1109/ICSE55347.2025.00117},
+  publisher = {IEEE Computer Society},
 }
 </code></pre>

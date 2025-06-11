@@ -41,13 +41,13 @@ rm -rf binutils
 # Next, download the FreeBSD libraries and header files
 mkdir -p "$sysroot"
 case $arch in
-  (x86_64) freebsd_arch=amd64 ;;
-  (i686) freebsd_arch=i386 ;;
+  x86_64) freebsd_arch=amd64 ;;
+  i686) freebsd_arch=i386 ;;
 esac
 
 files_to_extract=(
-"./usr/include"
-"./usr/lib/*crt*.o"
+  "./usr/include"
+  "./usr/lib/*crt*.o"
 )
 # Try to unpack only the libraries the build needs, to save space.
 for lib in c cxxrt gcc_s m thr util; do
@@ -75,7 +75,7 @@ curl "$URL" | tar xJf - -C "$sysroot" --wildcards "${files_to_extract[@]}"
 # preprocessor macro.
 for tool in clang clang++; do
   tool_path=/usr/local/bin/${triple}-${tool}
-  cat > "$tool_path" <<EOF
+  cat > "$tool_path" << EOF
 #!/bin/sh
 exec $tool --sysroot=$sysroot --prefix=${sysroot}/bin "\$@" --target=$triple
 EOF

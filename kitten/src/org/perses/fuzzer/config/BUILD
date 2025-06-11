@@ -27,6 +27,6 @@ kt_jvm_library(
         "//src/org/perses/grammar/solidity/preprocessed:solidity_lexer",
         "//src/org/perses/grammar/sysverilog:language_kind",
         "//src/org/perses/grammar/sysverilog:sysverilog_lexer",
-        "//src/org/perses/util:YamlUtil",
+        "//src/org/perses/util:Serialization",
     ],
 )

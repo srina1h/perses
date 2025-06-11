@@ -45,7 +45,7 @@ kt_jvm_library(
         ":language_kind",
         "//:guava",
         "//:jackson",
-        "//src/org/perses/util:YamlUtil",
+        "//src/org/perses/util:Serialization",
         "//src/org/perses/util/shell",
     ],
 )

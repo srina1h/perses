@@ -47,6 +47,7 @@ kt_jvm_library(
         "GrammarHierarchy.kt",
         "GrammarHierarchyBuilder.kt",
         "RuleHierarchyEntry.kt",
+        "RuleReachabilityGraph.kt",
     ],
     deps = [
         ":antlr_grammar_info",
@@ -125,6 +126,8 @@ kt_jvm_library(
     srcs = ["ParseTreeWithParser.kt"],
     deps = [
         "//:antlr_runtime",
+        "//src/org/perses/antlr:util",
+        "//src/org/perses/util",
     ],
 )
 

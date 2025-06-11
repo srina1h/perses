@@ -21,7 +21,6 @@ import org.perses.program.TokenizedProgram
 import org.perses.program.printer.AbstractTokenizedProgramPrinter.AbstractTokenPlacementListener
 import org.perses.program.printer.AbstractTokenizedProgramPrinter.AbstractTokenPositionProvider
 import org.perses.util.FastStringBuilder
-import org.perses.util.Util.lazyAssert
 
 abstract class AbstractOrigFormatVisitor(
   val program: TokenizedProgram,
@@ -37,7 +36,7 @@ abstract class AbstractOrigFormatVisitor(
 
   protected open fun onVisitEnd() {}
 
-  val result = FastStringBuilder(capacity = program.tokenCount() * 5)
+  val result = FastStringBuilder(capacity = program.tokenCount * 5)
 
   fun visit(): AbstractOrigFormatVisitor {
     val tokens = program.tokens
@@ -59,9 +58,10 @@ abstract class AbstractOrigFormatVisitor(
         continue
       }
       val lineNo = tokenPositionProvider.getLine(token)
-      lazyAssert { lineNo > 0 }
-      lazyAssert { currentLineNumber <= lineNo }
-      if (currentLineNumber == lineNo) {
+      if (currentLineNumber >= lineNo) {
+        /*
+         * A token might be on a lower lines due to token insertion. Just be permissive.
+         */
         currentLine.add(token)
       } else {
         visitLine(currentLine)

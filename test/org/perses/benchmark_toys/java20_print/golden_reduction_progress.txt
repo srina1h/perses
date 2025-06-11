@@ -85,13 +85,29 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses: null
+  onDemandFineGritReducerAnnotationClasses: []
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.java.Java20ParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<fixpoint>
+body: !<atomic>
+  reducer: perses_node_priority_with_dfs_delta
+condition: smaller
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -357,6 +373,12 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 45 -> 35
+------------------------------------------------------------
+
+
 ===================Node reduction is done===================
 
 Succeeded to reduce node 15 from 45 to 35
@@ -528,6 +550,12 @@ The current best program is the following
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 35 -> 26
+------------------------------------------------------------
+
+
 =========Cache hit for the following program: fail==========
 
     --file: HelloJava20.java.txt--
@@ -574,6 +602,12 @@ The current best program is the following
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 2
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 26 -> 12
 ------------------------------------------------------------
 
 
@@ -676,6 +710,12 @@ The current best program is the following
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 2
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 12 -> 10
 ------------------------------------------------------------
 
 
@@ -874,6 +914,8 @@ The current best program is the following
 Failed to reduce node 8
 ------------------------------------------------------------
 
+
+Rebuilding spar-tree: The spartree is rebuilt.
 
 =Fixpoint iteration 2. Reducer: perses_node_priority_with_dfs_delta
 
@@ -1328,6 +1370,63 @@ The current best program is the following
 
 Failed to reduce node 225
 ------------------------------------------------------------
+
+
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 45
+  characterCount: 157
+  fileContents:
+  - fileName: "HelloJava20.java.txt"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 10
+  characterCount: 36
+  fileContents:
+  - fileName: "HelloJava20.java.txt"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[3]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 10
+  characterCount: 36
+  fileContents:
+  - fileName: "HelloJava20.java.txt"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
 
 
 #test success = 4

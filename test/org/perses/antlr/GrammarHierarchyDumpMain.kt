@@ -35,12 +35,31 @@ class GrammarHierarchyDumpMain(cmd: Options) :
     dumpGrammarHierarchy(cmd.c!!, PnfCParserFacade().ruleHierarchy)
     dumpGrammarHierarchy(cmd.go!!, PnfGoParserFacade().ruleHierarchy)
     dumpGrammarHierarchy(cmd.scala!!, PnfScalaParserFacade().ruleHierarchy)
+    dumpRuleGraph(cmd.graphC!!, PnfCParserFacade().ruleHierarchy)
+    dumpRuleGraph(cmd.graphGo!!, PnfGoParserFacade().ruleHierarchy)
+    dumpRuleGraph(cmd.graphScala!!, PnfScalaParserFacade().ruleHierarchy)
   }
 
   private fun dumpGrammarHierarchy(outputPath: String, hierarchy: GrammarHierarchy) {
     val message = TextFormat.printer().printToString(hierarchy.toProtoMessage())
     Files.asCharSink(File(outputPath), StandardCharsets.UTF_8)
       .write(message)
+  }
+
+  private fun dumpRuleGraph(outputPath: String, hierarchy: GrammarHierarchy) {
+    val graph = hierarchy.reachabilityGraph.graph
+    val nodes = graph.nodes().sortedBy { it.ruleName }
+    val builder = StringBuilder()
+
+    for (node in nodes) {
+      val successors = graph.successors(node)
+        .sortedBy { it.ruleName }
+        .joinToString(", ") { it.ruleName }
+      builder.append("${node.ruleName} -> [$successors]\n")
+    }
+
+    Files.asCharSink(File(outputPath), StandardCharsets.UTF_8)
+      .write(builder.toString())
   }
 
   class Options : AbstractCommandOptions() {
@@ -53,10 +72,22 @@ class GrammarHierarchyDumpMain(cmd: Options) :
     @Parameter(names = ["-scala"], required = true)
     var scala: String? = null
 
+    @Parameter(names = ["-graph-c"])
+    var graphC: String? = null
+
+    @Parameter(names = ["-graph-go"])
+    var graphGo: String? = null
+
+    @Parameter(names = ["-graph-scala"])
+    var graphScala: String? = null
+
     override fun validateExtra() {
       checkNotNull(c)
       checkNotNull(go)
       checkNotNull(scala)
+      checkNotNull(graphC)
+      checkNotNull(graphGo)
+      checkNotNull(graphScala)
     }
   }
 

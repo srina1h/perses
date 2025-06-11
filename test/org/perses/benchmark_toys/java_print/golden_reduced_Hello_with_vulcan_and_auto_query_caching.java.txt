@@ -9,7 +9,7 @@ main
 String
 [
 ]
-Hello
+out
 )
 {
 String

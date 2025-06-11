@@ -35,8 +35,8 @@ class TestScript(val scriptFile: Path, private val scriptTemplate: ScriptFile) {
   fun test(): PropertyTestResult {
     val timeSpanBuilder = TimeSpan.Builder.start(System.currentTimeMillis())
     val output = singleton.run(
-      "${scriptTemplate.shebang}  ${scriptFile.fileName}",
-      scriptFile.parent,
+      cmd = "${scriptTemplate.shebang}  ${scriptFile.fileName}",
+      workingDirectory = scriptFile.parent,
       captureOutput = false,
       environment = CURRENT_ENV,
     )
@@ -48,20 +48,20 @@ class TestScript(val scriptFile: Path, private val scriptTemplate: ScriptFile) {
 
   fun runAndCaptureOutput(): CmdOutput {
     return singleton.run(
-      "${scriptTemplate.shebang}  ${scriptFile.fileName}",
-      scriptFile.parent,
+      cmd = "${scriptTemplate.shebang}  ${scriptFile.fileName}",
+      workingDirectory = scriptFile.parent,
       captureOutput = true,
       environment = CURRENT_ENV,
     )
-  }
-
-  companion object {
-    private val logger = FluentLogger.forEnclosingClass()
   }
 
   init {
     scriptTemplate.writeTo(scriptFile)
     Util.setExecutable(scriptFile)
     check(Files.isExecutable(scriptFile)) { "Fail to set executable bit for $scriptFile" }
+  }
+
+  companion object {
+    private val logger = FluentLogger.forEnclosingClass()
   }
 }

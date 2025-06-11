@@ -85,13 +85,60 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses: null
+  onDemandFineGritReducerAnnotationClasses: []
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<sequence>
+reducers:
+- !<fixpoint>
+  body: !<atomic>
+    reducer: concurrent_token_slicer
+  condition: smaller
+- !<sequence>
+  reducers:
+  - !<fixpoint>
+    body: !<if>
+      condition: !<atomic>
+        reducer: line_based_concurrent_token_slicer
+      then: !<fixpoint>
+        body: !<atomic>
+          reducer: concurrent_token_slicer
+        condition: smaller
+    condition: smaller
+  - !<fixpoint>
+    body: !<if>
+      condition: !<atomic>
+        reducer: tree_slicer
+      then: !<fixpoint>
+        body: !<atomic>
+          reducer: concurrent_token_slicer
+        condition: smaller
+    condition: smaller
+  - !<fixpoint>
+    body: !<if>
+      condition: !<atomic>
+        reducer: concurrent_token_slicer
+      then: !<fixpoint>
+        body: !<atomic>
+          reducer: concurrent_token_slicer
+        condition: smaller
+    condition: smaller
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 ==Fixpoint iteration 1. Reducer: concurrent_token_slicer@1==
 
 The spar-tree is the following.
@@ -320,6 +367,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 56 -> 55
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -358,6 +411,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 55 -> 54
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -393,6 +452,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 54 -> 53
 ------------------------------------------------------------
 
 
@@ -512,6 +577,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 53 -> 52
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -547,6 +618,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 52 -> 51
 ------------------------------------------------------------
 
 
@@ -611,6 +688,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 51 -> 50
 ------------------------------------------------------------
 
 
@@ -860,6 +943,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 50 -> 49
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -895,6 +984,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 49 -> 48
 ------------------------------------------------------------
 
 
@@ -936,6 +1031,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 48 -> 47
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -974,6 +1075,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 47 -> 46
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -1009,6 +1116,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 46 -> 45
 ------------------------------------------------------------
 
 
@@ -1099,6 +1212,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 45 -> 44
 ------------------------------------------------------------
 
 
@@ -1244,6 +1363,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 44 -> 43
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: token slicer@1
@@ -1386,6 +1511,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 43 -> 42
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -1421,6 +1552,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 42 -> 41
 ------------------------------------------------------------
 
 
@@ -1488,6 +1625,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 41 -> 40
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -1526,6 +1669,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 40 -> 39
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -1561,6 +1710,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 39 -> 38
 ------------------------------------------------------------
 
 
@@ -1651,6 +1806,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 38 -> 37
 ------------------------------------------------------------
 
 
@@ -1796,6 +1957,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 37 -> 36
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@1
@@ -1831,6 +1998,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 36 -> 35
 ------------------------------------------------------------
 
 
@@ -2165,6 +2338,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 35 -> 33
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: token slicer@2
@@ -2224,6 +2403,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 33 -> 31
 ------------------------------------------------------------
 
 
@@ -2288,6 +2473,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 31 -> 29
 ------------------------------------------------------------
 
 
@@ -2379,6 +2570,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 29 -> 27
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@2
@@ -2415,6 +2612,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 27 -> 25
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@2
@@ -2446,6 +2649,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 25 -> 23
 ------------------------------------------------------------
 
 
@@ -2527,6 +2736,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 23 -> 21
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: token slicer@2
@@ -2605,6 +2820,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 21 -> 19
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: token slicer@2
@@ -2658,6 +2879,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 19 -> 17
 ------------------------------------------------------------
 
 
@@ -2885,6 +3112,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 17 -> 14
+------------------------------------------------------------
+
+
 ============Testing the following program: fail=============
 
 // edit action set type: token slicer@3
@@ -2955,6 +3188,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 14 -> 11
+------------------------------------------------------------
+
+
 ============Testing the following program: pass=============
 
 // edit action set type: token slicer@3
@@ -2984,6 +3223,12 @@ translationUnit {id=1,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 11 -> 8
 ------------------------------------------------------------
 
 
@@ -3492,6 +3737,8 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+Rebuilding spar-tree: The spartree is rebuilt.
+
 =Fixpoint iteration 15. Reducer: concurrent_token_slicer@1==
 
 The spar-tree is the following.
@@ -3680,6 +3927,12 @@ translationUnit {id=404,slot_type=translationUnit}
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 8 -> 7
 ------------------------------------------------------------
 
 
@@ -4294,6 +4547,8 @@ translationUnit {id=404,slot_type=translationUnit}
             |___Token:} {id=413,slot_type=RightBrace}
 ------------------------------------------------------------
 
+
+Rebuilding spar-tree: The spartree is rebuilt.
 
 =Fixpoint iteration 29. Reducer: concurrent_token_slicer@1==
 
@@ -5529,6 +5784,1652 @@ The current best program is the following
 
 Failed to reduce node 533
 ------------------------------------------------------------
+
+
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 56
+  characterCount: 133
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  granularity: 1
+  shortName: "concurrent_token_slicer@1"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 35
+  characterCount: 72
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[3]: ReducerCallEvent
+---
+reducer:
+  granularity: 2
+  shortName: "concurrent_token_slicer@2"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 17
+  characterCount: 44
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[5]: ReducerCallEvent
+---
+reducer:
+  granularity: 3
+  shortName: "concurrent_token_slicer@3"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[6]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[7]: ReducerCallEvent
+---
+reducer:
+  granularity: 4
+  shortName: "concurrent_token_slicer@4"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[8]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[9]: ReducerCallEvent
+---
+reducer:
+  granularity: 5
+  shortName: "concurrent_token_slicer@5"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[10]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[11]: ReducerCallEvent
+---
+reducer:
+  granularity: 6
+  shortName: "concurrent_token_slicer@6"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[12]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[13]: ReducerCallEvent
+---
+reducer:
+  granularity: 7
+  shortName: "concurrent_token_slicer@7"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[14]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[15]: ReducerCallEvent
+---
+reducer:
+  granularity: 8
+  shortName: "concurrent_token_slicer@8"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[16]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[17]: ReducerCallEvent
+---
+reducer:
+  granularity: 9
+  shortName: "concurrent_token_slicer@9"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[18]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[19]: ReducerCallEvent
+---
+reducer:
+  granularity: 10
+  shortName: "concurrent_token_slicer@10"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[20]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[21]: ReducerCallEvent
+---
+reducer:
+  granularity: 11
+  shortName: "concurrent_token_slicer@11"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[22]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[23]: ReducerCallEvent
+---
+reducer:
+  granularity: 12
+  shortName: "concurrent_token_slicer@12"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[24]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[25]: ReducerCallEvent
+---
+reducer:
+  granularity: 13
+  shortName: "concurrent_token_slicer@13"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[26]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[27]: ReducerCallEvent
+---
+reducer:
+  granularity: 14
+  shortName: "concurrent_token_slicer@14"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[28]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 8
+  characterCount: 23
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[29]: ReducerCallEvent
+---
+reducer:
+  granularity: 1
+  shortName: "concurrent_token_slicer@1"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[30]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[31]: ReducerCallEvent
+---
+reducer:
+  granularity: 2
+  shortName: "concurrent_token_slicer@2"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[32]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[33]: ReducerCallEvent
+---
+reducer:
+  granularity: 3
+  shortName: "concurrent_token_slicer@3"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[34]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[35]: ReducerCallEvent
+---
+reducer:
+  granularity: 4
+  shortName: "concurrent_token_slicer@4"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[36]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[37]: ReducerCallEvent
+---
+reducer:
+  granularity: 5
+  shortName: "concurrent_token_slicer@5"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[38]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[39]: ReducerCallEvent
+---
+reducer:
+  granularity: 6
+  shortName: "concurrent_token_slicer@6"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[40]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[41]: ReducerCallEvent
+---
+reducer:
+  granularity: 7
+  shortName: "concurrent_token_slicer@7"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[42]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[43]: ReducerCallEvent
+---
+reducer:
+  granularity: 8
+  shortName: "concurrent_token_slicer@8"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[44]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[45]: ReducerCallEvent
+---
+reducer:
+  granularity: 9
+  shortName: "concurrent_token_slicer@9"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[46]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[47]: ReducerCallEvent
+---
+reducer:
+  granularity: 10
+  shortName: "concurrent_token_slicer@10"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[48]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[49]: ReducerCallEvent
+---
+reducer:
+  granularity: 11
+  shortName: "concurrent_token_slicer@11"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[50]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[51]: ReducerCallEvent
+---
+reducer:
+  granularity: 12
+  shortName: "concurrent_token_slicer@12"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[52]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[53]: ReducerCallEvent
+---
+reducer:
+  granularity: 13
+  shortName: "concurrent_token_slicer@13"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[54]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[55]: ReducerCallEvent
+---
+reducer:
+  granularity: 14
+  shortName: "concurrent_token_slicer@14"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[56]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[57]: ReducerCallEvent
+---
+reducer:
+  granularity: 1
+  shortName: "concurrent_token_slicer@1"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[58]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[59]: ReducerCallEvent
+---
+reducer:
+  granularity: 2
+  shortName: "concurrent_token_slicer@2"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[60]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[61]: ReducerCallEvent
+---
+reducer:
+  granularity: 3
+  shortName: "concurrent_token_slicer@3"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[62]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[63]: ReducerCallEvent
+---
+reducer:
+  granularity: 4
+  shortName: "concurrent_token_slicer@4"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[64]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[65]: ReducerCallEvent
+---
+reducer:
+  granularity: 5
+  shortName: "concurrent_token_slicer@5"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[66]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[67]: ReducerCallEvent
+---
+reducer:
+  granularity: 6
+  shortName: "concurrent_token_slicer@6"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[68]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[69]: ReducerCallEvent
+---
+reducer:
+  granularity: 7
+  shortName: "concurrent_token_slicer@7"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[70]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[71]: ReducerCallEvent
+---
+reducer:
+  granularity: 8
+  shortName: "concurrent_token_slicer@8"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[72]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[73]: ReducerCallEvent
+---
+reducer:
+  granularity: 9
+  shortName: "concurrent_token_slicer@9"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[74]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[75]: ReducerCallEvent
+---
+reducer:
+  granularity: 10
+  shortName: "concurrent_token_slicer@10"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[76]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[77]: ReducerCallEvent
+---
+reducer:
+  granularity: 11
+  shortName: "concurrent_token_slicer@11"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[78]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[79]: ReducerCallEvent
+---
+reducer:
+  granularity: 12
+  shortName: "concurrent_token_slicer@12"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[80]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[81]: ReducerCallEvent
+---
+reducer:
+  granularity: 13
+  shortName: "concurrent_token_slicer@13"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[82]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[83]: ReducerCallEvent
+---
+reducer:
+  granularity: 14
+  shortName: "concurrent_token_slicer@14"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[84]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[85]: ReducerCallEvent
+---
+reducer:
+  granularity: 1
+  shortName: "line_based_concurrent_token_slicer@1"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[86]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[87]: ReducerCallEvent
+---
+reducer:
+  granularity: 2
+  shortName: "line_based_concurrent_token_slicer@2"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[88]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[89]: ReducerCallEvent
+---
+reducer:
+  granularity: 3
+  shortName: "line_based_concurrent_token_slicer@3"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[90]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[91]: ReducerCallEvent
+---
+reducer:
+  granularity: 4
+  shortName: "line_based_concurrent_token_slicer@4"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[92]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[93]: ReducerCallEvent
+---
+reducer:
+  granularity: 5
+  shortName: "line_based_concurrent_token_slicer@5"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[94]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[95]: ReducerCallEvent
+---
+reducer:
+  granularity: 6
+  shortName: "line_based_concurrent_token_slicer@6"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[96]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[97]: ReducerCallEvent
+---
+reducer:
+  granularity: 7
+  shortName: "line_based_concurrent_token_slicer@7"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[98]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[99]: ReducerCallEvent
+---
+reducer:
+  granularity: 8
+  shortName: "line_based_concurrent_token_slicer@8"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[100]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[101]: ReducerCallEvent
+---
+reducer:
+  granularity: 9
+  shortName: "line_based_concurrent_token_slicer@9"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[102]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[103]: ReducerCallEvent
+---
+reducer:
+  granularity: 10
+  shortName: "line_based_concurrent_token_slicer@10"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[104]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[105]: ReducerCallEvent
+---
+reducer:
+  granularity: 11
+  shortName: "line_based_concurrent_token_slicer@11"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[106]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[107]: ReducerCallEvent
+---
+reducer:
+  granularity: 12
+  shortName: "line_based_concurrent_token_slicer@12"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[108]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[109]: ReducerCallEvent
+---
+reducer:
+  granularity: 13
+  shortName: "line_based_concurrent_token_slicer@13"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[110]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[111]: ReducerCallEvent
+---
+reducer:
+  granularity: 14
+  shortName: "line_based_concurrent_token_slicer@14"
+  description: "line-based concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "line_based_concurrent_token_slicer"
+
+[112]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[113]: ReducerCallEvent
+---
+reducer:
+  shortName: "tree_slicer"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[114]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[115]: ReducerCallEvent
+---
+reducer:
+  granularity: 1
+  shortName: "concurrent_token_slicer@1"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[116]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[117]: ReducerCallEvent
+---
+reducer:
+  granularity: 2
+  shortName: "concurrent_token_slicer@2"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[118]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[119]: ReducerCallEvent
+---
+reducer:
+  granularity: 3
+  shortName: "concurrent_token_slicer@3"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[120]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[121]: ReducerCallEvent
+---
+reducer:
+  granularity: 4
+  shortName: "concurrent_token_slicer@4"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[122]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[123]: ReducerCallEvent
+---
+reducer:
+  granularity: 5
+  shortName: "concurrent_token_slicer@5"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[124]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[125]: ReducerCallEvent
+---
+reducer:
+  granularity: 6
+  shortName: "concurrent_token_slicer@6"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[126]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[127]: ReducerCallEvent
+---
+reducer:
+  granularity: 7
+  shortName: "concurrent_token_slicer@7"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[128]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[129]: ReducerCallEvent
+---
+reducer:
+  granularity: 8
+  shortName: "concurrent_token_slicer@8"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[130]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[131]: ReducerCallEvent
+---
+reducer:
+  granularity: 9
+  shortName: "concurrent_token_slicer@9"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[132]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[133]: ReducerCallEvent
+---
+reducer:
+  granularity: 10
+  shortName: "concurrent_token_slicer@10"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[134]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[135]: ReducerCallEvent
+---
+reducer:
+  granularity: 11
+  shortName: "concurrent_token_slicer@11"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[136]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[137]: ReducerCallEvent
+---
+reducer:
+  granularity: 12
+  shortName: "concurrent_token_slicer@12"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[138]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[139]: ReducerCallEvent
+---
+reducer:
+  granularity: 13
+  shortName: "concurrent_token_slicer@13"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[140]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[141]: ReducerCallEvent
+---
+reducer:
+  granularity: 14
+  shortName: "concurrent_token_slicer@14"
+  description: "concurrent token slicer"
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+  namePrefix: "concurrent_token_slicer"
+
+[142]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 7
+  characterCount: 20
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
 
 
 #test success = 34

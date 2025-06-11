@@ -31,35 +31,35 @@ MINGW_ARCHIVE_32="i686-6.3.0-release-posix-dwarf-rt_v5-rev2.7z"
 MINGW_ARCHIVE_64="x86_64-6.3.0-release-posix-seh-rt_v5-rev2.7z"
 
 if isWindows; then
-    case "${CI_JOB_NAME}" in
-        *i686*)
-            bits=32
-            arch=i686
-            mingw_archive="${MINGW_ARCHIVE_32}"
-            ;;
-        *x86_64*)
-            bits=64
-            arch=x86_64
-            mingw_archive="${MINGW_ARCHIVE_64}"
-            ;;
-        *)
-            echo "src/ci/scripts/install-mingw.sh can't detect the builder's architecture"
-            echo "please tweak it to recognize the builder named '${CI_JOB_NAME}'"
-            exit 1
-            ;;
-    esac
+  case "${CI_JOB_NAME}" in
+    *i686*)
+      bits=32
+      arch=i686
+      mingw_archive="${MINGW_ARCHIVE_32}"
+      ;;
+    *x86_64*)
+      bits=64
+      arch=x86_64
+      mingw_archive="${MINGW_ARCHIVE_64}"
+      ;;
+    *)
+      echo "src/ci/scripts/install-mingw.sh can't detect the builder's architecture"
+      echo "please tweak it to recognize the builder named '${CI_JOB_NAME}'"
+      exit 1
+      ;;
+  esac
 
-    if [[ "${CUSTOM_MINGW-0}" -ne 1 ]]; then
-        pacman -S --noconfirm --needed mingw-w64-$arch-toolchain mingw-w64-$arch-cmake \
-            mingw-w64-$arch-gcc \
-            mingw-w64-$arch-python # the python package is actually for python3
-        ciCommandAddPath "$(ciCheckoutPath)/msys2/mingw${bits}/bin"
-    else
-        mingw_dir="mingw${bits}"
+  if [[ "${CUSTOM_MINGW-0}" -ne 1 ]]; then
+    pacman -S --noconfirm --needed mingw-w64-$arch-toolchain mingw-w64-$arch-cmake \
+      mingw-w64-$arch-gcc \
+      mingw-w64-$arch-python # the python package is actually for python3
+    ciCommandAddPath "$(ciCheckoutPath)/msys2/mingw${bits}/bin"
+  else
+    mingw_dir="mingw${bits}"
 
-        curl -o mingw.7z "${MIRRORS_BASE}/${mingw_archive}"
-        7z x -y mingw.7z > /dev/null
-        curl -o "${mingw_dir}/bin/gdborig.exe" "${MIRRORS_BASE}/2017-04-20-${bits}bit-gdborig.exe"
-        ciCommandAddPath "$(pwd)/${mingw_dir}/bin"
-    fi
+    curl -o mingw.7z "${MIRRORS_BASE}/${mingw_archive}"
+    7z x -y mingw.7z > /dev/null
+    curl -o "${mingw_dir}/bin/gdborig.exe" "${MIRRORS_BASE}/2017-04-20-${bits}bit-gdborig.exe"
+    ciCommandAddPath "$(pwd)/${mingw_dir}/bin"
+  fi
 fi

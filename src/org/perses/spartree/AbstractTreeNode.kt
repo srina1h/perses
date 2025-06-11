@@ -16,6 +16,7 @@
  */
 package org.perses.spartree
 
+import com.google.common.collect.HashBiMap
 import com.google.common.collect.ImmutableList
 import com.google.common.graph.SuccessorsFunction
 import com.google.common.graph.Traverser
@@ -141,17 +142,36 @@ protected constructor(val nodeId: Int) : Comparable<T> {
     children.clear()
   }
 
-  open fun addChild(child: T, payload: Payload) {
+  fun addChild(child: T, payload: Payload) {
+    addChildAtIndex(index = childCount, child, payload)
+  }
+
+  open fun addChildAtIndex(index: Int, child: T, payload: Payload) {
     lazyAssert({ child.parent == null }) {
       "The parent of the parameter " + child + " is not null: " + child.parent
     }
-    children.add(child)
+    lazyAssert { children.indexOf(child) < 0 }
+    children.add(index, child)
     @Suppress("UNCHECKED_CAST")
     child.parent = this as T
     child.payload = payload
 
     lazyAssert { child.parent === this }
     lazyAssert { child.payload === payload }
+  }
+
+  fun addChildBeforeExistingChild(existingChild: T, newChild: T, payload: Payload) {
+    // TODO("TODO(Yiran), implement this and test it")
+    val index = children.indexOf(existingChild)
+    check(index >= 0)
+    addChildAtIndex(index, newChild, payload)
+  }
+
+  open fun addChildAfterExistingChild(existingChild: T, newChild: T, payload: Payload) {
+    // TODO("TODO(Yiran), implement this and test it")
+    val index = children.indexOf(existingChild)
+    check(index >= 0)
+    addChildAtIndex(index + 1, newChild, payload)
   }
 
   override fun compareTo(other: T): Int {
@@ -162,6 +182,8 @@ protected constructor(val nodeId: Int) : Comparable<T> {
   fun forEachChild(consumer: (node: T) -> Unit) {
     children.forEach(consumer)
   }
+
+  fun childSequence() = children.asSequence()
 
   /** Clear the parent of the current node to `null`.  */
   fun resetParent() {
@@ -294,19 +316,24 @@ protected constructor(val nodeId: Int) : Comparable<T> {
       .forEach { visitor(it) }
   }
 
-  open fun recursiveDeepCopy(nodeIdCopyStrategy: NodeIdCopyStrategy): T {
+  open fun recursiveDeepCopy(nodeIdCopyStrategy: NodeIdCopyStrategy): DeepCopyResult<T, T> {
     cleanDeletedImmediateChildren()
-    val map = HashMap<T, T>()
+    val map = HashBiMap.create<T, T>()
     postOrderVisit { origNode ->
       val copyNode = origNode.copyCurrentNode(nodeIdCopyStrategy)
       origNode.children.forEach { oldChild ->
         val newChild = map[oldChild]!!
         copyNode.addChild(newChild, oldChild.payload!!)
       }
-      map[origNode] = copyNode
+      check(map.put(origNode, copyNode) == null) {
+        "Existing key-value pair $origNode, $copyNode"
+      }
     }
     @Suppress("UNCHECKED_CAST")
-    return map[this]!!
+    return DeepCopyResult(
+      result = map[this]!!,
+      orig2copyMapping = map,
+    )
   }
 
   protected fun copyCurrentNode(nodeIdCopyStrategy: NodeIdCopyStrategy): T {
@@ -327,7 +354,7 @@ protected constructor(val nodeId: Int) : Comparable<T> {
 
     @JvmStatic
     fun <T : AbstractTreeNode<T, Payload>, Payload> findLowestAncestor(
-      descendants: ImmutableList<T>,
+      descendants: List<T>,
     ): T {
       require(descendants.isNotEmpty())
       val pathList = ArrayList<ArrayList<T>>()
@@ -336,7 +363,7 @@ protected constructor(val nodeId: Int) : Comparable<T> {
       val descendantsCount = descendants.size
       for (i in 0 until descendantsCount) {
         val currentPath = ArrayList<T>()
-        var curNode = descendants[i]
+        var curNode: T? = descendants[i]
         while (curNode != null) {
           currentPath.add(curNode)
           curNode = curNode.parent

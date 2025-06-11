@@ -57,7 +57,7 @@ class NullLanguageModel(
     return if (nodeList.isEmpty()) {
       null
     } else {
-      nodeList[random.nextInt(nodeList.size)].recursiveDeepCopy(ReuseNodeIdStrategy)
+      nodeList[random.nextInt(nodeList.size)].recursiveDeepCopy(ReuseNodeIdStrategy).result
     }
   }
 

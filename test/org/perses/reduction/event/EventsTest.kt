@@ -53,7 +53,7 @@ class EventsTest {
   val nodeReductionStartEvent = firstIterationStart.createNodeReductionStartEvent(
     currentTimeMillis = System.currentTimeMillis(),
     program = tree.programSnapshot,
-    node = tree.root,
+    node = tree.realRoot,
     outputCreator = { ImmutableList.of() },
   )
 

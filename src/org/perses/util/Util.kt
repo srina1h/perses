@@ -57,6 +57,12 @@ import kotlin.io.path.writeText
 
 object Util {
 
+  data class UseResourcesResultTuple<A, B, R>(
+    val resourceA: A,
+    val resourceB: B,
+    val result: R,
+  )
+
   /**
    * Note that the two resources are passed in as lambdas, because
    * we want to make sure that if the second resource is failed to create,
@@ -69,10 +75,10 @@ object Util {
     creatorA: () -> A,
     creatorB: (A) -> B,
     block: (A, B) -> R,
-  ): R {
+  ): UseResourcesResultTuple<A, B, R> {
     creatorA().use { a ->
       creatorB(a).use { b ->
-        return block(a, b)
+        return UseResourcesResultTuple(a, b, block(a, b))
       }
     }
   }
@@ -554,7 +560,7 @@ object Util {
       ios.write(bArray)
       ios.finish()
       bos.toByteArray()
-    }
+    }.result
   }
 
   @JvmStatic
@@ -613,10 +619,51 @@ object Util {
     lazyAssert(test) { "" }
   }
 
-  inline fun lazyAssert(test: () -> Boolean, message: () -> Any) {
+  inline fun lazyAssert(test: () -> Boolean, message: () -> Any?) {
     if (ASSERTION_ENABLED) {
-      check(test()) { message() }
+      val result: Boolean
+      try {
+        result = test()
+      } catch (t: Throwable) {
+        throw IllegalStateException(message().toString(), t)
+      }
+      check(result) { message() ?: "null" }
     }
+  }
+
+  enum class EnumStopCriterion {
+    STOP,
+    CONTINUE,
+    ;
+
+    companion object {
+      fun stopIfTrue(value: Boolean): EnumStopCriterion {
+        return if (value) {
+          STOP
+        } else {
+          CONTINUE
+        }
+      }
+
+      fun continueIfTrue(value: Boolean) = stopIfTrue(!value)
+    }
+  }
+
+  inline fun <T> fixpoint(
+    initial: T,
+    stopCriterion: (prev: T, transformed: T) -> EnumStopCriterion =
+      { prev, transformed -> EnumStopCriterion.stopIfTrue(prev == transformed) },
+    transform: (T) -> T,
+  ): T {
+    var current = initial
+    while (true) {
+      val prev = current
+      current = transform(prev)
+      if (stopCriterion(prev, current) == EnumStopCriterion.STOP) {
+        break
+      }
+    }
+    return current
   }
 
   class AtomicSequenceGenerator(start: Int = 1, private val minLengthForPadding: Int) {

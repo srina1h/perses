@@ -53,7 +53,7 @@ class ContentLexemeListQueryCache(
       return encode(
         program.tokens.stream().map { obj: PersesTokenFactory.PersesToken -> obj.text }
           .iterator(),
-        program.tokenCount(),
+        program.tokenCount,
       )
     }
 

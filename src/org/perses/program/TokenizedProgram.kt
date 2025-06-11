@@ -25,9 +25,12 @@ class TokenizedProgram(
   val factory: TokenizedProgramFactory,
 ) {
 
-  fun tokenCount() = tokens.size
+  val tokenCount: Int
+    get() = tokens.size
 
-  fun countCharsOfAllTokens() = tokens.sumOf { it.text.length }
+  val totalCharacterCount: Int by lazy {
+    tokens.sumOf { it.text.length }
+  }
 
   override fun toString() =
     MoreObjects.toStringHelper(this).add("tokens", tokens).toString()

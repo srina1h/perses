@@ -31,9 +31,11 @@ import java.util.stream.Collectors
 class LatraGeneralActionSetTest {
   private var tree = createSparTreeFromFile(Paths.get("test_data/parentheses/t.c"))
   private var nodePrintf = tree.getTokenNodeForText("printf")[0]
-  private var nodeSemicol = tree.getTokenNodeForText(";")[0].recursiveDeepCopy(ReuseNodeIdStrategy)
+  private var nodeSemicol = tree.getTokenNodeForText(";")[0]
+    .recursiveDeepCopy(ReuseNodeIdStrategy).result
   private var nodeInt = tree.getTokenNodeForText("int")[0]
-  private var nodeMain = tree.getTokenNodeForText("main")[0].recursiveDeepCopy(ReuseNodeIdStrategy)
+  private var nodeMain = tree.getTokenNodeForText("main")[0]
+    .recursiveDeepCopy(ReuseNodeIdStrategy).result
   private lateinit var actionSet: LatraGeneralActionSet
   private lateinit var actionSet2: LatraGeneralActionSet
   private lateinit var actionSet3: LatraGeneralActionSet

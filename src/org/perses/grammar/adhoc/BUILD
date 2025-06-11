@@ -25,7 +25,7 @@ kt_jvm_library(
         "//antlropt/src/org/perses/antlr/ast:ast_builder",
         "//src/org/perses:perses_contants",
         "//src/org/perses/grammar:grammar_facade",
-        "//src/org/perses/util:YamlUtil",
+        "//src/org/perses/util:Serialization",
         "//src/org/perses/util/cmd",
         "//src/org/perses/util/java",
     ],

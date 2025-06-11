@@ -31,7 +31,7 @@ class RccFormatSensitiveEncoder(
 ) : AbstractRccLinearScanEncoder(baseProgram, profiler, enableCompression) {
 
   private var indicesOfTokensThatStartLines =
-    LogicalSizedArray.createWithSize(baseProgram.tokenCount())
+    LogicalSizedArray.createWithSize(baseProgram.tokenCount)
 
   init {
     fillLineStartIndexArray(baseProgram.tokens, indicesOfTokensThatStartLines)
@@ -45,7 +45,7 @@ class RccFormatSensitiveEncoder(
       refreshThreshold,
     )
     fillLineStartIndexArray(encoderBaseProgram.tokens, indicesOfTokensThatStartLines)
-    lazyAssert { encoderBaseProgram.tokenCount() >= indicesOfTokensThatStartLines.logicalSize }
+    lazyAssert { encoderBaseProgram.tokenCount >= indicesOfTokensThatStartLines.logicalSize }
   }
 
   override fun encodeUncompressed(

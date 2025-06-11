@@ -19,7 +19,6 @@ package org.perses.grammar.solidity.preprocessed
 import com.google.common.primitives.ImmutableIntArray
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.antlr.ParseTreeWithParser
 import org.perses.grammar.AbstractDefaultParserFacade
 import org.perses.grammar.solidity.LanguageSolidity
@@ -33,40 +32,27 @@ import java.nio.file.Path
 class PnfSolidityParserFacade : AbstractDefaultParserFacade<SolidityLexer, PnfSolidityParser>(
   LanguageSolidity,
   createSeparateAntlrGrammar(
-    "PnfSolidity.g4",
-    "SolidityLexer.g4",
+    startRuleName = "sourceUnit",
+    antlrParserGrammarFileName = "PnfSolidity.g4",
+    antlrLexerGrammarFileName = "SolidityLexer.g4",
     PnfSolidityParserFacade::class.java,
   ),
   SolidityLexer::class.java,
   PnfSolidityParser::class.java,
   ImmutableIntArray.of(SolidityLexer.Identifier),
 ) {
-  override fun createLexer(inputStream: CharStream): SolidityLexer {
-    return SolidityLexer(inputStream)
-  }
 
-  override fun createParser(tokens: CommonTokenStream): PnfSolidityParser {
-    return PnfSolidityParser(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfSolidityParser): ParseTree {
-    return parser.sourceUnit()
-  }
-
-  @Throws(IOException::class)
   fun parseWithOrigSolidityParser(file: Path): ParseTreeWithParser {
     Files.newBufferedReader(file, StandardCharsets.UTF_8)
       .use { reader -> return parseWithOrigSolidityParser(reader, file.toString()) }
   }
 
-  @Throws(IOException::class)
   fun parseWithOrigSolidityParser(goProgram: String?): ParseTreeWithParser {
     BufferedReader(
       StringReader(goProgram),
     ).use { reader -> return parseWithOrigSolidityParser(reader, "<in-memory>") }
   }
 
-  @Throws(IOException::class)
   fun parseWithOrigSolidityParser(goProgram: String?, fileName: String): ParseTreeWithParser {
     BufferedReader(
       StringReader(goProgram),

@@ -49,7 +49,7 @@ abstract class AbstractConcurrentTokenSlicer(
       .fixpointIterationStartEvent
       .createTokenSlicingStartEvent(
         currentTimeMillis = System.currentTimeMillis(),
-        programSize = tree.programSnapshot.tokenCount(),
+        programSize = tree.programSnapshot.tokenCount,
         tokenSlicingGranularity = tokenSlicingGranularity,
       )
     listenerManager.onSlicingTokensStart(slicingStartEvent)
@@ -64,7 +64,7 @@ abstract class AbstractConcurrentTokenSlicer(
     }
     val slicingEndEvent = slicingStartEvent.createEndEvent(
       currentTimeMillis = System.currentTimeMillis(),
-      programSize = tree.programSnapshot.tokenCount(),
+      programSize = tree.programSnapshot.tokenCount,
     )
     listenerManager.onSlicingTokensEnd(slicingEndEvent)
   }

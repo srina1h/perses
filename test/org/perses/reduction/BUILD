@@ -192,6 +192,7 @@ kt_jvm_test(
         "//src/org/perses/reduction:test_script",
         "//src/org/perses/reduction:test_script_executor_service",
         "//src/org/perses/reduction/cache:enum_query_caching_control",
+        "//src/org/perses/reduction/scheduler",
         "//test/org/perses:test_util",
     ],
 )

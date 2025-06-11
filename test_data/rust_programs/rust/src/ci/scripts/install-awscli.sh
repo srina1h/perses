@@ -24,11 +24,11 @@ DEPS_DIR="/tmp/awscli-deps"
 pip="pip"
 pipflags=""
 if isLinux; then
-    pip="pip3"
-    pipflags="--user"
+  pip="pip3"
+  pipflags="--user"
 
-    sudo apt-get install -y python3-setuptools
-    ciCommandAddPath "${HOME}/.local/bin"
+  sudo apt-get install -y python3-setuptools
+  ciCommandAddPath "${HOME}/.local/bin"
 fi
 
 mkdir -p "${DEPS_DIR}"

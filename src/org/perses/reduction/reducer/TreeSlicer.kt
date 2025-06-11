@@ -47,7 +47,7 @@ class TreeSlicer(
     val treeEdit = tree.createNodeDeletionEdit(actionSet)
     val testProgram = treeEdit.program
     val parserFacade = reducerContext.configuration.parserFacade
-    if (testProgram.tokenCount() <= 150 &&
+    if (testProgram.tokenCount <= 150 &&
       !parserFacade.isSourceCodeParsable(
         PrinterRegistry.getPrinter(ioManager.getDefaultProgramFormat())
           .print(testProgram).sourceCode,
@@ -65,19 +65,17 @@ class TreeSlicer(
     }
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(
+      reducerContext: ReducerContext,
+    ): ImmutableList<AbstractTokenReducer> = ImmutableList.of(TreeSlicer(reducerContext))
+  }
   companion object {
     const val NAME = "tree_slicer"
-
-    @JvmStatic
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(
-        reducerContext: ReducerContext,
-      ): ImmutableList<AbstractTokenReducer> = ImmutableList.of(TreeSlicer(reducerContext))
-    }
   }
 }

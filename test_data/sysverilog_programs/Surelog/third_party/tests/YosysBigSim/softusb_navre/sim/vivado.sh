@@ -25,4 +25,3 @@ EOT
 
 /opt/Xilinx/Vivado/2014.4/bin/vivado -mode batch -nojournal -log softusb_navre/gen/vivado_rtl.log -source softusb_navre/gen/vivado_rtl.tcl
 /opt/Xilinx/Vivado/2014.4/bin/vivado -mode batch -nojournal -log softusb_navre/gen/vivado_yosys.log -source softusb_navre/gen/vivado_yosys.tcl
-

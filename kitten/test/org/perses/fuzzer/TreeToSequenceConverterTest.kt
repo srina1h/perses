@@ -67,7 +67,7 @@ class TreeToSequenceConverterTest {
     )
     var treeFuzzer =
       SparTreeFuzzer.fromFile(parserFacade, program)
-    var seq = TreeToSequenceConverter.convertWithPreOrder(treeFuzzer.sparTree.root)
+    var seq = TreeToSequenceConverter.convertWithPreOrder(treeFuzzer.sparTree.realRoot)
     assertThat(seq).isEqualTo(
       ImmutableList.of(
         NodeRepresentation.create(nodeType = 230, featureValue = 0),
@@ -101,7 +101,7 @@ class TreeToSequenceConverterTest {
     )
     treeFuzzer =
       SparTreeFuzzer.fromFile(parserFacade, program)
-    seq = TreeToSequenceConverter.convertWithPreOrder(treeFuzzer.sparTree.root)
+    seq = TreeToSequenceConverter.convertWithPreOrder(treeFuzzer.sparTree.realRoot)
     assertThat(seq).isEqualTo(
       ImmutableList.of(
         NodeRepresentation.create(nodeType = 34, featureValue = 0),

@@ -17,13 +17,13 @@ CACHE_DIR="$2"
 cache_src_dir="$CACHE_DIR/src"
 
 if [ ! -d "$REPO_DIR" -o ! -d "$REPO_DIR/.git" ]; then
-    echo "Error: $REPO_DIR does not exist or is not a git repo"
-    exit 1
+  echo "Error: $REPO_DIR does not exist or is not a git repo"
+  exit 1
 fi
 cd $REPO_DIR
 if [ ! -d "$CACHE_DIR" ]; then
-    echo "Error: $CACHE_DIR does not exist or is not an absolute path"
-    exit 1
+  echo "Error: $CACHE_DIR does not exist or is not an absolute path"
+  exit 1
 fi
 
 rm -rf "$CACHE_DIR"
@@ -37,14 +37,14 @@ fi
 
 # Duplicated in docker/dist-various-2/shared.sh
 function fetch_github_commit_archive {
-    local module=$1
-    local cached="download-${module//\//-}.tar.gz"
-    retry sh -c "rm -f $cached && \
+  local module=$1
+  local cached="download-${module//\//-}.tar.gz"
+  retry sh -c "rm -f $cached && \
         curl -f -sSL -o $cached $2"
-    mkdir $module
-    touch "$module/.git"
-    tar -C $module --strip-components=1 -xf $cached
-    rm $cached
+  mkdir $module
+  touch "$module/.git"
+  tar -C $module --strip-components=1 -xf $cached
+  rm $cached
 }
 
 included="src/llvm-project src/doc/book src/doc/rust-by-example"
@@ -54,17 +54,17 @@ use_git=""
 urls="$(git config --file .gitmodules --get-regexp '\.url$' | cut -d' ' -f2)"
 urls=($urls)
 for i in ${!modules[@]}; do
-    module=${modules[$i]}
-    if [[ " $included " = *" $module "* ]]; then
-        commit="$(git ls-tree HEAD $module | awk '{print $3}')"
-        git rm $module
-        url=${urls[$i]}
-        url=${url/\.git/}
-        fetch_github_commit_archive $module "$url/archive/$commit.tar.gz" &
-        continue
-    else
-        use_git="$use_git $module"
-    fi
+  module=${modules[$i]}
+  if [[ " $included " = *" $module "* ]]; then
+    commit="$(git ls-tree HEAD $module | awk '{print $3}')"
+    git rm $module
+    url=${urls[$i]}
+    url=${url/\.git/}
+    fetch_github_commit_archive $module "$url/archive/$commit.tar.gz" &
+    continue
+  else
+    use_git="$use_git $module"
+  fi
 done
 retry sh -c "git submodule deinit -f $use_git && \
     git submodule sync && \

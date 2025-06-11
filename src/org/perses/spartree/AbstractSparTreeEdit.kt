@@ -56,7 +56,7 @@ sealed class AbstractSparTreeEdit<T : AbstractTreeEditAction> (
 
   override fun compareTo(other: AbstractSparTreeEdit<*>): Int {
     return ComparisonChain.start()
-      .compare(program.tokenCount(), other.program.tokenCount())
+      .compare(program.tokenCount, other.program.tokenCount)
       .compare(id, other.id)
       .result()
   }

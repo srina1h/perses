@@ -14,4 +14,3 @@ diff -u mem_simple_4x1_gold_tb.out mem_simple_4x1_gate_tb.out
 rm -f mem_simple_4x1_synth.v mem_simple_4x1_tb.vcd
 rm -f mem_simple_4x1_{gold,gate}_tb{,.out}
 : OK
-

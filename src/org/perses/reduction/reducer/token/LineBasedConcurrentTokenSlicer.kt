@@ -88,6 +88,20 @@ class LineBasedConcurrentTokenSlicer(
       this@LineBasedConcurrentTokenSlicer.analyzeResultsAndGetBest(futureResult)
   }
 
+  object CompositeReducerAnnotation : ReducerAnnotation(
+    shortName = NAME_PREFIX,
+    description = "",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return REDUCER_ANNOTATIONS
+        .asSequence()
+        .flatMap { it.create(reducerContext) }
+        .toImmutableList()
+    }
+  }
   companion object {
 
     private const val NAME_PREFIX = "line_based_concurrent_token_slicer"
@@ -104,21 +118,6 @@ class LineBasedConcurrentTokenSlicer(
       .asSequence()
       .map { LineBasedConcurrentTokenSlicerAnnotation(granularity = it) }
       .toImmutableList()
-
-    val COMPOSITE_REDUCER = object : ReducerAnnotation(
-      shortName = NAME_PREFIX,
-      description = "",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return REDUCER_ANNOTATIONS
-          .asSequence()
-          .flatMap { it.create(reducerContext) }
-          .toImmutableList()
-      }
-    }
   }
 
   class LineBasedConcurrentTokenSlicerAnnotation internal constructor(granularity: Int) :

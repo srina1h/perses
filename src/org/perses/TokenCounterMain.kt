@@ -65,7 +65,7 @@ class TokenCounterMain(
     val sourceFile = SourceFile(file, language)
     val parserFacade = parserFacadeFactory.getParserFacadeListForOrNull(sourceFile.dataKind)!!
       .defaultParserFacade.create()
-    val tokens = parserFacade.parseIntoTokens(sourceFile.file)
+    val tokens = parserFacade.tokenizeFile(sourceFile.file)
     var count = 0
     for (token in tokens) {
       if (token.channel == Token.DEFAULT_CHANNEL) {

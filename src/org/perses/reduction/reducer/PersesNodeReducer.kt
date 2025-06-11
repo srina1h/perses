@@ -66,7 +66,7 @@ open class PersesNodeReducer(
       is LexerRuleSparTreeNode -> ImmutableList.of()
       is ParserRuleSparTreeNode -> when (node.ruleType) {
         RuleType.KLEENE_PLUS -> reduceKleenePlus(tree, node)
-        RuleType.KLEENE_STAR, RuleType.OPTIONAL -> reduceKleenStar(tree, node)
+        RuleType.KLEENE_STAR, RuleType.OPTIONAL -> reduceKleeneStar(tree, node)
         RuleType.ALT_BLOCKS, RuleType.OTHER_RULE -> reduceRegularRule(tree, node)
         else -> error("unhandled type: ${node.ruleType}")
       }
@@ -169,7 +169,7 @@ open class PersesNodeReducer(
   }
 
   /** Perform delta debugging.  */
-  private fun reduceKleenStar(
+  private fun reduceKleeneStar(
     tree: SparTree,
     kleeneStar: AbstractSparTreeNode,
   ): ImmutableList<AbstractSparTreeNode> {

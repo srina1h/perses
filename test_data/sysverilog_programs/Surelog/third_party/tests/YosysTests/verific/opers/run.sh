@@ -19,11 +19,10 @@ yosys -p "
 	miter -equiv -flatten A B miter
 	sat -verify -prove trigger 0 miter
 "
-if [ $? != 0 ] ; then
-    echo FAIL > ${1}_${2}.status
-    touch .stamp
-    exit 0
+if [ $? != 0 ]; then
+  echo FAIL > ${1}_${2}.status
+  touch .stamp
+  exit 0
 fi
 
 echo PASS > $1.status
-

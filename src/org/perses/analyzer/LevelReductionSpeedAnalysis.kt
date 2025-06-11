@@ -64,7 +64,7 @@ class LevelReductionSpeedAnalysis(eventFile: Path) : AbstractHddPerformanceAnaly
   //  private void exportLevelProgramSizeChart(List<IProfileEvent
   //          .LevelReductionEvent> starts, List<IProfileEvent
   //          .LevelReductionEvent> ends) {
-  //    final int tokenCount = starts.tokenCount();
+  //    final int tokenCount = starts.tokenCount;
   //    final double[] xData = new double[tokenCount + 1];
   //    final double[] yData = new double[tokenCount + 1];
   //    long startTime = 0;

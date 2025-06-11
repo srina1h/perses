@@ -39,7 +39,7 @@ for target in "${TEST_TARGETS[@]}"; do
   set -x
   pytest -v -s test/systemtest/functional_verilator_test.py \
     --test_bin "$SW_BUILD_PATH/${target}" \
-    --rom_bin  "$SW_BUILD_PATH/${BOOT_ROM_TARGET}" \
+    --rom_bin "$SW_BUILD_PATH/${BOOT_ROM_TARGET}" \
     --verilator_model "$VERILATED_SYSTEM_PATH"
   if [[ $? == 0 ]]; then
     PASS_TARGETS=("${PASS_TARGETS[@]}" "${target}")

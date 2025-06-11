@@ -53,6 +53,18 @@ class ReductionStartEvent(
     )
   }
 
+  fun createAdHocMessageEvent(
+    programSize: Int,
+    messageComputer: () -> Any,
+  ): AdHocMessageEvent {
+    return AdHocMessageEvent(
+      reductionStartEvent = this,
+      currentTimeMillis = System.currentTimeMillis(),
+      programSize = programSize,
+      messageComputer = messageComputer,
+    )
+  }
+
   fun createEndEvent(
     programSize: Int,
     testScriptStatistics: TestScriptExecutorServiceStatisticsSnapshot,

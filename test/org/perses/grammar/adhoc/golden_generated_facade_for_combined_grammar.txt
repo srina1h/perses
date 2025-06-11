@@ -15,27 +15,15 @@ public final class FakeParserFacade
   public FakeParserFacade() {
     super(
         LANGUAGE,
-        createCombinedAntlrGrammar("Parser.g4", FakeParserFacade.class),
+        createCombinedAntlrGrammar(
+        "start_rule", 
+        "Parser.g4", 
+        FakeParserFacade.class),
         CLASS_LEXER,
         CLASS_PARSER,
         com.google.common.primitives.ImmutableIntArray.of(FakeLexer.Identifier));
   }
 
-  @Override
-  protected FakeLexer createLexer(CharStream inputStream) {
-    return new FakeLexer(inputStream);
-  }
-
-  @Override
-  protected FakeParser createParser(CommonTokenStream tokens) {
-    return new FakeParser(tokens);
-  }
-
-  @Override
-  protected ParseTree startParsing(FakeParser parser) {
-    return parser.start_rule();
-  }
- 
   public static LanguageKind LANGUAGE;
   
   

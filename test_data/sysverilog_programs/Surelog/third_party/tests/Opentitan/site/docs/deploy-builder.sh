@@ -5,7 +5,7 @@
 
 set -e
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
 cd $DIR
 
 docker build -t gcr.io/active-premise-257318/builder -f builder.Dockerfile \

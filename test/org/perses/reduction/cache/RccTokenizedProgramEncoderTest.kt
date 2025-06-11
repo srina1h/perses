@@ -124,7 +124,7 @@ class RccTokenizedProgramEncoderTest {
   }
 
   private fun getIntervalsInOrigin(p: TokenizedProgram): IntArrayList? {
-    return encoder!!.encodeUncompressed(p.tokens.iterator(), p.tokenCount())
+    return encoder!!.encodeUncompressed(p.tokens.iterator(), p.tokenCount)
   }
 
   private fun restore(intervals: IntArrayList?): TokenizedProgram {

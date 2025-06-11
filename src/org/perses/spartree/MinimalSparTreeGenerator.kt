@@ -67,7 +67,7 @@ class MinimalSparTreeGenerator(
     check(originalLexerRuleNodeList.isNotEmpty())
     val preGeneratedNode =
       ruleToPreGeneratedCandidateSparTreeNodeMap[ruleNameHandle]?.getOrNull(indexOfAlternative)
-        ?.recursiveDeepCopy(ReuseNodeIdStrategy) ?: return null
+        ?.recursiveDeepCopy(ReuseNodeIdStrategy)?.result ?: return null
     var lineNumber = originalLexerRuleNodeList.first().token.position.line
     preGeneratedNode.leafNodeSequence().forEach {
       // Fail if any placeholder cannot be filled with a matched original token
@@ -298,10 +298,10 @@ class MinimalSparTreeGenerator(
           ImmutableList.of(
             nodes.minByOrNull {
               it.updateLeafTokenCount()
-            }!!.recursiveDeepCopy(ReuseNodeIdStrategy),
+            }!!.recursiveDeepCopy(ReuseNodeIdStrategy).result,
           )
         } else {
-          nodes.map { it.recursiveDeepCopy(ReuseNodeIdStrategy) }.toImmutableList()
+          nodes.map { it.recursiveDeepCopy(ReuseNodeIdStrategy).result }.toImmutableList()
         }
         if (antlrRule == null) {
           nodeFromReference
@@ -321,7 +321,7 @@ class MinimalSparTreeGenerator(
 
         val lexerRuleName = extractTokenReferenceNameOrNull(ruleBody)
         val lexerNode = if (lexerRuleName != null) {
-          mapToBuild[lexerRuleName]!!.first().recursiveDeepCopy(ReuseNodeIdStrategy)
+          mapToBuild[lexerRuleName]!!.first().recursiveDeepCopy(ReuseNodeIdStrategy).result
         } else {
           generateLexerRuleSparTreeNode(ruleBody)
         }
@@ -341,7 +341,7 @@ class MinimalSparTreeGenerator(
     return sparTreeNodeFactory.createParserRuleSparTreeNode(antlrRule.ruleName).apply {
       for (child in children) {
         this.addChild(
-          child.recursiveDeepCopy(ReuseNodeIdStrategy),
+          child.recursiveDeepCopy(ReuseNodeIdStrategy).result,
           AbstractNodePayload.SinglePayload(child.antlrRule),
         )
       }

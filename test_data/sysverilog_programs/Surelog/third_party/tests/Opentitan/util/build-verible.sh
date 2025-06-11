@@ -17,14 +17,14 @@ INSTALL_DIR=/tools/verible
 
 echo "checking whether bazel is installed..."
 if which bazel; then
-	echo "OK"
+  echo "OK"
 else
-	echo "bazel is not installed. installing bazel..."
-	sudo apt install curl -y
-	curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-	echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
-		| sudo tee /etc/apt/sources.list.d/bazel.list
-	sudo apt update && sudo apt install bazel -y
+  echo "bazel is not installed. installing bazel..."
+  sudo apt install curl -y
+  curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+  echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
+    | sudo tee /etc/apt/sources.list.d/bazel.list
+  sudo apt update && sudo apt install bazel -y
 fi
 
 # upgrade to GCC7
@@ -32,12 +32,12 @@ fi
 # for gcc -> GCC-5* such that other tools still work.
 echo "checking whether GCC7 is installed..."
 if which gcc-7; then
-	echo "OK"
+  echo "OK"
 else
-	echo "GCC7 is not installed. installing GCC7..."
-	sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-	sudo apt update
-	sudo apt install g++-7 -y
+  echo "GCC7 is not installed. installing GCC7..."
+  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  sudo apt update
+  sudo apt install g++-7 -y
 fi
 
 # get verible and install under /tools/verible
@@ -60,5 +60,3 @@ sudo install bazel-bin/verilog/tools/formatter/verilog_format $INSTALL_DIR
 sudo install bazel-bin/verilog/tools/lint/verilog_lint $INSTALL_DIR
 
 echo "done"
-
-

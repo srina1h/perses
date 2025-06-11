@@ -8,7 +8,7 @@ reduction_golden_test(
     golden_reduced_file = "golden_reduced_t.c",
     other_flags = {
         "--code-format": "ORIG_FORMAT",
-        "--on-demand-reducer-classes": "org.perses.reduction.reducer.vulcan.SubTreeReplacementReducer",
+        "--on-demand-fine-grit-reducer-annotations": "org.perses.reduction.reducer.vulcan.SubTreeReplacementReducer\\$$META",
         "--non-deletion-iteration-limit": "20",
     },
     perses_bin = "//src/org/perses:perses",

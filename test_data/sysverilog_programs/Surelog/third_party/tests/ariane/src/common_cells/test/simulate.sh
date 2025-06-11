@@ -17,11 +17,11 @@ bender vsim -t test
 [ ! -z "$VSIM" ] || VSIM=vsim
 
 call_vsim() {
-	echo "run -all" | $VSIM "$@" | tee vsim.log 2>&1
-	grep "Errors: 0," vsim.log
+  echo "run -all" | $VSIM "$@" | tee vsim.log 2>&1
+  grep "Errors: 0," vsim.log
 }
 
 #call_vsim cdc_fifo_tb # currently broken
 for tb in cdc_2phase_tb fifo_tb graycode_tb id_queue_tb popcount_tb stream_register_tb; do
-    call_vsim $tb
+  call_vsim $tb
 done

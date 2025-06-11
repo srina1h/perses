@@ -40,19 +40,19 @@ class CustomizedTreeNodesReducer(
     queue.addAll(startNodes)
   }
 
+  class ExtendedReducerAnnotation(private val startNodes: ImmutableList<AbstractSparTreeNode>) :
+    ReducerAnnotation(
+      shortName = NAME,
+      description = "",
+      deterministic = true,
+      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+    ) {
+    override fun create(reducerContext: ReducerContext) = ImmutableList.of<AbstractTokenReducer>(
+      CustomizedTreeNodesReducer(reducerAnnotation = this, reducerContext, startNodes),
+    )
+  }
+
   companion object {
     const val NAME = "customized_tree_diff_node_reducer"
-
-    class ExtendedReducerAnnotation(private val startNodes: ImmutableList<AbstractSparTreeNode>) :
-      ReducerAnnotation(
-        shortName = NAME,
-        description = "",
-        deterministic = true,
-        reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-      ) {
-      override fun create(reducerContext: ReducerContext) = ImmutableList.of<AbstractTokenReducer>(
-        CustomizedTreeNodesReducer(reducerAnnotation = this, reducerContext, startNodes),
-      )
-    }
   }
 }

@@ -24,6 +24,7 @@ import org.junit.runners.JUnit4
 import org.perses.TestUtility
 import org.perses.grammar.c.LanguageC
 import org.perses.program.TokenizedProgramFactory
+import org.perses.util.MutableInt
 import org.perses.util.toImmutableList
 
 @RunWith(JUnit4::class)
@@ -37,10 +38,27 @@ class AbstractSparTreeNodeTest {
   )
 
   @Test
+  fun testChildSequence() {
+    val tree = TestUtility.createSparTreeFromString(
+      "int a ; int b = a + 3 + 4 + 5;",
+      LanguageC,
+      simplifyTree = true,
+    )
+    val childrenCounter = MutableInt(0)
+    tree.realRoot.postOrderVisit { node ->
+      val list = mutableListOf<AbstractSparTreeNode>()
+      node.forEachChild { child -> list.add(child) }
+      assertThat(list).isEqualTo(node.childSequence().toList())
+      childrenCounter.incrementBy(list.count())
+    }
+    assertThat(childrenCounter.get()).isGreaterThan(10) // Just pick a random large number.
+  }
+
+  @Test
   fun testUpdateLeafTokenCountSingleStatement() {
     val tree = TestUtility.createSparTreeFromString("int a;", LanguageC)
     tree.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(3)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(3)
     val tokens = tree.getTokenNodeForText("int")
     assertThat(tokens).hasSize(1)
 
@@ -49,14 +67,14 @@ class AbstractSparTreeNodeTest {
     )
     tree.applyEdit(edit)
 
-    assertThat(tree.root.leafTokenCount).isEqualTo(3)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(3)
     tree.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(2)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(2)
     tree.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(2)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(2)
     tree.updateLeafTokenCount()
     tree.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(2)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(2)
   }
 
   @Test
@@ -94,10 +112,10 @@ class AbstractSparTreeNodeTest {
   fun testUpdateLeafTokenCountTwoStatements() {
     val tree = TestUtility.createSparTreeFromString("int a; int b=0;", LanguageC)
     tree.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(8)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(8)
 
-    assertThat(tree.root.childCount).isEqualTo(1)
-    val child = tree.root.getChild(0)
+    assertThat(tree.realRoot.childCount).isEqualTo(1)
+    val child = tree.realRoot.getChild(0)
 
     assertThat(child.childCount).isEqualTo(2)
     val firstStmt = child.getChild(0)
@@ -115,9 +133,9 @@ class AbstractSparTreeNodeTest {
       tree.applyEdit(it)
     }
 
-    assertThat(tree.root.leafTokenCount).isEqualTo(8)
-    tree.root.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(7)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(8)
+    tree.realRoot.updateLeafTokenCount()
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(7)
   }
 
   @Test
@@ -125,10 +143,10 @@ class AbstractSparTreeNodeTest {
     val tree = TestUtility.createSparTreeFromString("int a; int b=0;", LanguageC)
     tree.updateLeafTokenCount()
 
-    tree.root.delete()
+    tree.realRoot.delete()
     tree.updateLeafTokenCount()
-    assertThat(tree.root.leafTokenCount).isEqualTo(0)
-    assertThat(tree.root.isPermanentlyDeleted)
-    assertThat(tree.root.childCount).isEqualTo(0)
+    assertThat(tree.realRoot.leafTokenCount).isEqualTo(0)
+    assertThat(tree.realRoot.isPermanentlyDeleted)
+    assertThat(tree.realRoot.childCount).isEqualTo(0)
   }
 }

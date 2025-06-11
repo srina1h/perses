@@ -94,6 +94,18 @@ class SubTreeReplacementReducer(
     }
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "Randomly pick up a subtree, " +
+      "and replace it with another subtree of the same type.",
+    deterministic = false,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_REMAIN,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(SubTreeReplacementReducer(reducerContext))
+    }
+  }
+
   companion object {
     const val NAME = "subtree_replacer"
 
@@ -102,7 +114,7 @@ class SubTreeReplacementReducer(
     ): ImmutableMultimap<AbstractSparTreeNode, RuleNameHandle> {
       val builder = ImmutableMultimap.builder<AbstractSparTreeNode, RuleNameHandle>()
 
-      tree.root.boundedBFSChildren { node, _ ->
+      tree.realRoot.boundedBFSChildren { node, _ ->
         val rules = findAllAlternativeRulesInPayload(node)
         if (rules.isNotEmpty()) {
           builder.putAll(node, rules)
@@ -110,18 +122,6 @@ class SubTreeReplacementReducer(
         TreeNodeFilterResult.CONTINUE
       }
       return builder.build()
-    }
-
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "Randomly pick up a subtree, " +
-        "and replace it with another subtree of the same type.",
-      deterministic = false,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_REMAIN,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(SubTreeReplacementReducer(reducerContext))
-      }
     }
 
     private fun findAllAlternativeRulesInPayload(

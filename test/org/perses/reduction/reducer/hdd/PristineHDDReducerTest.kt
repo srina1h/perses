@@ -36,7 +36,7 @@ class PristineHDDReducerTest {
 
   private fun countNodes(tree: SparTree): Int {
     val counter = AtomicInteger(0)
-    tree.root.postOrderVisit { counter.incrementAndGet() }
+    tree.realRoot.postOrderVisit { counter.incrementAndGet() }
     return counter.get()
   }
 }

@@ -94,6 +94,17 @@ class SparTreeNodeFactory(
     return createParserRuleSparTreeNode(ruleName)
   }
 
+  fun createGroupingSparTreeNodeForTokens(tokens: Iterable<Token>): GroupingSparTreeNode {
+    return createGroupingSparTreeNode(tokens.map { createLexerRuleSparTreeNode(it) })
+  }
+
+  fun createGroupingSparTreeNode(children: Iterable<AbstractSparTreeNode>): GroupingSparTreeNode {
+    val result = GroupingSparTreeNode(nextNodeId())
+    val payload = AbstractNodePayload.SinglePayload(expectedAntlrRuleType = null)
+    children.forEach { result.addChild(it, payload) }
+    return result
+  }
+
   fun createParserRuleSparTreeNode(ruleName: String): ParserRuleSparTreeNode {
     val antlrRule = grammarHierarchy.getRuleHierarchyEntryWithNameOrThrow(
       ruleName,

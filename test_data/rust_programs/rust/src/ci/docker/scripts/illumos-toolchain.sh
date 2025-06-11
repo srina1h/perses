@@ -10,12 +10,13 @@ PHASE="$2"
 JOBS="$(getconf _NPROCESSORS_ONLN)"
 
 case "$ARCH" in
-x86_64)
-        SYSROOT_MACH='i386'
-        ;;
-*)
-        printf 'ERROR: unknown architecture: %s\n' "$ARCH"
-        exit 1
+  x86_64)
+    SYSROOT_MACH='i386'
+    ;;
+  *)
+    printf 'ERROR: unknown architecture: %s\n' "$ARCH"
+    exit 1
+    ;;
 esac
 
 BUILD_TARGET="$ARCH-sun-solaris2.10"
@@ -58,120 +59,118 @@ BINUTILS_BASE="binutils-$BINUTILS_VERSION"
 BINUTILS_TAR="$BINUTILS_BASE.tar.bz2"
 BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
 
-
 download_file() {
-        local file="$1"
-        local url="$2"
-        local sum="$3"
+  local file="$1"
+  local url="$2"
+  local sum="$3"
 
-        while :; do
-                if [[ -f "$file" ]]; then
-                        if ! h="$(sha256sum "$file" | awk '{ print $1 }')"; then
-                                printf 'ERROR: reading hash\n' >&2
-                                exit 1
-                        fi
+  while :; do
+    if [[ -f "$file" ]]; then
+      if ! h="$(sha256sum "$file" | awk '{ print $1 }')"; then
+        printf 'ERROR: reading hash\n' >&2
+        exit 1
+      fi
 
-                        if [[ "$h" == "$sum" ]]; then
-                                return 0
-                        fi
+      if [[ "$h" == "$sum" ]]; then
+        return 0
+      fi
 
-                        printf 'WARNING: hash mismatch: %s != expected %s\n' \
-                            "$h" "$sum" >&2
-                        rm -f "$file"
-                fi
+      printf 'WARNING: hash mismatch: %s != expected %s\n' \
+        "$h" "$sum" >&2
+      rm -f "$file"
+    fi
 
-                printf 'Downloading: %s\n' "$url"
-                if ! curl -f -L -o "$file" "$url"; then
-                        rm -f "$file"
-                        sleep 1
-                fi
-        done
+    printf 'Downloading: %s\n' "$url"
+    if ! curl -f -L -o "$file" "$url"; then
+      rm -f "$file"
+      sleep 1
+    fi
+  done
 }
 
-
 case "$PHASE" in
-sysroot)
-        download_file "/tmp/$SYSROOT_TAR" "$SYSROOT_URL" "$SYSROOT_SUM"
-        mkdir -p "$SYSROOT_DIR"
-        cd "$SYSROOT_DIR"
-        tar -xzf "/tmp/$SYSROOT_TAR"
-        rm -f "/tmp/$SYSROOT_TAR"
-        ;;
+  sysroot)
+    download_file "/tmp/$SYSROOT_TAR" "$SYSROOT_URL" "$SYSROOT_SUM"
+    mkdir -p "$SYSROOT_DIR"
+    cd "$SYSROOT_DIR"
+    tar -xzf "/tmp/$SYSROOT_TAR"
+    rm -f "/tmp/$SYSROOT_TAR"
+    ;;
 
-binutils)
-        download_file "/tmp/$BINUTILS_TAR" "$BINUTILS_URL" "$BINUTILS_SUM"
-        mkdir -p /ws/src/binutils
-        cd /ws/src/binutils
-        tar -xjf "/tmp/$BINUTILS_TAR"
-        rm -f "/tmp/$BINUTILS_TAR"
+  binutils)
+    download_file "/tmp/$BINUTILS_TAR" "$BINUTILS_URL" "$BINUTILS_SUM"
+    mkdir -p /ws/src/binutils
+    cd /ws/src/binutils
+    tar -xjf "/tmp/$BINUTILS_TAR"
+    rm -f "/tmp/$BINUTILS_TAR"
 
-        mkdir -p /ws/build/binutils
-        cd /ws/build/binutils
-        "/ws/src/binutils/$BINUTILS_BASE/configure" \
-            --prefix="$PREFIX" \
-            --target="$BUILD_TARGET" \
-            --program-prefix="$ARCH-illumos-" \
-            --with-sysroot="$SYSROOT_DIR"
+    mkdir -p /ws/build/binutils
+    cd /ws/build/binutils
+    "/ws/src/binutils/$BINUTILS_BASE/configure" \
+      --prefix="$PREFIX" \
+      --target="$BUILD_TARGET" \
+      --program-prefix="$ARCH-illumos-" \
+      --with-sysroot="$SYSROOT_DIR"
 
-        make -j "$JOBS"
+    make -j "$JOBS"
 
-        mkdir -p "$PREFIX"
-        make install
+    mkdir -p "$PREFIX"
+    make install
 
-        cd /
-        rm -rf /ws/src/binutils /ws/build/binutils
-        ;;
+    cd /
+    rm -rf /ws/src/binutils /ws/build/binutils
+    ;;
 
-gcc)
-        download_file "/tmp/$GCC_TAR" "$GCC_URL" "$GCC_SUM"
-        mkdir -p /ws/src/gcc
-        cd /ws/src/gcc
-        tar -xJf "/tmp/$GCC_TAR"
-        rm -f "/tmp/$GCC_TAR"
+  gcc)
+    download_file "/tmp/$GCC_TAR" "$GCC_URL" "$GCC_SUM"
+    mkdir -p /ws/src/gcc
+    cd /ws/src/gcc
+    tar -xJf "/tmp/$GCC_TAR"
+    rm -f "/tmp/$GCC_TAR"
 
-        mkdir -p /ws/build/gcc
-        cd /ws/build/gcc
-        export CFLAGS='-fPIC'
-        export CXXFLAGS='-fPIC'
-        export CXXFLAGS_FOR_TARGET='-fPIC'
-        export CFLAGS_FOR_TARGET='-fPIC'
-        "/ws/src/gcc/$GCC_BASE/configure" \
-            --prefix="$PREFIX" \
-            --target="$BUILD_TARGET" \
-            --program-prefix="$ARCH-illumos-" \
-            --with-sysroot="$SYSROOT_DIR" \
-            --with-gnu-as \
-            --with-gnu-ld \
-            --disable-nls \
-            --disable-libgomp \
-            --disable-libquadmath \
-            --disable-libssp \
-            --disable-libvtv \
-            --disable-libcilkrts \
-            --disable-libada \
-            --disable-libsanitizer \
-            --disable-libquadmath-support \
-            --disable-shared \
-            --enable-tls
+    mkdir -p /ws/build/gcc
+    cd /ws/build/gcc
+    export CFLAGS='-fPIC'
+    export CXXFLAGS='-fPIC'
+    export CXXFLAGS_FOR_TARGET='-fPIC'
+    export CFLAGS_FOR_TARGET='-fPIC'
+    "/ws/src/gcc/$GCC_BASE/configure" \
+      --prefix="$PREFIX" \
+      --target="$BUILD_TARGET" \
+      --program-prefix="$ARCH-illumos-" \
+      --with-sysroot="$SYSROOT_DIR" \
+      --with-gnu-as \
+      --with-gnu-ld \
+      --disable-nls \
+      --disable-libgomp \
+      --disable-libquadmath \
+      --disable-libssp \
+      --disable-libvtv \
+      --disable-libcilkrts \
+      --disable-libada \
+      --disable-libsanitizer \
+      --disable-libquadmath-support \
+      --disable-shared \
+      --enable-tls
 
-        make -j "$JOBS"
+    make -j "$JOBS"
 
-        mkdir -p "$PREFIX"
-        make install
+    mkdir -p "$PREFIX"
+    make install
 
-        #
-        # Link toolchain commands into /usr/local/bin so that cmake and others
-        # can find them:
-        #
-        (cd "$PREFIX/bin" && ls -U) | grep "^$ARCH-illumos-" |
-            xargs -t -I% ln -s "$PREFIX/bin/%" '/usr/local/bin/'
+    #
+    # Link toolchain commands into /usr/local/bin so that cmake and others
+    # can find them:
+    #
+    (cd "$PREFIX/bin" && ls -U) | grep "^$ARCH-illumos-" \
+      | xargs -t -I% ln -s "$PREFIX/bin/%" '/usr/local/bin/'
 
-        cd /
-        rm -rf /ws/src/gcc /ws/build/gcc
-        ;;
+    cd /
+    rm -rf /ws/src/gcc /ws/build/gcc
+    ;;
 
-*)
-        printf 'ERROR: unknown phase "%s"\n' "$PHASE" >&2
-        exit 100
-        ;;
+  *)
+    printf 'ERROR: unknown phase "%s"\n' "$PHASE" >&2
+    exit 100
+    ;;
 esac

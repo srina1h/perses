@@ -48,7 +48,7 @@ abstract class AbstractLevelBasedReducer protected constructor(
 
   protected fun getInitialRegion(tree: SparTree): ReductionLevel {
     val level = ReductionLevel(1)
-    tree.root.forEachChild { level.addNode(it) }
+    tree.realRoot.forEachChild { level.addNode(it) }
     return level
   }
 

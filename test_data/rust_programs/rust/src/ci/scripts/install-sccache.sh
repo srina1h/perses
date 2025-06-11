@@ -8,12 +8,12 @@ IFS=$'\n\t'
 source "$(cd "$(dirname "$0")" && pwd)/../shared.sh"
 
 if isMacOS; then
-    curl -fo /usr/local/bin/sccache "${MIRRORS_BASE}/2018-04-02-sccache-x86_64-apple-darwin"
-    chmod +x /usr/local/bin/sccache
+  curl -fo /usr/local/bin/sccache "${MIRRORS_BASE}/2018-04-02-sccache-x86_64-apple-darwin"
+  chmod +x /usr/local/bin/sccache
 elif isWindows; then
-    mkdir -p sccache
-    curl -fo sccache/sccache.exe "${MIRRORS_BASE}/2018-04-26-sccache-x86_64-pc-windows-msvc"
-    ciCommandAddPath "$(pwd)/sccache"
+  mkdir -p sccache
+  curl -fo sccache/sccache.exe "${MIRRORS_BASE}/2018-04-26-sccache-x86_64-pc-windows-msvc"
+  ciCommandAddPath "$(pwd)/sccache"
 fi
 
 # FIXME: we should probably install sccache outside the containers and then

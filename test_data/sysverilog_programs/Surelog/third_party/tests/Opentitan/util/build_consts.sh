@@ -30,7 +30,7 @@ else
   exit 1
 fi
 
-OT_GIT_VERSION="$(git describe --always 2>/dev/null)"
+OT_GIT_VERSION="$(git describe --always 2> /dev/null)"
 if [[ -n "$OT_GIT_VERSION" ]]; then
   readonly OT_VERSION="opentitan-$OT_GIT_VERSION"
 else

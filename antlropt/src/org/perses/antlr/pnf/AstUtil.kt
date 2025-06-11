@@ -28,25 +28,10 @@ import org.perses.antlr.ast.PersesSequenceAst
 import org.perses.antlr.ast.PersesStarAst
 import org.perses.antlr.ast.SmartAstConstructor
 import org.perses.util.Interval
+import org.perses.util.Util
 import org.perses.util.toImmutableList
 
 object AstUtil {
-
-  inline fun <T> fixpoint(
-    initial: T,
-    stopCriterion: (prev: T, transformed: T) -> Boolean =
-      { prev, transformed -> prev != transformed },
-    transform: (T) -> T,
-  ): T {
-    var current = initial
-    var changed: Boolean
-    do {
-      val prev = current
-      current = transform(prev)
-      changed = stopCriterion(prev, current)
-    } while (changed)
-    return current
-  }
 
   fun isSeqOrRuleRefOrTerminal(e: AbstractPersesRuleElement): Boolean {
     when (e.tag) {
@@ -136,7 +121,7 @@ object AstUtil {
   internal fun convertStarToPlus(
     list: List<AbstractPersesRuleElement>,
   ): ImmutableList<AbstractPersesRuleElement> {
-    return fixpoint(ImmutableList.copyOf(list)) { current ->
+    return Util.fixpoint(ImmutableList.copyOf(list)) { current ->
       val starList = current.withIndex()
         .asSequence()
         .filter { it.value is PersesStarAst }

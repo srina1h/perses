@@ -73,7 +73,7 @@ class ContentSHA512Encoder(
       convertProgramToRawString(program)
     }
     val sha512 = Util.SHA512HashCode.createFromString(rawContent)
-    return ContentSHA512Encoding(sha512, program.tokenCount())
+    return ContentSHA512Encoding(sha512, program.tokenCount)
   }
 
   internal fun convertProgramToRawString(program: TokenizedProgram): String {

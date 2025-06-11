@@ -5,25 +5,24 @@ set -o pipefail
 set -o xtrace
 set -o errexit
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <install dir>"
   exit 1
 fi
 
-
 readonly TOOLS=("pkg-config"
-    "autoconf" 
-    "bison" 
-    "re2c")
+  "autoconf"
+  "bison"
+  "re2c")
 
 missing=""
-for tool in "${TOOLS[@]}" ; do
-  if ! command -v "${tool}" &> /dev/null ; then
+for tool in "${TOOLS[@]}"; do
+  if ! command -v "${tool}" &> /dev/null; then
     missing="${missing} ${tool}"
   fi
 done
 
-if [[ "${missing}" != "" ]] ; then
+if [[ "${missing}" != "" ]]; then
   echo "The following tools are missing: ${missing}"
   exit 1
 fi
@@ -37,7 +36,6 @@ function cleanup() {
   rm -rf "${BUILDROOT}" &> /dev/null || true
 }
 trap cleanup EXIT
-
 
 readonly INSTALLROOT="$(readlink -f $1)"
 echo "Installing to ${INSTALLROOT}"

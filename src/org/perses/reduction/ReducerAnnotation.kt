@@ -16,12 +16,8 @@
  */
 package org.perses.reduction
 
+import com.google.common.base.MoreObjects
 import com.google.common.collect.ImmutableList
-
-fun interface ITokenReducerCreator {
-
-  fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer>
-}
 
 /** Annotation for a reducer.  */
 // TODO: test the equals and hashcode function.
@@ -30,7 +26,14 @@ abstract class ReducerAnnotation(
   description: String,
   val deterministic: Boolean,
   val reductionResultSizeTrend: ReductionResultSizeTrend,
-) : AbstractReducerNameAndDesc(shortName, description), ITokenReducerCreator {
+) : AbstractReducerNameAndDesc(shortName, description) {
+
+  override fun extraToString(stringHelper: MoreObjects.ToStringHelper) {
+    stringHelper.add("deterministic", deterministic)
+      .add("reductionResultSizeTrend", reductionResultSizeTrend)
+  }
+
+  abstract fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer>
 
   enum class ReductionResultSizeTrend {
     BEST_RESULT_SIZE_INCREASE,

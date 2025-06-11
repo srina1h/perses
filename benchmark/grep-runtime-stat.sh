@@ -1,8 +1,8 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 
-if [[ $# == 0 ]] ; then 
+if [[ $# == 0 ]]; then
   SUFFIX=""
-else 
+else
   SUFFIX=$1
 fi
 
@@ -12,7 +12,7 @@ set -o nounset
 readonly PERSES="perses_node_priority_with_dfs_delta"
 readonly HDD="hdd"
 
-for subject in $(ls -d clang-* gcc-*) ; do
+for subject in $(ls -d clang-* gcc-*); do
   echo "Runtime Statistics for ${subject}"
   echo "<<<<<< HDD >>>>>>"
   tail -n 4 ${subject}/exp-${HDD}${SUFFIX}/log.txt
@@ -22,4 +22,3 @@ for subject in $(ls -d clang-* gcc-*) ; do
   echo ""
   echo ""
 done
-

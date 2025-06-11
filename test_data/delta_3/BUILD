@@ -1,7 +1,7 @@
-package(default_visibility = ["//test/org/perses:__subpackages__"])
-
-load("//src/org/perses:reduction.bzl", "reduce")
+load("//:perses.bzl", "reduce")
 load("//benchmark:benchmark.bzl", "reduction_golden_test", "sanity_test")
+
+package(default_visibility = ["//test/org/perses:__subpackages__"])
 
 filegroup(
     name = "delta_3",

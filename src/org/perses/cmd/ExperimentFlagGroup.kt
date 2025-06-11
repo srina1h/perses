@@ -24,14 +24,33 @@ class ExperimentFlagGroup : AbstractCommandLineFlagGroup(groupName = "Experiment
 
   @JvmField
   @Parameter(
-    names = ["--on-demand-reducer-classes"],
-    description = "the list of reducer classes to be called after the main reduction",
+    names = ["--on-demand-fine-grit-reducer-annotations"],
+    description = "the list of fine-grit reducer classes to be called after the main reduction",
     hidden = true,
     order = 100,
     converter = ClassConverter::class,
   )
-  var onDemandReducerClasses: List<Class<*>>? = null
+  var onDemandFineGritReducerAnnotationClasses: List<Class<*>> = listOf()
 
+  @JvmField
+  @Parameter(
+    names = ["--on-demand-medium-grit-reducer-annotations"],
+    description = "the list of medium-grit reducer classes to be called after the main reduction",
+    hidden = true,
+    order = 200,
+    converter = ClassConverter::class,
+  )
+  var onDemandMediumGritReducerAnnotationClasses: List<Class<*>> = listOf()
+
+  @JvmField
+  @Parameter(
+    names = ["--on-demand-coarse-grit-reducer-annotations"],
+    description = "the list of coarse-grit reducer classes to be called after the main reduction",
+    hidden = true,
+    order = 300,
+    converter = ClassConverter::class,
+  )
+  var onDemandCoarseGritReducerAnnotationClasses: List<Class<*>> = listOf()
   override fun validate() = Unit
 
   class ClassConverter : IStringConverter<Class<*>> {

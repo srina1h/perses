@@ -306,8 +306,8 @@ class PPRMetaReductionDriver private constructor(
       seedPath: Path,
       variantPath: Path,
     ): ListAlignment<Token> {
-      val seedTokenList = parserFacade.parseIntoTokens(seedPath)
-      val variantTokenList = parserFacade.parseIntoTokens(variantPath)
+      val seedTokenList = parserFacade.tokenizeFile(seedPath)
+      val variantTokenList = parserFacade.tokenizeFile(variantPath)
       val listAlignment = ListAlignment.create(
         seedTokenList,
         variantTokenList,

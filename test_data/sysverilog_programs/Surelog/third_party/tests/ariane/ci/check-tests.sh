@@ -21,9 +21,8 @@ fi
 
 if [ ! -f "${1}"*.log ]; then
   echo -e "${RED}FAILED file $1 does not exist ${NC}"
-  exit 1;
+  exit 1
 fi
-
 
 # get NUM_TOTAL number of tests
 NUM_TOTAL=$2
@@ -34,10 +33,10 @@ echo "checking files:"
 ls "${1}"*.log
 
 # check for patterns
-NUM_PASSED=`grep -i -s "SUCCESS"  ${1}*.log | wc -l`
-NUM_FAILED=`grep -i -s "FAILED"   ${1}*.log | wc -l`
-NUM_FATAL=`grep  -i -s "Fatal:"   ${1}*.log | wc -l`
-NUM_ERROR=`grep  -i -s "Error:"   ${1}*.log | wc -l`
+NUM_PASSED=$(grep -i -s "SUCCESS" ${1}*.log | wc -l)
+NUM_FAILED=$(grep -i -s "FAILED" ${1}*.log | wc -l)
+NUM_FATAL=$(grep -i -s "Fatal:" ${1}*.log | wc -l)
+NUM_ERROR=$(grep -i -s "Error:" ${1}*.log | wc -l)
 
 echo "NUM_TOTAL:  $NUM_TOTAL"
 echo "NUM_PASSED: $NUM_PASSED"
@@ -47,17 +46,17 @@ echo "NUM_ERROR:  $NUM_ERROR"
 
 if [[ $(($NUM_FAILED)) -gt 0 ]]; then
   echo -e "${RED}FAILED $NUM_FAILED of $NUM_TOTAL tests ${NC}"
-  exit 1;
-elif [[ $(($NUM_FATAL)) -ne  0 ]]; then
+  exit 1
+elif [[ $(($NUM_FATAL)) -ne 0 ]]; then
   echo -e "${RED}FAILED at least one test due to $NUM_FATAL FATAL assertions ${NC}"
-  exit 1;
+  exit 1
 elif [[ $(($NUM_ERROR)) -ne 0 ]]; then
   echo -e "${RED}FAILED at least one test due to $NUM_ERROR ERROR assertions ${NC}"
-  exit 1;
+  exit 1
 elif [[ $(($NUM_PASSED)) -ne $(($NUM_TOTAL)) ]]; then
   echo -e "${RED}FAILED since not all tests have been executed  ${NC}"
-  exit 1;
+  exit 1
 else
   echo -e "${GREEN}PASSED all $NUM_TOTAL tests ${NC}"
-  exit 0;
+  exit 0
 fi

@@ -19,6 +19,7 @@ package org.perses.spartree
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.perses.TestUtility
+import org.perses.grammar.c.LanguageC
 import org.perses.spartree.AbstractTreeNode.NodeIdCopyStrategy.ReuseNodeIdStrategy
 import java.nio.file.Paths
 
@@ -32,8 +33,8 @@ class LatraGeneralTreeEditTest {
   @Test
   fun testInternalApply() {
     val builder = LatraGeneralActionSet.Builder("test 1")
-    val nodeSemicolCopy = nodeSemicol.recursiveDeepCopy(ReuseNodeIdStrategy)
-    val nodeMainCopy = nodeMain.recursiveDeepCopy(ReuseNodeIdStrategy)
+    val nodeSemicolCopy = nodeSemicol.recursiveDeepCopy(ReuseNodeIdStrategy).result
+    val nodeMainCopy = nodeMain.recursiveDeepCopy(ReuseNodeIdStrategy).result
     // ";" replace Printf , main replace Int and delete main at int
     builder.replaceNode(nodePrintf, nodeSemicolCopy)
     builder.replaceNode(nodeInt, nodeMainCopy)
@@ -55,13 +56,13 @@ class LatraGeneralTreeEditTest {
   }
 
   @Test
-  fun testComputeProgram() {
+  fun testLatraEditComputeProgram() {
     val expectOutput = """
       main ( ) { { { { { ; ( ( "hello world\n" ) ) ; } } } } }
     """.trimIndent()
     val builder = LatraGeneralActionSet.Builder("test 2")
-    val nodeSemicolCopy = nodeSemicol.recursiveDeepCopy(ReuseNodeIdStrategy)
-    val nodeMainCopy = nodeMain.recursiveDeepCopy(ReuseNodeIdStrategy)
+    val nodeSemicolCopy = nodeSemicol.recursiveDeepCopy(ReuseNodeIdStrategy).result
+    val nodeMainCopy = nodeMain.recursiveDeepCopy(ReuseNodeIdStrategy).result
     // ";" replace Printf , main replace Int and delete main at int
     builder.replaceNode(nodePrintf, nodeSemicolCopy)
     builder.replaceNode(nodeInt, nodeMainCopy)
@@ -82,5 +83,49 @@ class LatraGeneralTreeEditTest {
         .map { it.text }
         .joinToString(" "),
     ).isEqualTo(expectOutput)
+  }
+
+  @Test
+  fun testReplaceRootWithLatraEdit() {
+    val tree = TestUtility.createSparTreeFromString("int a;", LanguageC)
+    val another = TestUtility.createSparTreeFromString(
+      "char c;",
+      LanguageC,
+    ).detachRootFromTree().also { root ->
+      val firstToken = root.beginToken!!
+      firstToken.parent!!.replaceChild(
+        firstToken,
+        newChild = TestUtility.createSparTreeFromString(
+          ";",
+          LanguageC,
+        ).detachRootFromTree(),
+        firstToken.payload!!,
+      )
+    }
+    another.fixLinkIntegrity()
+
+    val edit = tree.createLatraGeneralEdit(
+      LatraGeneralActionSet.Builder(
+        actionsDescription = "test action",
+      ).replaceNode(
+        targetNode = tree.realRoot,
+        replacingNode = another,
+      ).build()!!,
+    )
+    edit.computeProgram(tree).tokens.map { it.text }.let { tokens ->
+      assertThat(tokens).containsExactly(
+        ";",
+        "c",
+        ";",
+      ).inOrder()
+    }
+    tree.applyEdit(edit)
+    tree.programSnapshot.tokens.map { it.text }.let { tokens ->
+      assertThat(tokens).containsExactly(
+        ";",
+        "c",
+        ";",
+      ).inOrder()
+    }
   }
 }

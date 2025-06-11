@@ -23,11 +23,12 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.perses.TestUtility
 import org.perses.grammar.c.LanguageC
-import org.perses.reduction.reducer.vulcan.pattern.EnumOperation.DELETE
-import org.perses.reduction.reducer.vulcan.pattern.EnumOperation.KEEP
-import org.perses.reduction.reducer.vulcan.pattern.NumOfDeletesToPatterns.Companion.createDeletionPatterns
-import org.perses.reduction.reducer.vulcan.pattern.NumOfDeletesToPatterns.Companion.createOperationListWithGivenNumOfDeletes
-import org.perses.reduction.reducer.vulcan.pattern.NumOfDeletesToPatterns.Companion.createPatternsWithGivenNumOfDeletes
+import org.perses.listminimizer.localexhaust.ElementEditPattern
+import org.perses.listminimizer.localexhaust.EnumOperation.DELETE
+import org.perses.listminimizer.localexhaust.EnumOperation.KEEP
+import org.perses.listminimizer.localexhaust.NumOfDeletesToPatterns.Companion.createDeletionPatterns
+import org.perses.listminimizer.localexhaust.NumOfDeletesToPatterns.Companion.createOperationListWithGivenNumOfDeletes
+import org.perses.listminimizer.localexhaust.NumOfDeletesToPatterns.Companion.createPatternsWithGivenNumOfDeletes
 
 @RunWith(JUnit4::class)
 class LocalExhaustivePatternReducerTest {
@@ -94,7 +95,7 @@ class LocalExhaustivePatternReducerTest {
 
   @Test
   fun testPattern() {
-    val pattern = TokenEditPattern(ImmutableList.of(KEEP, DELETE))
+    val pattern = ElementEditPattern(ImmutableList.of(KEEP, DELETE))
     assertThat(pattern.patternLength).isEqualTo(2)
     assertThat(pattern.numOfDeletes).isEqualTo(1)
     assertThat(pattern.numOfKeeps).isEqualTo(1)

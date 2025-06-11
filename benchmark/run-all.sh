@@ -3,7 +3,7 @@
 set -o pipefail
 set -o nounset
 
-if [[ $# != 1 ]] ; then
+if [[ $# != 1 ]]; then
   echo "Usage: $0 <iteration count>"
   exit 1
 fi
@@ -16,8 +16,8 @@ readonly JVM_FLAGS="-Xmx11G"
 
 export JVM_FLAGS
 
-for iteration in $(seq $MAX_ITERATION) ; do
-  for subject in $(ls -d clang-* gcc-*) ; do
+for iteration in $(seq $MAX_ITERATION); do
+  for subject in $(ls -d clang-* gcc-*); do
     echo "running an experiment with $subject"
     echo "running hdd"
     ./run-exp.sh "$HDD-iteration-${iteration}" $subject "perses.sh --fixpoint true --alg $HDD "
@@ -25,4 +25,3 @@ for iteration in $(seq $MAX_ITERATION) ; do
     ./run-exp.sh "$PERSES-iteration-${iteration}" $subject "perses.sh --fixpoint true --alg $PERSES "
   done
 done
-

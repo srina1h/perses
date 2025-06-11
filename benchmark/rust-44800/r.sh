@@ -11,7 +11,7 @@ rustup toolchain install "${BUGGY_RUSTC_VERSION}" --force
 rustup toolchain install "${CORRECT_RUSTC_VERSION}" --force
 rustup toolchain install "${CORRECT_RUSTC_VERSION_2}" --force
 
-if ! command -v valgrind > /dev/null ; then
+if ! command -v valgrind > /dev/null; then
   echo "valgrind is not installed"
   exit 100
 fi
@@ -22,18 +22,18 @@ if ! timeout -s 9 60 rustup run "${BUGGY_RUSTC_VERSION}" rustc -o "${EXE_WRONG}"
 fi
 
 readonly EXE_CORRECT="./correct.out"
-if ! timeout -s 9 60 rustup run "${CORRECT_RUSTC_VERSION}" rustc -o "${EXE_CORRECT}" "${FILE}" ; then
+if ! timeout -s 9 60 rustup run "${CORRECT_RUSTC_VERSION}" rustc -o "${EXE_CORRECT}" "${FILE}"; then
   exit 1
 fi
 
 readonly EXE_CORRECT_2="./correct_2.out"
-if ! timeout -s 9 60 rustup run "${CORRECT_RUSTC_VERSION_2}" rustc -o "${EXE_CORRECT_2}" "${FILE}" ; then
+if ! timeout -s 9 60 rustup run "${CORRECT_RUSTC_VERSION_2}" rustc -o "${EXE_CORRECT_2}" "${FILE}"; then
   exit 1
 fi
 
 readonly OUTPUT_WRONG="wrong_output.txt"
 
-if (timeout -s 9 30 valgrind "${EXE_WRONG}") &> "${OUTPUT_WRONG}" ; then
+if (timeout -s 9 30 valgrind "${EXE_WRONG}") &> "${OUTPUT_WRONG}"; then
   exit 1
 fi
 
@@ -43,16 +43,15 @@ if ! timeout -s 9 30 valgrind "${EXE_CORRECT}"; then
   exit 1
 fi
 
-timeout -s 9 30 "${EXE_CORRECT}"  &> "${OUTPUT_CORRECT_1}"
+timeout -s 9 30 "${EXE_CORRECT}" &> "${OUTPUT_CORRECT_1}"
 
-if ! timeout -s 9 30 valgrind  "${EXE_CORRECT_2}" ; then
+if ! timeout -s 9 30 valgrind "${EXE_CORRECT_2}"; then
   exit 1
 fi
 timeout -s 9 30 "${EXE_CORRECT_2}" &> "${OUTPUT_CORRECT_2}"
 
-if ! diff "${OUTPUT_CORRECT_1}" "${OUTPUT_CORRECT_2}" ; then
+if ! diff "${OUTPUT_CORRECT_1}" "${OUTPUT_CORRECT_2}"; then
   exit 1
 fi
 
 exit 0
-

@@ -22,7 +22,7 @@ builder=$2
 
 curl -O https://$bucket.s3.amazonaws.com/rustc-builds/$commit/cpu-$builder.csv
 
-gnuplot <<-EOF
+gnuplot <<- EOF
 reset
 set timefmt '%Y-%m-%dT%H:%M:%S'
 set xdata time

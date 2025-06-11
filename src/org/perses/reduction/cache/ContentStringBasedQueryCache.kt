@@ -63,7 +63,7 @@ class ContentStringBasedQueryCache(
         program.tokens.stream()
           .map { obj: PersesTokenFactory.PersesToken -> obj.text }
           .collect(Collectors.joining("\n")),
-        program.tokenCount(),
+        program.tokenCount,
       )
     }
 

@@ -21,7 +21,6 @@ readonly BINARY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${BINARY_DIR}/run_common.sh"
 readonly REDUCED_TOKEN_FILE="${TMP_SOURCE_FILE}"
 
-
 pushd "${TMP}"
 readonly START_TIME=$(date +%s)
 creduce --n "${THREADS}" "${TMP_TEST_SCRIPT}" "${TMP_SOURCE_FILE}"

@@ -4,10 +4,10 @@ set -o pipefail
 set -o nounset
 set -o errexit
 
-if command -v git > /dev/null ; then
+if command -v git > /dev/null; then
   GIT_COMMIT_HASH=$(git show --format="%H" --no-patch)
   GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  if git diff-index --quiet HEAD -- ; then
+  if git diff-index --quiet HEAD --; then
     GIT_STATUS="Clean"
   else
     GIT_STATUS="Modified"

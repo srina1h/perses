@@ -9,7 +9,7 @@
 # See all `update-references.sh`, if you just want to update a single test.
 
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    echo "usage: $0"
+  echo "usage: $0"
 fi
 
 BUILD_DIR=$PWD/target/debug/test_build_base

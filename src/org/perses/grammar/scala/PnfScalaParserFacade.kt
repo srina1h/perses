@@ -19,7 +19,6 @@ package org.perses.grammar.scala
 import com.google.common.primitives.ImmutableIntArray
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.antlr.ParseTreeWithParser
 import org.perses.grammar.AbstractDefaultParserFacade
 import java.io.BufferedReader
@@ -31,22 +30,15 @@ import java.nio.file.Path
 
 class PnfScalaParserFacade : AbstractDefaultParserFacade<PnfScalaLexer, PnfScalaParser>(
   LanguageScala,
-  createCombinedAntlrGrammar("PnfScala.g4", PnfScalaParserFacade::class.java),
+  createCombinedAntlrGrammar(
+    startRuleName = "compilationUnit",
+    antlrGrammarFileName = "PnfScala.g4",
+    classUnderSamePkg = PnfScalaParserFacade::class.java,
+  ),
   PnfScalaLexer::class.java,
   PnfScalaParser::class.java,
   ImmutableIntArray.of(PnfScalaLexer.Id, PnfScalaLexer.BoundVarid, PnfScalaLexer.Varid),
 ) {
-  override fun createLexer(inputStream: CharStream): PnfScalaLexer {
-    return PnfScalaLexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfScalaParser {
-    return PnfScalaParser(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfScalaParser): ParseTree {
-    return parser.compilationUnit()
-  }
 
   @Throws(IOException::class)
   fun parseWithOrigScalaParser(file: Path): ParseTreeWithParser {

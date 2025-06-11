@@ -75,7 +75,7 @@ class NDepthTreeModel(
     updatedTimesFromLastFindingOfNewFeature++
     changeStatusOfGuidance()
     val encodingResult = FeatureOfSparTree()
-    tree.root.preOrderVisit {
+    tree.realRoot.preOrderVisit {
       if (!it.isTokenNode() && it.updateLeafTokenCount() != 0) {
         val rule = it.antlrRule!!.ruleDef
         if (rule.body is AbstractPersesQuantifiedAst || rule.body is PersesAlternativeBlockAst) {
@@ -180,7 +180,7 @@ class NDepthTreeModel(
     }.minByOrNull {
       return@minByOrNull getPrevalence(it, featureOfSparTree!!)
     }
-    return selectedNode?.recursiveDeepCopy(ReuseNodeIdStrategy)
+    return selectedNode?.recursiveDeepCopy(ReuseNodeIdStrategy)?.result
   }
 
   private fun getPrevalence(

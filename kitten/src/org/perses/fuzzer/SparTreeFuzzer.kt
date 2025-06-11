@@ -18,6 +18,7 @@ package org.perses.fuzzer
 
 import com.google.common.collect.ImmutableList
 import com.google.common.primitives.ImmutableIntArray
+import org.perses.antlr.ParseTreeUtil
 import org.perses.antlr.RuleType
 import org.perses.antlr.TokenType
 import org.perses.fuzzer.languagemodel.AbstractLanguageModel
@@ -54,7 +55,7 @@ class SparTreeFuzzer private constructor(
   private val identifierTokenType = parserFacade.identifierTokenTypes
   val sparTree: SparTree = tree ?: run {
     val parseTree = parserFacade.parseFile(seedFile.toPath())
-    val tokens = AbstractParserFacade.getTokens(parseTree.tree)
+    val tokens = ParseTreeUtil.getTokens(parseTree.tree)
     val tokenizedProgramFactory = TokenizedProgramFactory.createFactory(
       tokens,
       parserFacade.language,
@@ -107,7 +108,7 @@ class SparTreeFuzzer private constructor(
   }
 
   private fun flatSparTree(tree: SparTree): ImmutableList<AbstractSparTreeNode> {
-    val root = tree.root
+    val root = tree.realRoot
     val currentList = ImmutableList.builder<AbstractSparTreeNode>()
     val bufferStack = Stack<AbstractSparTreeNode>()
     bufferStack.push(root)
@@ -163,7 +164,7 @@ class SparTreeFuzzer private constructor(
   fun createMutantByRepeatingRecursion(random: Random, maxRepeatingTimes: Int): MutatedProgram? {
     val recursiveNodesToCorrespondingChildrenMap =
       hashMapOf<AbstractSparTreeNode, List<AbstractSparTreeNode>>()
-    val recursiveNodes = sparTree.root.boundedBreadthFirstSearchForFirstQualifiedNodes(
+    val recursiveNodes = sparTree.realRoot.boundedBreadthFirstSearchForFirstQualifiedNodes(
       { node -> findAllRecursiveChildren(node, recursiveNodesToCorrespondingChildrenMap, random) },
       maxBfsDepth = 10,
     ).toImmutableList()
@@ -224,7 +225,7 @@ class SparTreeFuzzer private constructor(
     }
     val selectedIndex = model.selectIndexOfNodeToBeReplaced(nodeList, featureOfTheSparTree, random)
       ?: return null
-    val copiedSparTree = sparTree.deepCopy(ReuseNodeIdStrategy)
+    val copiedSparTree = sparTree.deepCopy(ReuseNodeIdStrategy).result
     val copiedNodeList = flatSparTree(copiedSparTree).filter {
       it.isNonRootParserRuleNode() && it.payload != null
     }
@@ -282,7 +283,7 @@ class SparTreeFuzzer private constructor(
       featureOfTheSparTree,
       random,
     ) ?: return null
-    val copiedSparTree = sparTree.deepCopy(ReuseNodeIdStrategy)
+    val copiedSparTree = sparTree.deepCopy(ReuseNodeIdStrategy).result
     val nodesWithAntlrRule = flatSparTree(copiedSparTree).filter {
       it.parent != null && it.antlrRule != null && it.antlrRule!!.ruleDef.isParserRule
     }
@@ -303,7 +304,7 @@ class SparTreeFuzzer private constructor(
     )
     val nodesToBeDeleted = HashSet<AbstractSparTreeNode>()
     val removedTokens = HashSet<PersesToken>()
-    val copiedTree = sparTree.deepCopy(ReuseNodeIdStrategy)
+    val copiedTree = sparTree.deepCopy(ReuseNodeIdStrategy).result
     val kleeneNodes = flatSparTree(copiedTree).filterIsInstance<ParserRuleSparTreeNode>()
       .filter { it.ruleType == RuleType.KLEENE_STAR || it.ruleType == RuleType.KLEENE_PLUS }
     if (kleeneNodes.isEmpty()) {

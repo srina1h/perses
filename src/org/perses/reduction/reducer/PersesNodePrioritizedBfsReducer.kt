@@ -27,8 +27,7 @@ import org.perses.reduction.reducer.PersesNodeReducer.IDeltaDebuggerStrategy.Sim
 object PersesNodePrioritizedBfsReducer {
   const val NAME = "perses_node_priority_with_bfs_delta"
 
-  @JvmField
-  val META: ReducerAnnotation = object : ReducerAnnotation(
+  object META : ReducerAnnotation(
     shortName = NAME,
     description = "",
     deterministic = true,

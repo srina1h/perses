@@ -16,12 +16,13 @@
  */
 package org.perses.grammar.adhoc
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.hash.Hashing
 import org.perses.PersesConstants
 import org.perses.antlr.ast.PersesAstBuilder
 import org.perses.grammar.AbstractParserFacade
 import org.perses.program.LanguageKind
-import org.perses.util.YamlUtil
+import org.perses.util.Serialization
 import org.perses.util.java.JarFile
 import org.perses.util.toImmutableList
 import java.nio.charset.StandardCharsets
@@ -181,7 +182,7 @@ class AdhocGrammarConfiguration(
             path,
             LANGUAGE_INFO_FILE_PATH,
           )
-          return YamlUtil.fromYamlString(yaml, LanguageInfo::class.java)
+          return Serialization.fromYamlString(yaml, object : TypeReference<LanguageInfo>() {})
         } catch (e: Exception) {
           null
         }
@@ -190,7 +191,7 @@ class AdhocGrammarConfiguration(
 
     data class LanguageInfo(val parserFacadeClassFullName: String) {
       fun toYamlString(): String {
-        return YamlUtil.toYamlString(this)
+        return Serialization.toYamlString(this)
       }
     }
   }

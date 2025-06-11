@@ -13,9 +13,12 @@ set -e
 # This script does not use build_consts.sh, but relies on Meson to supply that
 # information.
 
-platform_bin_dir="$1"; shift
-meson_src_dir_prefix="$1"; shift
-meson_src_dir="$1"; shift
+platform_bin_dir="$1"
+shift
+meson_src_dir_prefix="$1"
+shift
+meson_src_dir="$1"
+shift
 
 target_bin_dir="$platform_bin_dir/${meson_src_dir#"$meson_src_dir_prefix"}"
 

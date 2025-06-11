@@ -27,7 +27,7 @@ object SingleTokenPerLinePrinter : AbstractTokenizedProgramPrinter() {
     tokenPlacementListener: AbstractTokenPlacementListener?,
   ) = object : AbstractLazySourceCode() {
     override fun computeStringBuilder() = program.tokens.fold(
-      FastStringBuilder(program.tokenCount() * 5),
+      FastStringBuilder(program.tokenCount * 5),
     ) { builder, token -> builder.append(token.text).append('\n') }
   }
 

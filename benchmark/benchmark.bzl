@@ -1,10 +1,10 @@
-load("//test/org/perses:test.bzl", "golden_test")
 load(
-    "//src/org/perses:reduction.bzl",
+    "//:perses.bzl",
     "DEFAULT_MAIN_REDUCTION_ALGORITHM",
     "DEFAULT_PERSES_BIN",
     "reduce",
 )
+load("//test/org/perses:test.bzl", "golden_test")
 
 def sanity_test(name, source_files, test_script):
     script = "%s_sanity_test.sh" % name

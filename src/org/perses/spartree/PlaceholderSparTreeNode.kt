@@ -19,7 +19,7 @@ package org.perses.spartree
 class PlaceholderSparTreeNode internal constructor(
   nodeId: Int,
   private val source: String,
-  private val predicateForCompatibility: (AbstractSparTreeNode) -> Boolean,
+  private val predicateForCompatibility: CompatibilityPredicate,
 ) : AbstractSparTreeNode(nodeId, antlrRule = null) {
 
   override var beginToken: LexerRuleSparTreeNode? = null
@@ -32,8 +32,15 @@ class PlaceholderSparTreeNode internal constructor(
     return PlaceholderSparTreeNode(computedNewNodeId, source, predicateForCompatibility)
   }
 
-  @Deprecated("Should not be called on a placeholder node.")
-  override fun addChild(child: AbstractSparTreeNode, payload: AbstractNodePayload) {
+  @Deprecated(
+    "Should not be called on a placeholder node.",
+    ReplaceWith("""error("Cannot call this method on a token node.")"""),
+  )
+  override fun addChildAtIndex(
+    index: Int,
+    child: AbstractSparTreeNode,
+    payload: AbstractNodePayload,
+  ) {
     error("Cannot call this method on a token node.")
   }
 
@@ -43,16 +50,23 @@ class PlaceholderSparTreeNode internal constructor(
 
   @Deprecated(
     "Should not be called on a placeholder node.",
-    ReplaceWith("None"),
+    ReplaceWith("""error("Cannot call this method on a token node.")"""),
   )
   override fun onChildRemoved(index: Int, child: AbstractSparTreeNode) {
     error("Cannot call this method on a token node.")
   }
 
   fun canBeReplacedBy(node: AbstractSparTreeNode): Boolean {
-    check(node !is PlaceholderSparTreeNode) {
+    check(node is LexerRuleSparTreeNode || node is ParserRuleSparTreeNode) {
       "PlaceholderNode should not be used for replacing another PlaceholderNode."
     }
-    return predicateForCompatibility(node)
+    return predicateForCompatibility.isNodeCompatible(node)
+  }
+
+  fun interface CompatibilityPredicate {
+    /**
+     * Test whether the given node is compatible.
+     */
+    fun isNodeCompatible(node: AbstractSparTreeNode): Boolean
   }
 }

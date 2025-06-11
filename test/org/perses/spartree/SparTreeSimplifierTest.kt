@@ -38,7 +38,7 @@ class SparTreeSimplifierTest {
   fun testSESESimplification() {
     val tree = createSparTreeFromFile(Paths.get("test_data/misc/t10.c"))
     simplifySingleEntrySingleExitPath(tree)
-    assertThat(SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.root)).isTrue()
+    assertThat(SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.realRoot)).isTrue()
   }
 
   @Test
@@ -52,19 +52,19 @@ class SparTreeSimplifierTest {
       simplifyTree = false,
     )
     assertThrows(Exception::class.java) {
-      SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.root)
+      SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.realRoot)
     }
     val payloadsBeforeSimplification = ArrayList<SinglePayload>()
-    tree.root.preOrderVisit {
+    tree.realRoot.preOrderVisit {
       it.payload?.let {
         payloadsBeforeSimplification.addAll(it.asSinglePayloadList)
       }
       it.immutableChildView
     }
     SparTreeSimplifier.simplify(tree)
-    SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.root)
+    SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(tree.realRoot)
     val payloadsAfterSimplification = ArrayList<SinglePayload>()
-    tree.root.preOrderVisit {
+    tree.realRoot.preOrderVisit {
       it.payload?.let {
         payloadsAfterSimplification.addAll(it.asSinglePayloadList)
       }

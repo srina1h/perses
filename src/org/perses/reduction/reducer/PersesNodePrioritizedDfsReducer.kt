@@ -26,8 +26,7 @@ object PersesNodePrioritizedDfsReducer {
 
   const val NAME = "perses_node_priority_with_dfs_delta"
 
-  @JvmField
-  val META = object : ReducerAnnotation(
+  object META : ReducerAnnotation(
     shortName = NAME,
     description = "",
     deterministic = true,

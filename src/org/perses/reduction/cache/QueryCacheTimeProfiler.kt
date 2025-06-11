@@ -77,7 +77,7 @@ class QueryCacheTimeProfiler(
       .append(tokensInOrigin.size.toString())
       .append('\t')
       .append("token_count=")
-      .append(program.tokenCount().toString())
+      .append(program.tokenCount.toString())
       .append('\t')
       .append("duration=")
       .append(nanoDuration.toString())

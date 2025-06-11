@@ -91,19 +91,19 @@ patch -p0 < $PATCH_TOOLCHAIN
 
 mkdir ../gcc-build
 cd ../gcc-build
-hide_output ../gcc-$GCC/configure                \
-  --enable-languages=c,c++                       \
-  --target=$ARCH-unknown-dragonfly               \
-  --disable-multilib                             \
-  --disable-nls                                  \
-  --disable-libgomp                              \
-  --disable-libquadmath                          \
-  --disable-libssp                               \
-  --disable-libvtv                               \
-  --disable-libcilkrts                           \
-  --disable-libada                               \
-  --disable-libsanitizer                         \
-  --disable-libquadmath-support                  \
+hide_output ../gcc-$GCC/configure \
+  --enable-languages=c,c++ \
+  --target=$ARCH-unknown-dragonfly \
+  --disable-multilib \
+  --disable-nls \
+  --disable-libgomp \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libvtv \
+  --disable-libcilkrts \
+  --disable-libada \
+  --disable-libsanitizer \
+  --disable-libquadmath-support \
   --disable-lto
 hide_output make -j10
 hide_output make install

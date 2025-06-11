@@ -4,21 +4,21 @@ set -o nounset
 set -o pipefail
 set -o errexit
 
-if [[ ! -e "WORKSPACE" ]] ; then
+if [[ ! -e "WORKSPACE" ]]; then
   echo "ERROR: This script should be run in the root folder of the project."
   exit 1
 fi
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "ERROR: Usage: $0 <install dir>"
   exit 1
 fi
 
-if [[ ! -d "${1}" ]] ; then
+if [[ ! -d "${1}" ]]; then
   echo "ERROR: ${1} is not a directory"
   exit 1
 fi
-readonly INSTALL_DIR="$( cd "${1}" &> /dev/null && pwd )"
+readonly INSTALL_DIR="$(cd "${1}" &> /dev/null && pwd)"
 
 # Update the repo.
 git pull || true

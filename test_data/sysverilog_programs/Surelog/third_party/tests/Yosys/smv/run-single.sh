@@ -1,11 +1,11 @@
 #!/bin/bash
 
-cat > $1.tpl <<EOT
+cat > $1.tpl << EOT
 %module main
   INVARSPEC ! bool(_trigger)
 EOT
 
-cat > $1.ys <<EOT
+cat > $1.ys << EOT
 echo on
 
 read_ilang $1.il
@@ -30,4 +30,3 @@ set -ex
 ../../yosys -l $1.log -q $1.ys
 NuSMV -bmc $1.smv >> $1.log
 grep "^-- invariant .* is true" $1.log
-

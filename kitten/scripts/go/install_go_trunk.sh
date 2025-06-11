@@ -5,7 +5,7 @@ set -o pipefail
 set -o xtrace
 set -o errexit
 
-if [[ "$#" != 1 ]] ; then
+if [[ "$#" != 1 ]]; then
   echo "Usage: $0 <install dir>"
   exit 1
 fi
@@ -20,7 +20,6 @@ function cleanup() {
   rm -rf "${BUILDROOT}" &> /dev/null || true
 }
 trap cleanup EXIT
-
 
 readonly INSTALLROOT="$(readlink -f $1)"
 echo "Installing to ${INSTALLROOT}"
@@ -44,4 +43,3 @@ cd "${HOME_USR_BIN}"
 ln -s "${INSTALLROOT}/go/bin/go" "go-trunk"
 ln -s "${INSTALLROOT}/go/bin/gofmt" "gofmt-trunk"
 ./go-trunk version
-

@@ -17,31 +17,17 @@
 package org.perses.grammar.sysverilog
 
 import com.google.common.primitives.ImmutableIntArray
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
 import org.perses.grammar.AbstractDefaultParserFacade
 
 class PnfSysverilogParserFacade : AbstractDefaultParserFacade<SV3_1aLexer, PnfSysVerilogHDL>(
   LanguageSystemVerilog,
   createSeparateAntlrGrammar(
-    "PnfSysVerilogHDL.g4",
-    "SV3_1aLexer.g4",
-    PnfSysverilogParserFacade::class.java,
+    startRuleName = "source_text",
+    antlrParserGrammarFileName = "PnfSysVerilogHDL.g4",
+    antlrLexerGrammarFileName = "SV3_1aLexer.g4",
+    classUnderSamePkg = PnfSysverilogParserFacade::class.java,
   ),
   SV3_1aLexer::class.java,
   PnfSysVerilogHDL::class.java,
   ImmutableIntArray.of(SV3_1aLexer.Escaped_identifier, SV3_1aLexer.Simple_identifier),
-) {
-  override fun createLexer(inputStream: CharStream): SV3_1aLexer {
-    return SV3_1aLexer(inputStream)
-  }
-
-  override fun createParser(tokens: CommonTokenStream): PnfSysVerilogHDL {
-    return PnfSysVerilogHDL(tokens)
-  }
-
-  protected override fun startParsing(parser: PnfSysVerilogHDL): ParseTree {
-    return parser.source_text()
-  }
-}
+)

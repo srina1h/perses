@@ -8,7 +8,7 @@ set -o errexit
 readonly GOLDEN_TESTS=($(bazel query "attr(tags, 'golden_file_update_target', //...)"))
 
 bazel_build_targets=""
-for target in "${GOLDEN_TESTS[@]}" ; do
+for target in "${GOLDEN_TESTS[@]}"; do
   bazel_build_targets="${bazel_build_targets} ${target}"
 done
 # We build all targets at once so as to leverage the multi cores.
@@ -16,6 +16,6 @@ done
 # shellcheck disable=SC2086
 bazelisk build ${bazel_build_targets} || exit 1
 
-for target in "${GOLDEN_TESTS[@]}" ; do
+for target in "${GOLDEN_TESTS[@]}"; do
   bazelisk run "${target}"
 done

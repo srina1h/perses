@@ -184,21 +184,21 @@ class IdentifierReplacementReducer(
     }
   }
 
+  object META : ReducerAnnotation(
+    shortName = NAME,
+    description = "Randomly pick up an identifier or a set of identifiers, " +
+      "and replace it with another identifier.",
+    // Given the same input, the algorithm might yield different results,
+    // because this alg also depends on the cache in the reduction context.
+    deterministic = false,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_REMAIN,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return ImmutableList.of(IdentifierReplacementReducer(reducerContext))
+    }
+  }
+
   companion object {
     const val NAME = "token_replacer"
-
-    val META = object : ReducerAnnotation(
-      shortName = NAME,
-      description = "Randomly pick up an identifier or a set of identifiers, " +
-        "and replace it with another identifier.",
-      // Given the same input, the algorithm might yield different results,
-      // because this alg also depends on the cache in the reduction context.
-      deterministic = false,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_REMAIN,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return ImmutableList.of(IdentifierReplacementReducer(reducerContext))
-      }
-    }
   }
 }

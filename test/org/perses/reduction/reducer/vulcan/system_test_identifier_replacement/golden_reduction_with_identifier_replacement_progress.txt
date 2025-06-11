@@ -85,14 +85,39 @@ cacheControlFlags:
   pathToSaveUpdatedGlobalCache: null
 experimentFlags:
   groupName: "Experiment Control"
-  onDemandReducerClasses:
-  - "org.perses.reduction.reducer.vulcan.IdentifierReplacementReducer"
+  onDemandFineGritReducerAnnotationClasses:
+  - "org.perses.reduction.reducer.vulcan.IdentifierReplacementReducer$META"
+  onDemandMediumGritReducerAnnotationClasses: []
+  onDemandCoarseGritReducerAnnotationClasses: []
+lprFlags:
+  groupName: "LPR Reducer Control"
+  enableLPR: false
+  lprFixpoint: false
+  llmClientPath: null
 
 Parser Facade: class org.perses.grammar.c.PnfCParserFacade
 ------------------------------------------------------------
 
 
 The sanity check has been performed. The result is PassingSanityCheckResult
+The reducer execution plan is listed below.
+--- !<sequence>
+reducers:
+- !<fixpoint>
+  body: !<atomic>
+    reducer: perses_node_priority_with_dfs_delta
+  condition: smaller
+- !<fixpoint>
+  body: !<if>
+    condition: !<atomic>
+      reducer: token_replacer
+    then: !<atomic>
+      reducer: perses_node_priority_with_dfs_delta
+  condition: 10
+
+
+Rebuilding spar-tree: The spartree is not dirty, and thus the rebuilding is skipped.
+
 =Fixpoint iteration 1. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -4567,6 +4592,14 @@ translationUnit {id=1,slot_type=translationUnit}
 ------------------------------------------------------------
 
 
+================The best program is updated.================
+
+token count change 40 -> 40
+------------------------------------------------------------
+
+
+Rebuilding spar-tree: The spartree is rebuilt.
+
 =Fixpoint iteration 3. Reducer: perses_node_priority_with_dfs_delta
 
 The spar-tree is the following.
@@ -5236,6 +5269,12 @@ The current best program is the following
 ===========Node edit action set cache is cleared.===========
 
     size before clearance = 0
+------------------------------------------------------------
+
+
+================The best program is updated.================
+
+token count change 40 -> 35
 ------------------------------------------------------------
 
 
@@ -9351,6 +9390,107 @@ translationUnit {id=270,slot_type=translationUnit}
        return main;
     }
 ------------------------------------------------------------
+
+
+The history of the reducer invocation.
+[0]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 40
+  characterCount: 90
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[1]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[2]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 40
+  characterCount: 90
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
+
+[3]: ReducerCallEvent
+---
+reducer:
+  shortName: "token_replacer"
+  description: "Randomly pick up an identifier or a set of identifiers, and replace\
+    \ it with another identifier."
+  deterministic: false
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_REMAIN"
+
+[4]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 40
+  characterCount: 90
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 1
+fileContentChangedWrtPrevious: true
+
+[5]: ReducerCallEvent
+---
+reducer:
+  shortName: "perses_node_priority_with_dfs_delta"
+  description: ""
+  deterministic: true
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_DECREASE"
+
+[6]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 35
+  characterCount: 81
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: true
+
+[7]: ReducerCallEvent
+---
+reducer:
+  shortName: "token_replacer"
+  description: "Randomly pick up an identifier or a set of identifiers, and replace\
+    \ it with another identifier."
+  deterministic: false
+  reductionResultSizeTrend: "BEST_RESULT_SIZE_REMAIN"
+
+[8]: StatsSnapshotEvent
+---
+stats:
+  tokenCount: 35
+  characterCount: 81
+  fileContents:
+  - fileName: "t.c"
+    contentDigest:
+      digest: {}
+      numOfStrings: 1
+numberOfNonDeletionIterations: 0
+fileContentChangedWrtPrevious: false
 
 
 #test success = 2

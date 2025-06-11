@@ -39,6 +39,7 @@ kt_jvm_library(
     ],
     deps = [
         "//antlropt/src/org/perses/antlr/ast",
+        "//src/org/perses/util",
         "//src/org/perses/util:Interval",
     ],
 )

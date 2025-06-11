@@ -16,7 +16,7 @@
  */
 package org.perses.spartree
 
-import com.google.common.collect.ImmutableBiMap
+import com.google.common.collect.HashBiMap
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.RuleNode
@@ -30,16 +30,27 @@ class SparTreeBuilder(
   private val sparTreeNodeFactory: SparTreeNodeFactory,
   private val parseTreeWithParser: ParseTreeWithParser,
   val simplifyTree: Boolean = true,
-) {
-  private val spar2antlrMap = HashMap<AbstractSparTreeNode, ParseTree>()
-  val sparAntlrBiMap by lazy {
-    ImmutableBiMap.Builder<AbstractSparTreeNode, ParseTree>()
-      .putAll(spar2antlrMap)
-      .build()
+) : ISparTreeAntlrTreeMapping {
+
+  private val spar2antlrMap = HashBiMap.create<AbstractSparTreeNode, ParseTree>()
+  private var built = false
+  val result by lazy {
+    build()
   }
-  val result = build()
+
+  override fun getMappedNodeFor(antlrNode: ParseTree): AbstractSparTreeNode? {
+    check(built) { "The spartree must be built" }
+    return spar2antlrMap.inverse()[antlrNode]
+  }
+
+  override fun getMappedNodeFor(sparTreeNode: AbstractSparTreeNode): ParseTree? {
+    check(built) { "The spartree must be built" }
+    return spar2antlrMap[sparTreeNode]
+  }
 
   private fun build(): SparTree {
+    check(!built) { "The spartree is already built." }
+    built = true
     val rootParseTree = parseTreeWithParser.tree
     val spar2antlrMap = spar2antlrMap
     val stack = SimpleStack<AbstractSparTreeNode>()
@@ -67,7 +78,10 @@ class SparTreeBuilder(
     if (simplifyTree) {
       SparTreeSimplifier.simplify(root)
     }
-    return SparTree(root, sparTreeNodeFactory)
+    return SparTree(
+      realRoot = root,
+      sparTreeNodeFactory = sparTreeNodeFactory,
+    )
   }
 
   private fun isEOFToken(node: ParseTree): Boolean {
@@ -87,18 +101,22 @@ class SparTreeBuilder(
   }
 
   companion object {
-    private fun isEmptyRuleNode(node: ParseTree): Boolean {
+    fun isEmptyRuleNode(node: ParseTree): Boolean {
       return isRuleNode(node) && node.childCount == 0
     }
 
-    private fun isRuleNode(node: ParseTree): Boolean {
+    fun isRuleNode(node: ParseTree): Boolean {
       lazyAssert { node is RuleNode != node is TerminalNode }
       return node is RuleNode
     }
 
-    private fun isTokenNode(node: ParseTree): Boolean {
+    fun isTokenNode(node: ParseTree): Boolean {
       lazyAssert { node is RuleNode != node is TerminalNode }
       return node is TerminalNode
+    }
+
+    fun isEOFToken(node: ParseTree): Boolean {
+      return isTokenNode(node) && (node as TerminalNode).symbol.type == Token.EOF
     }
 
     private fun areNodeIdsUnique(root: AbstractSparTreeNode): Boolean {
@@ -110,5 +128,16 @@ class SparTreeBuilder(
       }
       return true
     }
+
+    fun createSparTree(
+      sparTreeNodeFactory: SparTreeNodeFactory,
+      parseTreeWithParser: ParseTreeWithParser,
+    ): SparTree = SparTreeBuilder(sparTreeNodeFactory, parseTreeWithParser).result
+
+    fun createSparTreeNode(
+      sparTreeNodeFactory: SparTreeNodeFactory,
+      parseTreeWithParser: ParseTreeWithParser,
+    ) =
+      createSparTree(sparTreeNodeFactory, parseTreeWithParser).detachRootFromTree()
   }
 }

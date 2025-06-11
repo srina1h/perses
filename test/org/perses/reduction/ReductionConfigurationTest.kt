@@ -81,7 +81,7 @@ class ReductionConfigurationTest {
       .builderWithBuiltinLanguages().build().getParserFacadeListForOrNull(languageKind)!!
       .defaultParserFacade.create()
     val configuration = ReductionConfiguration(
-      fixpointReduction = true,
+      fixpointReductionForMainReducer = true,
       enableTestScriptExecutionCaching = true,
       defaultDeltaDebuggerTypeForKleene = EnumListInputMinimizerType.DFS,
       numOfReductionThreads = numOfReductionThreads,
@@ -96,6 +96,10 @@ class ReductionConfigurationTest {
         windowSizeForLocalExhaustivePatternReduction = 4,
         vulcanFixpoint = false,
       ),
+      lprConfig = ReductionConfiguration.LPRConfig(
+        llmClientPath = null,
+        lprFixpoint = false,
+      ),
     )
     val mainFile = (ioManager.reductionInputs as RegularReductionInputs).mainFile
     assertThat(mainFile.file).isEqualTo(sourceFile.file)
@@ -109,7 +113,7 @@ class ReductionConfigurationTest {
       assertThat(tempRootFolder.parent).isEqualTo(workingDirectory)
       assertThat(tempRootFolder.fileName.toString()).startsWith("PersesTempRoot_t.c_r.sh_")
     }
-    assertThat(configuration.fixpointReduction).isTrue()
+    assertThat(configuration.fixpointReductionForMainReducer).isTrue()
   }
 
   companion object {

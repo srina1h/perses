@@ -4,7 +4,7 @@ set -o pipefail
 set -o nounset
 set -o errexit
 
-if [[ "$#" != "1" ]] ; then
+if [[ "$#" != "1" ]]; then
   echo "$0 <dir contains gcda files>"
   exit 1
 fi

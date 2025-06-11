@@ -2,8 +2,14 @@
 
 set -e
 
-readonly CI_DIR="$( cd $(dirname $0) ; pwd -P )"
-readonly ROOT_DIR="$( cd ${CI_DIR}/.. ; pwd -P )"
+readonly CI_DIR="$(
+  cd $(dirname $0)
+  pwd -P
+)"
+readonly ROOT_DIR="$(
+  cd ${CI_DIR}/..
+  pwd -P
+)"
 readonly BEHAV_DIR="${ROOT_DIR}/behav"
 
 cd ${CI_DIR}

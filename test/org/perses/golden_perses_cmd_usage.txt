@@ -136,6 +136,17 @@ Usage: org.perses.Main [options]
       Whether to enable lightweight refreshing
       Default: true
 
+[LPR Reducer Control]  Options:
+    --enable-lpr
+      Enable LPR (LLM-based transformations to improve reduction results).
+      Default: false
+    --lpr-fixpoint
+      Enable lpr fixpoint. Everytime a transformation makes progress, go to 
+      the next transformation.
+      Default: false
+    --llm-client-script
+      The script to invoke LLM.
+
 [Verbosity]  Options:
     --verbosity
       verbosity of logging

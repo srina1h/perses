@@ -19,6 +19,7 @@ package org.perses.reduction.io
 import org.perses.util.Util
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 
 class ReductionFolderManager internal constructor(
@@ -31,21 +32,30 @@ class ReductionFolderManager internal constructor(
   )
 
   fun createNextFolder(prefix: String = "", postfix: String = ""): ReductionFolder {
-    check(!isRootFolderDeleted()) { "The root folder has been deleted." }
-    val folderName = sequenceGenerator.next()
-    return createNamedFolder(prefix + folderName + postfix)
+    val folderName = prefix + sequenceGenerator.next() + postfix
+    return ReductionFolder(reductionInputs, createDirectory(folderName))
   }
 
-  private fun createNamedFolder(folderName: String): ReductionFolder {
-    val folder = rootFolder.resolve(folderName)
-    check(!Files.exists(folder)) { "The folder already exists. $folder" }
-    Files.createDirectory(folder)
-    check(Files.isDirectory(folder)) { "Failed to create folder $folder" }
-    return ReductionFolder(reductionInputs, folder)
+  fun createTempDirectory(prefix: String = "", postfix: String = ""): Path {
+    val directoryName = prefix + sequenceGenerator.next() + postfix
+    return createDirectory(directoryName).also { directory ->
+      check(Files.isDirectory(directory)) { directory }
+      check(Util.isEmptyDirectory(directory)) { directory }
+    }
+  }
+
+  private fun createDirectory(directoryName: String): Path {
+    check(!isRootFolderDeleted()) { "The root folder has been deleted." }
+    val directory = rootFolder.resolve(directoryName)
+    check(!Files.exists(directory)) { "The directory already exists. $directory" }
+    Files.createDirectory(directory)
+    check(Files.isDirectory(directory)) { "Failed to create directory $directory" }
+    return directory
   }
 
   private fun isRootFolderDeleted() = !Files.exists(rootFolder)
 
+  @OptIn(ExperimentalPathApi::class)
   fun deleteRootFolder() {
     if (isRootFolderDeleted()) {
       return

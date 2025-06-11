@@ -74,7 +74,7 @@ abstract class AbstractReductionIOManager<
 
   fun updateBestResult(program: P) {
     /*
-     * We try to make the writing-best-resut operation atomic.
+     * We try to make the writing-best-result operation atomic.
      *
      * https://github.com/uw-pluverse/perses/issues/9
      *

@@ -51,7 +51,7 @@ class SimpleLevelPartitionPolicyTest {
   @Test
   fun testRegionWithOneNode() {
     val region = ReductionLevel(1)
-    val node: AbstractSparTreeNode = tree.root
+    val node: AbstractSparTreeNode = tree.realRoot
     region.addNode(node)
     run {
       val result = policy.partition(region, 1)
@@ -74,8 +74,8 @@ class SimpleLevelPartitionPolicyTest {
   @Test
   fun regionWithTwoNodes() {
     val region = ReductionLevel(1)
-    val node1: AbstractSparTreeNode = tree.root
-    val node2: AbstractSparTreeNode = tree.root.getChild(0)
+    val node1: AbstractSparTreeNode = tree.realRoot
+    val node2: AbstractSparTreeNode = tree.realRoot.getChild(0)
     region.addNode(node1)
     region.addNode(node2)
     assertThat(region.nodeCount).isEqualTo(2)

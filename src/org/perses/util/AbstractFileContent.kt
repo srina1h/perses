@@ -19,11 +19,12 @@ package org.perses.util
 import com.google.common.hash.HashCode
 import com.google.common.hash.Hashing
 import com.google.common.hash.PrimitiveSink
+import java.io.InputStream
 import java.nio.file.Path
 import kotlin.io.path.readBytes
 import kotlin.io.path.writeBytes
 
-open class AbstractFileContent(protected val bytes: ByteArray) {
+sealed class AbstractFileContent(protected val bytes: ByteArray) {
 
   open val printableContentIfPossible: String by lazy {
     "SHA-512: $sha512"
@@ -32,6 +33,8 @@ open class AbstractFileContent(protected val bytes: ByteArray) {
   fun writeToFile(filePath: Path) {
     filePath.writeBytes(bytes)
   }
+
+  abstract val asTextFileContent: TextFileContent
 
   val length: Int
     get() = bytes.size
@@ -54,19 +57,26 @@ open class AbstractFileContent(protected val bytes: ByteArray) {
 
     override val printableContentIfPossible: String
       get() = text
+
+    override val asTextFileContent: TextFileContent
+      get() = this
   }
 
   class BinaryFileContent private constructor(
     bytes: ByteArray,
   ) : AbstractFileContent(bytes) {
 
-    val asTextFileContent by lazy {
+    override val asTextFileContent by lazy {
       TextFileContent(String(bytes, Charsets.UTF_8))
     }
 
     companion object {
       fun fromFile(filePath: Path): BinaryFileContent {
         return BinaryFileContent(filePath.readBytes())
+      }
+
+      fun fromInputStream(inputStream: InputStream): BinaryFileContent {
+        return BinaryFileContent(bytes = inputStream.readBytes())
       }
     }
   }

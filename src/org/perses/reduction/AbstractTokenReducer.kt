@@ -74,7 +74,7 @@ abstract class AbstractTokenReducer protected constructor(
     val sparTree = state.sparTree
     lazyAssert {
       SparTreeSimplifier.assertSingleEntrySingleExitPathProperty(
-        sparTree.getTreeRegardlessOfParsability().root,
+        sparTree.getTreeRegardlessOfParsability().realRoot,
       )
     }
     state.fixpointIterationStartEvent
@@ -85,7 +85,7 @@ abstract class AbstractTokenReducer protected constructor(
           state.fixpointIterationStartEvent.createBestProgramUpdatedEvent(
             currentTimeMillis = System.currentTimeMillis(),
             programSizeBefore = event.programSizeBefore,
-            programSizeAfter = event.program.tokenCount(),
+            programSizeAfter = event.program.tokenCount,
           ),
         )
       }
@@ -130,7 +130,7 @@ abstract class AbstractTokenReducer protected constructor(
     var prevTokenCount = Integer.MIN_VALUE
     futureList.forEach {
       it.payload?.let { current ->
-        val curTokenCount = current.program.program.tokenCount()
+        val curTokenCount = current.program.program.tokenCount
         if (prevTokenCount > curTokenCount) {
           return false
         }

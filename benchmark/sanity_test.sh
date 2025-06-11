@@ -5,7 +5,7 @@ set -o nounset
 set -o errexit
 set -o xtrace
 
-if [[ "$#" -eq "0" ]] ; then
+if [[ "$#" -eq "0" ]]; then
   echo "Usage: $0 <test script> <files...>" 1>&2
   exit 1
 fi
@@ -13,7 +13,7 @@ fi
 readonly TEST_SCRIPT=$1
 
 readonly TMP=$(mktemp -d)
-for file in "$@" ; do
+for file in "$@"; do
   # Check if the file exists
   if [ -f "${file}" ]; then
     echo "Processing file: ${file}"

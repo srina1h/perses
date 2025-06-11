@@ -10,7 +10,7 @@ echo "cwd: $(pwd)" 1>&2
 echo "golden: ${GOLDEN}" 1>&2
 echo "real: ${ACTUAL}" 1>&2
 
-if [[ "${GOLDEN}" == "${ACTUAL}" ]] ; then
+if [[ "${GOLDEN}" == "${ACTUAL}" ]]; then
   echo "Both files point to the same file. ${GLODEN}" 1>&2
   exit 1
 fi
@@ -18,7 +18,7 @@ fi
 diff "${GOLDEN}" "${ACTUAL}" &> /dev/null
 readonly EXIT_CODE="$?"
 
-if [[ "${EXIT_CODE}" != 0 ]] ; then
+if [[ "${EXIT_CODE}" != 0 ]]; then
   # Note that the following does not return 1 even if there is a difference.
   echo "=====golden file====="
   cat "${GOLDEN}"

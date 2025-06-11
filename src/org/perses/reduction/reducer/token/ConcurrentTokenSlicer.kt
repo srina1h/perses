@@ -79,6 +79,19 @@ class ConcurrentTokenSlicer(
       this@ConcurrentTokenSlicer.analyzeResultsAndGetBest(futureResult)
   }
 
+  object CompositeReducerAnnotation : ReducerAnnotation(
+    shortName = NAME_PREFIX,
+    description = "",
+    deterministic = true,
+    reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
+  ) {
+    override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
+      return REDUCER_ANNOTATIONS
+        .asSequence()
+        .flatMap { it.create(reducerContext) }
+        .toImmutableList()
+    }
+  }
   companion object {
 
     private const val NAME_PREFIX = "concurrent_token_slicer"
@@ -90,20 +103,6 @@ class ConcurrentTokenSlicer(
 
     fun getAnnotationForGranularity(granularity: Int): ConcurrentTokenSlicerAnnotation {
       return REDUCER_ANNOTATIONS.single { it.granularity == granularity }
-    }
-
-    val COMPOSITE_REDUCER = object : ReducerAnnotation(
-      shortName = NAME_PREFIX,
-      description = "",
-      deterministic = true,
-      reductionResultSizeTrend = ReductionResultSizeTrend.BEST_RESULT_SIZE_DECREASE,
-    ) {
-      override fun create(reducerContext: ReducerContext): ImmutableList<AbstractTokenReducer> {
-        return REDUCER_ANNOTATIONS
-          .asSequence()
-          .flatMap { it.create(reducerContext) }
-          .toImmutableList()
-      }
     }
   }
 

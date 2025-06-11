@@ -5,7 +5,7 @@ set -o nounset
 set -o errexit
 set -o xtrace
 
-if [[ $# != 1 ]] ; then
+if [[ $# != 1 ]]; then
   echo "$0 <perses_bin_path>"
   exit 1
 fi
@@ -49,11 +49,10 @@ echo "int a;" > "${SOURCE_FILE}"
 
 readonly LOG_FILE="${ROOT}/log.txt"
 ${PERSES_BIN} --test-script "${REDUCTION_SCRIPT}" --input-file "${SOURCE_FILE}" &> "${LOG_FILE}" || true
-if grep --quiet "The property test is flaky. #total runs: 6, #interesting: 3, #uninteresting: 3" "${LOG_FILE}" ; then
+if grep --quiet "The property test is flaky. #total runs: 6, #interesting: 3, #uninteresting: 3" "${LOG_FILE}"; then
   exit 0
 else
   cat "${LOG_FILE}"
   grep "flaky" "${LOG_FILE}"
   exit 1
 fi
-

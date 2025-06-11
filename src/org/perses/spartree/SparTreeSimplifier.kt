@@ -26,7 +26,7 @@ import org.perses.util.Util.lazyAssert
 object SparTreeSimplifier {
 
   fun simplify(tree: SparTree) {
-    simplify(tree.root)
+    simplify(tree.realRoot)
   }
 
   fun simplify(root: AbstractSparTreeNode): AbstractSparTreeNode {
@@ -50,7 +50,7 @@ object SparTreeSimplifier {
 
   @JvmStatic
   fun simplifySingleEntrySingleExitPath(tree: SparTree) {
-    simplifySingleEntrySingleExitPath(tree.root)
+    simplifySingleEntrySingleExitPath(tree.realRoot)
   }
 
   /**

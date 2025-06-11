@@ -3,7 +3,7 @@
 set -o pipefail
 set -o nounset
 
-if [[ $# != 3 ]] ; then 
+if [[ $# != 3 ]]; then
   echo "Usage: $0 <exp name> <bug folder> <reduction cmd>"
   exit 1
 fi
@@ -23,10 +23,9 @@ mkdir -p ${EXP_FOLDER}
 cp $SOURCE_FILE ${EXP_FOLDER}/
 cp $TEST_SCRIPT ${EXP_FOLDER}/
 
-
 cd ${EXP_FOLDER}
 
-if ! ./${TEST_SCRIPT_NAME} &> /dev/null ; then 
+if ! ./${TEST_SCRIPT_NAME} &> /dev/null; then
   echo "The initial test failed"
   exit 1
 fi

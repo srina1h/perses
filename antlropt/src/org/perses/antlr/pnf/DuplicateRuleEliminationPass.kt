@@ -20,6 +20,7 @@ import com.google.common.collect.LinkedHashMultimap
 import org.perses.antlr.ast.AbstractPersesRuleDefAst
 import org.perses.antlr.ast.PersesGrammar
 import org.perses.antlr.ast.RuleNameRegistry
+import org.perses.util.Util
 import org.perses.util.toImmutableList
 
 class DuplicateRuleEliminationPass(private val startRuleName: String) : AbstractPnfPass() {
@@ -32,7 +33,7 @@ class DuplicateRuleEliminationPass(private val startRuleName: String) : Abstract
       .symbolTable
       .ruleNameRegistry
       .getOrThrow(startRuleName)
-    val processedParserGramamr = AstUtil.fixpoint(parserGrammar) { inputGrammar ->
+    val processedParserGramamr = Util.fixpoint(parserGrammar) { inputGrammar ->
       val candidates = searchForCandidates(inputGrammar)
       if (candidates.isEmpty()) {
         return@fixpoint inputGrammar
