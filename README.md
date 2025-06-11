@@ -358,7 +358,7 @@ This repository contains the implementations of the techniques proposed in the f
 ```
 @article{perses-cdd,
   title={Toward a Better Understanding of Probabilistic Delta Debugging},
-  author={Zhou, Xintong and Xu, Zhenyang and Zhang, Mengxiao and Tian, Yongqiang and Sun, Chengnian},
+  author={Zhang, Mengxiao and Xu, Zhenyang and Tian, Yongqiang and Cheng, Xinru and Sun, Chengnian},
   booktitle={Proceedings of the 47th International Conference on Software Engineering},
   year={2025},
   doi = {10.1109/ICSE55347.2025.00117},
