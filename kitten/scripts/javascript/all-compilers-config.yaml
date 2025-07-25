@@ -10,3 +10,18 @@ programsUnderTest:
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JerryScriptCrashDetector"
+  
+  - command: "~/.jsvu/bin/v8"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
+  
+  - command: "~/.jsvu/bin/hermes"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
+  
