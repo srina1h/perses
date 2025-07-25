@@ -1,23 +1,28 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-set -o pipefail
-set -o nounset
-set -o errexit
+# This script is used by Bazel to compute workspace status
+# It outputs key-value pairs that Bazel uses for build stamping
 
-if command -v git > /dev/null; then
-  GIT_COMMIT_HASH=$(git show --format="%H" --no-patch)
-  GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  if git diff-index --quiet HEAD --; then
-    GIT_STATUS="Clean"
-  else
-    GIT_STATUS="Modified"
-  fi
+set -e
+
+# Get the current timestamp
+BUILD_TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+# Get git information if available
+if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
+    GIT_COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+    GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+    GIT_DIRTY=$(git diff-index --quiet HEAD -- 2>/dev/null && echo "clean" || echo "dirty")
 else
-  GIT_COMMIT_HASH=""
-  GIT_BRANCH=""
-  GIT_STATUS=""
+    GIT_COMMIT="unknown"
+    GIT_BRANCH="unknown"
+    GIT_DIRTY="unknown"
 fi
 
-echo "PERSES_GIT_COMMIT_HASH ${GIT_COMMIT_HASH}"
-echo "PERSES_GIT_BRANCH ${GIT_BRANCH}"
-echo "PERSES_GIT_STATUS ${GIT_STATUS}"
+# Output the build stamp information
+echo "BUILD_TIMESTAMP ${BUILD_TIMESTAMP}"
+echo "GIT_COMMIT ${GIT_COMMIT}"
+echo "GIT_BRANCH ${GIT_BRANCH}"
+echo "GIT_DIRTY ${GIT_DIRTY}"
+echo "BUILD_USER $(whoami)"
+echo "BUILD_HOST $(hostname)" 
