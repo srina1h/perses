@@ -25,3 +25,17 @@ programsUnderTest:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
   
+  # - command: "/Users/srinath/.jsvu/bin/jsc"
+  #   flagsToTest:
+  #     - flags: []
+  #   versionFlags:
+  #     flags: ["--version"]
+  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JSCCrashDetector"
+  
+  - command: "/Users/srinath/.jsvu/bin/graaljs"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
+  

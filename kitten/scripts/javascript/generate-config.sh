@@ -26,6 +26,16 @@ if [ ! -f "$JSVU_PATH/hermes" ]; then
     echo "You can install it with: jsvu --engines=hermes"
 fi
 
+# if [ ! -f "$JSVU_PATH/jsc" ]; then
+#     echo "Warning: JavaScriptCore not found at $JSVU_PATH/jsc"
+#     echo "You can install it with: jsvu --engines=jsc"
+# fi
+
+if [ ! -f "$JSVU_PATH/graaljs" ]; then
+    echo "Warning: GraalJS not found at $JSVU_PATH/graaljs"
+    echo "You can install it with: jsvu --engines=graaljs"
+fi
+
 # Generate the configuration file
 cat > "all-compilers-config.yaml" << EOF
 language: "JAVASCRIPT"
@@ -54,6 +64,20 @@ programsUnderTest:
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
+  
+  # - command: "$JSVU_PATH/jsc"
+  #   flagsToTest:
+  #     - flags: []
+  #   versionFlags:
+  #     flags: ["--version"]
+  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JSCCrashDetector"
+  
+  - command: "$JSVU_PATH/graaljs"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
 EOF
 
 echo "Configuration file generated successfully!"
