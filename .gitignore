@@ -41,3 +41,6 @@ perses_result*
 t.c.*.orig
 
 perses_deploy.jar
+
+seeds
+
