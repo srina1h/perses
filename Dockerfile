@@ -142,13 +142,11 @@ if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
     ls -la /usr/local/bin/js-engines/graaljs-temp/
     if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/js" ]; then
         echo "Found graaljs-24.2.2-linux-amd64/bin/js, creating wrapper script..."
-        cat > /usr/local/bin/js-engines/graaljs << 'EOF'
-#!/bin/bash
-export GRAALVM_HOME="/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64"
-export JAVA_HOME="$GRAALVM_HOME"
-export PATH="$GRAALVM_HOME/bin:$PATH"
-exec "$GRAALVM_HOME/bin/js" "$@"
-EOF
+        echo '#!/bin/bash' > /usr/local/bin/js-engines/graaljs
+        echo 'export GRAALVM_HOME="/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64"' >> /usr/local/bin/js-engines/graaljs
+        echo 'export JAVA_HOME="$GRAALVM_HOME"' >> /usr/local/bin/js-engines/graaljs
+        echo 'export PATH="$GRAALVM_HOME/bin:$PATH"' >> /usr/local/bin/js-engines/graaljs
+        echo 'exec "$GRAALVM_HOME/bin/js" "$@"' >> /usr/local/bin/js-engines/graaljs
         chmod +x /usr/local/bin/js-engines/graaljs
     elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs" ]; then
         echo "Found graaljs-24.2.2-linux-amd64/graaljs, copying..."
