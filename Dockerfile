@@ -33,7 +33,9 @@ RUN BAZEL_VERSION=7.4.1 \
 RUN npm install -g jsvu
 
 # Install JavaScript engines via JSVU
-RUN jsvu --os=linux64 --engines=v8,hermes,graaljs,jsc
+RUN jsvu --os=linux64 --engines=v8,hermes,graaljs,jsc \
+    && echo "Checking what engines were installed:" \
+    && ls -la ~/.jsvu/engines/ || echo "No engines directory found"
 
 # Debug: Check what was installed
 RUN echo "Checking JSVU installation:" \
@@ -43,21 +45,21 @@ RUN echo "Checking JSVU installation:" \
     && echo "Checking individual engine directories:" \
     && ls -la ~/.jsvu/engines/*/ || echo "No engines found"
 
-# Copy engines to a standard location (instead of symlinks to avoid missing files)
+# Copy engines to a standard location (only copy engines that exist)
 RUN mkdir -p /usr/local/bin/js-engines \
     && echo "Copying engines..." \
     && echo "V8 source: ~/.jsvu/engines/v8/" \
     && ls -la ~/.jsvu/engines/v8/ || echo "V8 source not found" \
-    && cp -r ~/.jsvu/engines/v8/ /usr/local/bin/js-engines/v8/ \
+    && if [ -d "~/.jsvu/engines/v8" ]; then cp -r ~/.jsvu/engines/v8/ /usr/local/bin/js-engines/v8/; fi \
     && echo "Hermes source: ~/.jsvu/engines/hermes/" \
-    && ls -la ~/.jsvu/engines/hermes/ || echo "Hermes source not found" \
-    && cp -r ~/.jsvu/engines/hermes/ /usr/local/bin/js-engines/hermes/ \
+    && ls -la ~/.jsvu/engines/hermes/ 2>/dev/null || echo "Hermes source not found" \
+    && if [ -d "~/.jsvu/engines/hermes" ]; then cp -r ~/.jsvu/engines/hermes/ /usr/local/bin/js-engines/hermes/; fi \
     && echo "GraalJS source: ~/.jsvu/engines/graaljs/" \
-    && ls -la ~/.jsvu/engines/graaljs/ || echo "GraalJS source not found" \
-    && cp -r ~/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs/ \
+    && ls -la ~/.jsvu/engines/graaljs/ 2>/dev/null || echo "GraalJS source not found" \
+    && if [ -d "~/.jsvu/engines/graaljs" ]; then cp -r ~/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs/; fi \
     && echo "JSC source: ~/.jsvu/engines/jsc/" \
-    && ls -la ~/.jsvu/engines/jsc/ || echo "JSC source not found" \
-    && cp -r ~/.jsvu/engines/jsc/ /usr/local/bin/js-engines/jsc/ \
+    && ls -la ~/.jsvu/engines/jsc/ 2>/dev/null || echo "JSC source not found" \
+    && if [ -d "~/.jsvu/engines/jsc" ]; then cp -r ~/.jsvu/engines/jsc/ /usr/local/bin/js-engines/jsc/; fi \
     && echo "Checking copied engines:" \
     && ls -la /usr/local/bin/js-engines/
 
@@ -119,6 +121,8 @@ echo "DEBUG: Checking if V8 exists at $HOME/.jsvu/engines/v8/v8"
 # Ensure engines are available (they should be copied during build)
 echo "Checking if engines are available..."
 mkdir -p /usr/local/bin/js-engines
+echo "Available engines:"
+ls -la /usr/local/bin/js-engines/ || echo "No engines found"
 if [ ! -f "/usr/local/bin/js-engines/v8/v8" ]; then
     echo "WARNING: V8 not found in /usr/local/bin/js-engines/v8/v8"
     echo "Checking original location..."
