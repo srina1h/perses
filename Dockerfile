@@ -140,9 +140,9 @@ if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
     echo "Copying GraalJS binary to standard location..."
     echo "Checking what's in graaljs-temp:"
     ls -la /usr/local/bin/js-engines/graaljs-temp/
-    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/graaljs" ]; then
-        echo "Found graaljs-24.2.2-linux-amd64/bin/graaljs, copying..."
-        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/graaljs /usr/local/bin/js-engines/graaljs
+    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/js" ]; then
+        echo "Found graaljs-24.2.2-linux-amd64/bin/js, copying..."
+        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/js /usr/local/bin/js-engines/graaljs
     elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs" ]; then
         echo "Found graaljs-24.2.2-linux-amd64/graaljs, copying..."
         cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs /usr/local/bin/js-engines/graaljs
