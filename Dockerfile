@@ -35,12 +35,22 @@ RUN npm install -g jsvu
 # Install JavaScript engines via JSVU
 RUN jsvu --os=linux64 --engines=v8,hermes,graaljs,jsc
 
+# Debug: Check what was installed
+RUN echo "Checking JSVU installation:" \
+    && ls -la ~/.jsvu/ \
+    && echo "Checking engines directory:" \
+    && ls -la ~/.jsvu/engines/ \
+    && echo "Checking individual engine directories:" \
+    && ls -la ~/.jsvu/engines/*/ || echo "No engines found"
+
 # Create symlinks for the engines in a standard location
 RUN mkdir -p /usr/local/bin/js-engines \
-    && ln -sf ~/.jsvu/v8 /usr/local/bin/js-engines/v8 \
-    && ln -sf ~/.jsvu/hermes /usr/local/bin/js-engines/hermes \
-    && ln -sf ~/.jsvu/graaljs /usr/local/bin/js-engines/graaljs \
-    && ln -sf ~/.jsvu/jsc /usr/local/bin/js-engines/jsc
+    && ln -sf ~/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8 \
+    && ln -sf ~/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes \
+    && ln -sf ~/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs \
+    && ln -sf ~/.jsvu/engines/jsc/jsc /usr/local/bin/js-engines/jsc \
+    && echo "Checking symlinks:" \
+    && ls -la /usr/local/bin/js-engines/
 
 # Clone the perses repository
 WORKDIR /workspace
@@ -91,10 +101,39 @@ echo "Starting differential testing setup..."
 
 # Verify JavaScript engines are available
 echo "Verifying JavaScript engines..."
-/usr/local/bin/js-engines/v8 --version
-/usr/local/bin/js-engines/hermes --version
-/usr/local/bin/js-engines/graaljs --version
-/usr/local/bin/js-engines/jsc --version
+echo "Checking symlinks:"
+ls -la /usr/local/bin/js-engines/
+echo "Checking original files:"
+ls -la ~/.jsvu/engines/
+echo "Testing engines:"
+if [ -f "/usr/local/bin/js-engines/v8" ]; then
+    /usr/local/bin/js-engines/v8 --version
+else
+    echo "ERROR: V8 not found!"
+    echo "Checking if V8 exists in original location:"
+    ls -la ~/.jsvu/engines/v8/ || echo "V8 directory not found"
+fi
+if [ -f "/usr/local/bin/js-engines/hermes" ]; then
+    /usr/local/bin/js-engines/hermes --version
+else
+    echo "ERROR: Hermes not found!"
+    echo "Checking if Hermes exists in original location:"
+    ls -la ~/.jsvu/engines/hermes/ || echo "Hermes directory not found"
+fi
+if [ -f "/usr/local/bin/js-engines/graaljs" ]; then
+    /usr/local/bin/js-engines/graaljs --version
+else
+    echo "ERROR: GraalJS not found!"
+    echo "Checking if GraalJS exists in original location:"
+    ls -la ~/.jsvu/engines/graaljs/ || echo "GraalJS directory not found"
+fi
+if [ -f "/usr/local/bin/js-engines/jsc" ]; then
+    /usr/local/bin/js-engines/jsc --version
+else
+    echo "ERROR: JSC not found!"
+    echo "Checking if JSC exists in original location:"
+    ls -la ~/.jsvu/engines/jsc/ || echo "JSC directory not found"
+fi
 
 # Determine number of threads based on SLURM environment or system cores
 if [[ -n "${SLURM_CPUS_PER_TASK:-}" ]]; then
