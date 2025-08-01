@@ -44,3 +44,8 @@ perses_deploy.jar
 
 seeds
 
+seeds_full
+
+/kitten/default_finding_folder*
+/kitten/default_temp_folder*
+/kitten/default_mutants_folder*

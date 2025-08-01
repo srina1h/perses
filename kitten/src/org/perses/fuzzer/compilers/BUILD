@@ -11,6 +11,8 @@ kt_jvm_library(
         "AbstractCompilerConfigurationFacade.kt",
         "AbstractCompilerCrashDetector.kt",
         "CommonCompilationAction.kt",
+        "DifferentialTestResult.kt",
+        "DifferentialTester.kt",
         "DefaultCompilationConfigurationFacade.kt",
         "ICompilationAction.kt",
         "ICompilerCrashDetector.kt",

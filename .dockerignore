@@ -1,0 +1,64 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+doc/
+LICENSE
+
+# Build artifacts
+bazel-*
+bazel-bin/
+bazel-out/
+bazel-testlogs/
+bazel-workspace/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test data (large directories)
+test_data/
+benchmark/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Results (will be mounted as volume)
+results/
+kitten/temp_testing_campaigns/
+
+# Node modules (if any)
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Java class files
+*.class
+
+# Archive files
+*.tar.gz
+*.zip
+*.jar
+
+# Docker files (to avoid recursive copying)
+Dockerfile*
+docker-compose*
+.dockerignore 

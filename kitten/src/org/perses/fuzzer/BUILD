@@ -12,6 +12,7 @@ kt_jvm_library(
         "CrashClusterFolder.kt",
         "CrashClusterIndex.kt",
         "CrashInstanceFolder.kt",
+        "DifferentialFindingFolder.kt",
         "DistributionTable.kt",
         "DuplicateBugFolder.kt",
         "ExtensionScript.kt",

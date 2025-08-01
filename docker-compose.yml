@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  kitten_df:
+    build: .
+    container_name: kitten_df
+    volumes:
+      # Mount results directory to persist findings
+      - ./results:/workspace/kitten/temp_testing_campaigns
+      # Mount logs directory
+      - ./logs:/workspace/logs
+      # Optional: Mount seeds directory if you want to add custom seeds
+      - ./custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro
+    environment:
+      # SLURM environment variables will be passed through
+      - SLURM_CPUS_PER_TASK
+      - SLURM_JOB_CPUS_PER_NODE
+      - SLURM_NTASKS
+      - SLURM_MEM_PER_NODE
+      # Default JVM options (will be overridden by SLURM values if available)
+      - JAVA_OPTS=-Xmx16G -Xms4G
+    # Remove hardcoded resource limits for SLURM compatibility
+    # SLURM will handle resource allocation
+    # Restart policy
+    restart: unless-stopped
+    # Run in detached mode by default
+    tty: true
+    stdin_open: true 

@@ -22,8 +22,11 @@ import com.google.common.flogger.FluentLogger
 import com.google.common.io.Files
 import org.perses.fuzzer.compilers.AbstractCompilerConfigurationFacade
 import org.perses.fuzzer.compilers.DefaultCompilationConfigurationFacade
+import org.perses.fuzzer.compilers.DifferentialTester
+import org.perses.fuzzer.compilers.DifferentialTestResult
 import org.perses.fuzzer.compilers.ICompilationAction
 import org.perses.fuzzer.compilers.ICompilerCrashDetector
+import org.perses.fuzzer.DifferentialFindingFolder
 import org.perses.fuzzer.config.SeedFolder
 import org.perses.fuzzer.config.TestingConfiguration
 import org.perses.fuzzer.coveragecollector.CoverageCollectorFactory
@@ -79,6 +82,7 @@ class FuzzerDriver(
     testingConfiguration,
     parserFacadeFactory,
   )
+  val differentialTester = DifferentialTester(facades)
   val extension: AbstractExtensionScript = if (options.generalFlags.extensionScript == null) {
     NullExtensionScript()
   } else {
@@ -408,21 +412,31 @@ class FuzzerDriver(
           val mutationResult =
             mutationOperatorExecutor.mutateWithTreeLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          for (facade in facades) {
-            for (action in facade.compilationActions) {
-              testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
-            }
-          }
-          scheduler.update(mutationResult.mutatedSparTree!!, mutantFile)
+          
+          // Create a persistent copy for differential testing
+          val persistentMutantFile = File(
+            mutantsFolder,
+            "mutant_${mutationOperationCounter.incrementAndGet()}_${System.currentTimeMillis()}." +
+              Files.getFileExtension(seedFile.name),
+          )
+          mutantFile.copyTo(persistentMutantFile)
+          
+          testDifferentially(persistentMutantFile, seedFile, seedProgram)
+          scheduler.update(mutationResult.mutatedSparTree!!, persistentMutantFile)
         } else {
           val mutationResult =
             mutationOperatorExecutor.mutateWithTokenLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          for (facade in facades) {
-            for (action in facade.compilationActions) {
-              testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
-            }
-          }
+          
+          // Create a persistent copy for differential testing
+          val persistentMutantFile = File(
+            mutantsFolder,
+            "mutant_${mutationOperationCounter.incrementAndGet()}_${System.currentTimeMillis()}." +
+              Files.getFileExtension(seedFile.name),
+          )
+          mutantFile.copyTo(persistentMutantFile)
+          
+          testDifferentially(persistentMutantFile, seedFile, seedProgram)
         }
         successfullyCreatedMutantCounter.incrementAndGet()
         logger.ktAt(Level.FINE) { "running extension on the mutant $mutantFile" }
@@ -459,6 +473,46 @@ class FuzzerDriver(
         action,
         crashDetectorResult.asCrash(),
       )
+    }
+  }
+
+  @VisibleForTesting
+  fun testDifferentially(
+    mutantFile: File,
+    seedFile: File,
+    seedProgram: TokenizedProgram,
+  ) {
+    logger.ktAt(Level.FINE) { "Running differential testing on $mutantFile" }
+    
+    val differentialResult = differentialTester.testDifferentially(mutantFile)
+    
+    if (differentialResult.hasDiscrepancy) {
+      logger.ktAt(Level.FINE) {
+        "Differential discrepancies found with the seed file $seedFile"
+      }
+      
+      // Create differential finding folder for each discrepancy
+      for (action in facades.first().compilationActions) {
+        DifferentialFindingFolder.create(
+          findingFolder,
+          seedProgram,
+          seedFile,
+          mutantFile,
+          differentialResult,
+          action
+        )
+      }
+      
+      logger.ktInfo {
+        "Found ${differentialResult.discrepancies.size} discrepancies between engines"
+      }
+    }
+    
+    // Also run traditional crash detection for backward compatibility
+    for (facade in facades) {
+      for (action in facade.compilationActions) {
+        testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
+      }
     }
   }
 
