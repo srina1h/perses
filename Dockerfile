@@ -45,9 +45,18 @@ RUN echo "Checking JSVU installation:" \
 
 # Create symlinks for the engines in a standard location
 RUN mkdir -p /usr/local/bin/js-engines \
+    && echo "Creating symlinks..." \
+    && echo "V8 source: ~/.jsvu/engines/v8/v8" \
+    && ls -la ~/.jsvu/engines/v8/v8 || echo "V8 source not found" \
     && ln -sf ~/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8 \
+    && echo "Hermes source: ~/.jsvu/engines/hermes/hermes" \
+    && ls -la ~/.jsvu/engines/hermes/hermes || echo "Hermes source not found" \
     && ln -sf ~/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes \
+    && echo "GraalJS source: ~/.jsvu/engines/graaljs/graaljs" \
+    && ls -la ~/.jsvu/engines/graaljs/graaljs || echo "GraalJS source not found" \
     && ln -sf ~/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs \
+    && echo "JSC source: ~/.jsvu/engines/jsc/jsc" \
+    && ls -la ~/.jsvu/engines/jsc/jsc || echo "JSC source not found" \
     && ln -sf ~/.jsvu/engines/jsc/jsc /usr/local/bin/js-engines/jsc \
     && echo "Checking symlinks:" \
     && ls -la /usr/local/bin/js-engines/
@@ -55,8 +64,8 @@ RUN mkdir -p /usr/local/bin/js-engines \
 # Clone the perses repository
 WORKDIR /workspace
 RUN git clone https://github.com/srina1h/perses.git .
-
-# Create necessary directories
+RUN git checkout diff
+# Create necessary directoriesß
 RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascript \
     && mkdir -p kitten/temp_testing_campaigns/differential_processing_folder_javascript \
     && mkdir -p kitten/temp_testing_campaigns/differential_duplicate_folder_javascript \
@@ -101,6 +110,27 @@ echo "Starting differential testing setup..."
 
 # Verify JavaScript engines are available
 echo "Verifying JavaScript engines..."
+
+# Create symlinks if they don't exist (fallback)
+echo "Ensuring symlinks exist..."
+mkdir -p /usr/local/bin/js-engines
+if [ ! -f "/usr/local/bin/js-engines/v8" ] && [ -f "~/.jsvu/engines/v8/v8" ]; then
+    echo "Creating V8 symlink..."
+    ln -sf ~/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8
+fi
+if [ ! -f "/usr/local/bin/js-engines/hermes" ] && [ -f "~/.jsvu/engines/hermes/hermes" ]; then
+    echo "Creating Hermes symlink..."
+    ln -sf ~/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes
+fi
+if [ ! -f "/usr/local/bin/js-engines/graaljs" ] && [ -f "~/.jsvu/engines/graaljs/graaljs" ]; then
+    echo "Creating GraalJS symlink..."
+    ln -sf ~/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs
+fi
+if [ ! -f "/usr/local/bin/js-engines/jsc" ] && [ -f "~/.jsvu/engines/jsc/jsc" ]; then
+    echo "Creating JSC symlink..."
+    ln -sf ~/.jsvu/engines/jsc/jsc /usr/local/bin/js-engines/jsc
+fi
+
 echo "Checking symlinks:"
 ls -la /usr/local/bin/js-engines/
 echo "Checking original files:"
