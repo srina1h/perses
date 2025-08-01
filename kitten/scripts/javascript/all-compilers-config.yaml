@@ -11,28 +11,21 @@ programsUnderTest:
   #     flags: ["--version"]
   #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JerryScriptCrashDetector"
   
-  - command: "/Users/srinath/.jsvu/bin/v8"
+  - command: "/usr/local/bin/js-engines/v8/v8"
     flagsToTest:
       - flags: []
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
   
-  - command: "/Users/srinath/.jsvu/bin/hermes"
+  - command: "/usr/local/bin/js-engines/hermes/hermes"
     flagsToTest:
       - flags: []
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
   
-  # - command: "/Users/srinath/.jsvu/bin/jsc"
-  #   flagsToTest:
-  #     - flags: []
-  #   versionFlags:
-  #     flags: ["--version"]
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JSCCrashDetector"
-  
-  - command: "/Users/srinath/.jsvu/bin/graaljs"
+  - command: "/usr/local/bin/js-engines/graaljs/graaljs"
     flagsToTest:
       - flags: []
     versionFlags:

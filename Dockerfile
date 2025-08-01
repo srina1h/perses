@@ -32,8 +32,15 @@ RUN BAZEL_VERSION=7.4.1 \
 # Install JSVU (JavaScript Version Updater)
 RUN npm install -g jsvu
 
-# Install JavaScript engines via JSVU
-RUN jsvu --os=linux64 --engines=v8,hermes,graaljs,jsc \
+# Install JavaScript engines via JSVU (try installing them individually)
+RUN echo "Installing V8..." \
+    && jsvu --os=linux64 --engines=v8 \
+    && echo "Installing Hermes..." \
+    && jsvu --os=linux64 --engines=hermes \
+    && echo "Installing GraalJS..." \
+    && jsvu --os=linux64 --engines=graaljs \
+    && echo "Installing JSC..." \
+    && jsvu --os=linux64 --engines=jsc \
     && echo "Checking what engines were installed:" \
     && ls -la ~/.jsvu/engines/ || echo "No engines directory found"
 
@@ -67,6 +74,9 @@ RUN mkdir -p /usr/local/bin/js-engines \
 WORKDIR /workspace
 RUN git clone https://github.com/srina1h/perses.git .
 RUN git checkout diff
+
+# Prepare seeds by running the prepare_seeds.sh script
+RUN chmod +x prepare_seeds.sh && ./prepare_seeds.sh
 # Create necessary directoriesß
 RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascript \
     && mkdir -p kitten/temp_testing_campaigns/differential_processing_folder_javascript \
