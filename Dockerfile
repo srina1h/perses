@@ -140,7 +140,10 @@ if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
     echo "Copying GraalJS binary to standard location..."
     echo "Checking what's in graaljs-temp:"
     ls -la /usr/local/bin/js-engines/graaljs-temp/
-    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64" ]; then
+    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs" ]; then
+        echo "Found graaljs-24.2.2-linux-amd64/graaljs, copying..."
+        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs /usr/local/bin/js-engines/graaljs
+    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64" ]; then
         echo "Found graaljs-24.2.2-linux-amd64, copying..."
         cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64 /usr/local/bin/js-engines/graaljs
     elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs" ]; then
@@ -148,7 +151,10 @@ if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
         cp /usr/local/bin/js-engines/graaljs-temp/graaljs /usr/local/bin/js-engines/graaljs
     else
         echo "ERROR: No GraalJS binary found in temp directory!"
+        echo "Searching for any graal executable:"
         find /usr/local/bin/js-engines/graaljs-temp/ -type f -executable -name "*graal*" -ls
+        echo "Listing contents of graaljs-24.2.2-linux-amd64 directory:"
+        ls -la /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/
     fi
 elif [ -f "$HOME/.jsvu/bin/graaljs" ]; then
     echo "Copying GraalJS binary from ~/.jsvu/bin/graaljs..."
