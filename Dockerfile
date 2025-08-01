@@ -141,9 +141,9 @@ fi
 
 # Also check ~/.jsvu/engines/ directory as fallback
 echo "Checking for engines in ~/.jsvu/engines/..."
-if [ -f "$HOME/.jsvu/engines/v8/v8" ] && [ ! -f "/usr/local/bin/js-engines/v8" ]; then
-    echo "Copying V8 from ~/.jsvu/engines/v8/v8..."
-    cp $HOME/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8
+if [ -d "$HOME/.jsvu/engines/v8" ] && [ ! -d "/usr/local/bin/js-engines/v8" ]; then
+    echo "Copying V8 directory from ~/.jsvu/engines/v8/..."
+    cp -r $HOME/.jsvu/engines/v8/ /usr/local/bin/js-engines/v8/
 fi
 if [ -f "$HOME/.jsvu/engines/hermes/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then
     echo "Copying Hermes from ~/.jsvu/engines/hermes/hermes..."
@@ -163,13 +163,13 @@ echo "Checking original files:"
 ls -la $HOME/.jsvu/engines/
 echo "Testing engines:"
 echo "DEBUG: About to test V8..."
-if [ -f "/usr/local/bin/js-engines/v8" ]; then
+if [ -f "/usr/local/bin/js-engines/v8/v8" ]; then
     echo "DEBUG: V8 exists, testing..."
-    /usr/local/bin/js-engines/v8 --version
+    /usr/local/bin/js-engines/v8/v8 --version
 else
     echo "ERROR: V8 not found!"
     echo "Checking if V8 exists in original location:"
-    ls -la $HOME/.jsvu/bin/v8 || echo "V8 not found in original location"
+    ls -la $HOME/.jsvu/engines/v8/v8 || echo "V8 not found in original location"
     echo "DEBUG: Skipping V8 test since engine doesn't exist"
 fi
 if [ -f "/usr/local/bin/js-engines/hermes" ]; then

@@ -11,7 +11,7 @@ programsUnderTest:
   #     flags: ["--version"]
   #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JerryScriptCrashDetector"
   
-  - command: "/usr/local/bin/js-engines/v8"
+  - command: "/usr/local/bin/js-engines/v8/v8"
     flagsToTest:
       - flags: []
     versionFlags:
