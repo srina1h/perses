@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV PATH=$JAVA_HOME/bin:$HOME/bin:$PATH
+ENV PATH=$JAVA_HOME/bin:/root/bin:$PATH
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -59,9 +59,22 @@ RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 RUN cat > /workspace/update-config.sh << 'EOF'
 #!/bin/bash
 # Update the differential testing config with correct paths
-sed -i 's|/Users/srinath/.jsvu/bin/v8|/usr/local/bin/js-engines/v8|g' kitten/scripts/javascript/differential-testing-config.yaml
-sed -i 's|/Users/srinath/.jsvu/bin/hermes|/usr/local/bin/js-engines/hermes|g' kitten/scripts/javascript/differential-testing-config.yaml
-sed -i 's|/Users/srinath/.jsvu/bin/graaljs|/usr/local/bin/js-engines/graaljs|g' kitten/scripts/javascript/differential-testing-config.yaml
+cd /workspace
+echo "Current directory: $(pwd)"
+echo "Checking if config file exists:"
+if [ -f "kitten/scripts/javascript/differential-testing-config.yaml" ]; then
+    echo "Config file found!"
+    echo "Updating configuration paths..."
+    sed -i 's|/Users/srinath/.jsvu/bin/v8|/usr/local/bin/js-engines/v8|g' kitten/scripts/javascript/differential-testing-config.yaml
+    sed -i 's|/Users/srinath/.jsvu/bin/hermes|/usr/local/bin/js-engines/hermes|g' kitten/scripts/javascript/differential-testing-config.yaml
+    sed -i 's|/Users/srinath/.jsvu/bin/graaljs|/usr/local/bin/js-engines/graaljs|g' kitten/scripts/javascript/differential-testing-config.yaml
+    echo "Configuration update completed."
+else
+    echo "ERROR: Config file not found!"
+    echo "Available files in kitten/scripts/javascript/:"
+    ls -la kitten/scripts/javascript/ || echo "Directory not found!"
+    exit 1
+fi
 EOF
 
 RUN chmod +x /workspace/update-config.sh
