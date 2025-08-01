@@ -134,9 +134,9 @@ if [ -f "$HOME/.jsvu/bin/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" 
     echo "Copying Hermes from ~/.jsvu/bin/hermes..."
     cp $HOME/.jsvu/bin/hermes /usr/local/bin/js-engines/hermes
 fi
-if [ -f "$HOME/.jsvu/bin/graaljs" ] && [ ! -f "/usr/local/bin/js-engines/graaljs" ]; then
-    echo "Copying GraalJS from ~/.jsvu/bin/graaljs..."
-    cp $HOME/.jsvu/bin/graaljs /usr/local/bin/js-engines/graaljs
+if [ -d "$HOME/.jsvu/engines/graaljs" ] && [ ! -d "/usr/local/bin/js-engines/graaljs" ]; then
+    echo "Copying GraalJS directory from ~/.jsvu/engines/graaljs/..."
+    cp -r $HOME/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs/
 fi
 
 # Also check ~/.jsvu/engines/ directory as fallback
@@ -165,7 +165,7 @@ echo "Testing engines:"
 echo "DEBUG: About to test V8..."
 if [ -f "/usr/local/bin/js-engines/v8/v8" ]; then
     echo "DEBUG: V8 exists, testing..."
-    /usr/local/bin/js-engines/v8/v8 --version
+    echo "console.log('V8 test successful');" | /usr/local/bin/js-engines/v8/v8
 else
     echo "ERROR: V8 not found!"
     echo "Checking if V8 exists in original location:"
@@ -173,18 +173,20 @@ else
     echo "DEBUG: Skipping V8 test since engine doesn't exist"
 fi
 if [ -f "/usr/local/bin/js-engines/hermes" ]; then
+    echo "DEBUG: About to test Hermes..."
     /usr/local/bin/js-engines/hermes --version
 else
     echo "ERROR: Hermes not found!"
     echo "Checking if Hermes exists in original location:"
     ls -la $HOME/.jsvu/bin/hermes || echo "Hermes not found in original location"
 fi
-if [ -f "/usr/local/bin/js-engines/graaljs" ]; then
-    /usr/local/bin/js-engines/graaljs --version
+if [ -f "/usr/local/bin/js-engines/graaljs/graaljs" ]; then
+    echo "DEBUG: About to test GraalJS..."
+    echo "console.log('GraalJS test successful');" | /usr/local/bin/js-engines/graaljs/graaljs
 else
     echo "ERROR: GraalJS not found!"
     echo "Checking if GraalJS exists in original location:"
-    ls -la $HOME/.jsvu/bin/graaljs || echo "GraalJS not found in original location"
+    ls -la $HOME/.jsvu/engines/graaljs/ || echo "GraalJS not found in original location"
 fi
 
 # Determine number of threads based on SLURM environment or system cores
