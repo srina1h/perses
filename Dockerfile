@@ -136,11 +136,11 @@ if [ -f "$HOME/.jsvu/bin/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" 
 fi
 if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
     echo "Copying GraalJS directory from ~/.jsvu/engines/graaljs/..."
-    cp -r $HOME/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs/
-    echo "Creating symlink to GraalJS binary..."
-    rm -rf /usr/local/bin/js-engines/graaljs-temp
-    mv /usr/local/bin/js-engines/graaljs /usr/local/bin/js-engines/graaljs-temp
-    ln -sf /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64 /usr/local/bin/js-engines/graaljs
+    cp -r $HOME/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs-temp/
+    echo "Copying GraalJS binary to standard location..."
+    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64" ]; then
+        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64 /usr/local/bin/js-engines/graaljs
+    fi
 elif [ -f "$HOME/.jsvu/bin/graaljs" ]; then
     echo "Copying GraalJS binary from ~/.jsvu/bin/graaljs..."
     cp $HOME/.jsvu/bin/graaljs /usr/local/bin/js-engines/graaljs
