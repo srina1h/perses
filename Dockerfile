@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV PATH=$JAVA_HOME/bin:$PATH
+ENV PATH=$JAVA_HOME/bin:$HOME/bin:$PATH
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,13 +20,14 @@ RUN apt-get update && apt-get install -y \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Bazel
-RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg \
-    && mv bazel.gpg /etc/apt/trusted.gpg.d/ \
-    && echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
-    && apt-get update \
-    && apt-get install -y bazel \
-    && rm -rf /var/lib/apt/lists/*
+# Install Bazel 7.4.1 (specific version required by the project)
+RUN BAZEL_VERSION=7.4.1 \
+    && curl -fsSL https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh -o bazel-installer.sh \
+    && chmod +x bazel-installer.sh \
+    && ./bazel-installer.sh --user \
+    && rm bazel-installer.sh \
+    && ln -sf $HOME/bin/bazel /usr/local/bin/bazel \
+    && bazel --version
 
 # Install JSVU (JavaScript Version Updater)
 RUN npm install -g jsvu
