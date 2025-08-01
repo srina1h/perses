@@ -222,11 +222,8 @@ cat > /workspace/run-differential-testing-temp.sh << 'INNER_EOF'
 #!/bin/bash
 set -e
 
-echo "Building kitten with differential testing support..."
-bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar || exit 1
-
 echo "Starting differential testing with multiple JavaScript engines..."
-echo "Engines: V8, Hermes, GraalJS, JavaScriptCore"
+echo "Engines: V8, Hermes, GraalJS"
 echo "Threads: THREADS_PLACEHOLDER"
 echo "JVM Heap: JVM_HEAP_PLACEHOLDER"
 echo "Differential findings will be saved to: kitten/temp_testing_campaigns/differential_finding_folder_javascript"
