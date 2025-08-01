@@ -25,7 +25,7 @@ programsUnderTest:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
   
-  - command: "/usr/local/bin/js-engines/graaljs/graaljs"
+  - command: "/usr/local/bin/js-engines/graaljs"
     flagsToTest:
       - flags: []
     versionFlags:
