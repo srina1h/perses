@@ -1,0 +1,7 @@
+mkdir -p results logs custom-seeds
+
+sudo docker run -it --cpuset-cpus="$(bash getcoreids.sh)" --name kitten_df \
+  -v $(pwd)/results:/workspace/kitten/temp_testing_campaigns \
+  -v $(pwd)/logs:/workspace/logs \
+  -v $(pwd)/custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro \
+  kitten

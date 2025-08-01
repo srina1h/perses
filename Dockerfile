@@ -264,6 +264,7 @@ java -XmxJVM_HEAP_PLACEHOLDER -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer
   --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \
   --threads THREADS_PLACEHOLDER \
   --verbosity "FINE" \
+  --timeout 1000000000 \
   --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
 
 echo "Differential testing completed!"
