@@ -111,58 +111,69 @@ echo "Starting differential testing setup..."
 # Verify JavaScript engines are available
 echo "Verifying JavaScript engines..."
 
+# Debug: Show what we're about to do
+echo "DEBUG: About to check and create symlinks..."
+echo "DEBUG: HOME=$HOME"
+echo "DEBUG: Checking if V8 exists at $HOME/.jsvu/engines/v8/v8"
+
 # Create symlinks if they don't exist (fallback)
 echo "Ensuring symlinks exist..."
 mkdir -p /usr/local/bin/js-engines
-if [ ! -f "/usr/local/bin/js-engines/v8" ] && [ -f "~/.jsvu/engines/v8/v8" ]; then
+if [ ! -f "/usr/local/bin/js-engines/v8" ] && [ -f "$HOME/.jsvu/engines/v8/v8" ]; then
     echo "Creating V8 symlink..."
-    ln -sf ~/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8
+    ln -sf $HOME/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8
+    echo "V8 symlink created successfully"
+else
+    echo "V8 symlink already exists or source not found"
 fi
-if [ ! -f "/usr/local/bin/js-engines/hermes" ] && [ -f "~/.jsvu/engines/hermes/hermes" ]; then
+if [ ! -f "/usr/local/bin/js-engines/hermes" ] && [ -f "$HOME/.jsvu/engines/hermes/hermes" ]; then
     echo "Creating Hermes symlink..."
-    ln -sf ~/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes
+    ln -sf $HOME/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes
 fi
-if [ ! -f "/usr/local/bin/js-engines/graaljs" ] && [ -f "~/.jsvu/engines/graaljs/graaljs" ]; then
+if [ ! -f "/usr/local/bin/js-engines/graaljs" ] && [ -f "$HOME/.jsvu/engines/graaljs/graaljs" ]; then
     echo "Creating GraalJS symlink..."
-    ln -sf ~/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs
+    ln -sf $HOME/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs
 fi
-if [ ! -f "/usr/local/bin/js-engines/jsc" ] && [ -f "~/.jsvu/engines/jsc/jsc" ]; then
+if [ ! -f "/usr/local/bin/js-engines/jsc" ] && [ -f "$HOME/.jsvu/engines/jsc/jsc" ]; then
     echo "Creating JSC symlink..."
-    ln -sf ~/.jsvu/engines/jsc/jsc /usr/local/bin/js-engines/jsc
+    ln -sf $HOME/.jsvu/engines/jsc/jsc /usr/local/bin/js-engines/jsc
 fi
 
 echo "Checking symlinks:"
 ls -la /usr/local/bin/js-engines/
 echo "Checking original files:"
-ls -la ~/.jsvu/engines/
+ls -la $HOME/.jsvu/engines/
 echo "Testing engines:"
+echo "DEBUG: About to test V8..."
 if [ -f "/usr/local/bin/js-engines/v8" ]; then
+    echo "DEBUG: V8 symlink exists, testing..."
     /usr/local/bin/js-engines/v8 --version
 else
     echo "ERROR: V8 not found!"
     echo "Checking if V8 exists in original location:"
-    ls -la ~/.jsvu/engines/v8/ || echo "V8 directory not found"
+    ls -la $HOME/.jsvu/engines/v8/ || echo "V8 directory not found"
+    echo "DEBUG: Skipping V8 test since symlink doesn't exist"
 fi
 if [ -f "/usr/local/bin/js-engines/hermes" ]; then
     /usr/local/bin/js-engines/hermes --version
 else
     echo "ERROR: Hermes not found!"
     echo "Checking if Hermes exists in original location:"
-    ls -la ~/.jsvu/engines/hermes/ || echo "Hermes directory not found"
+    ls -la $HOME/.jsvu/engines/hermes/ || echo "Hermes directory not found"
 fi
 if [ -f "/usr/local/bin/js-engines/graaljs" ]; then
     /usr/local/bin/js-engines/graaljs --version
 else
     echo "ERROR: GraalJS not found!"
     echo "Checking if GraalJS exists in original location:"
-    ls -la ~/.jsvu/engines/graaljs/ || echo "GraalJS directory not found"
+    ls -la $HOME/.jsvu/engines/graaljs/ || echo "GraalJS directory not found"
 fi
 if [ -f "/usr/local/bin/js-engines/jsc" ]; then
     /usr/local/bin/js-engines/jsc --version
 else
     echo "ERROR: JSC not found!"
     echo "Checking if JSC exists in original location:"
-    ls -la ~/.jsvu/engines/jsc/ || echo "JSC directory not found"
+    ls -la $HOME/.jsvu/engines/jsc/ || echo "JSC directory not found"
 fi
 
 # Determine number of threads based on SLURM environment or system cores
