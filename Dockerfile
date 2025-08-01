@@ -62,12 +62,12 @@ RUN cat > /workspace/update-config.sh << 'EOF'
 cd /workspace
 echo "Current directory: $(pwd)"
 echo "Checking if config file exists:"
-if [ -f "kitten/scripts/javascript/differential-testing-config.yaml" ]; then
+if [ -f "kitten/scripts/javascript/all-compilers-config.yaml" ]; then
     echo "Config file found!"
     echo "Updating configuration paths..."
-    sed -i 's|/Users/srinath/.jsvu/bin/v8|/usr/local/bin/js-engines/v8|g' kitten/scripts/javascript/differential-testing-config.yaml
-    sed -i 's|/Users/srinath/.jsvu/bin/hermes|/usr/local/bin/js-engines/hermes|g' kitten/scripts/javascript/differential-testing-config.yaml
-    sed -i 's|/Users/srinath/.jsvu/bin/graaljs|/usr/local/bin/js-engines/graaljs|g' kitten/scripts/javascript/differential-testing-config.yaml
+    sed -i 's|/Users/srinath/.jsvu/bin/v8|/usr/local/bin/js-engines/v8|g' kitten/scripts/javascript/all-compilers-config.yaml
+    sed -i 's|/Users/srinath/.jsvu/bin/hermes|/usr/local/bin/js-engines/hermes|g' kitten/scripts/javascript/all-compilers-config.yaml
+    sed -i 's|/Users/srinath/.jsvu/bin/graaljs|/usr/local/bin/js-engines/graaljs|g' kitten/scripts/javascript/all-compilers-config.yaml
     echo "Configuration update completed."
 else
     echo "ERROR: Config file not found!"
@@ -141,7 +141,7 @@ echo "JVM Heap: JVM_HEAP_PLACEHOLDER"
 echo "Differential findings will be saved to: kitten/temp_testing_campaigns/differential_finding_folder_javascript"
 
 java -XmxJVM_HEAP_PLACEHOLDER -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
-  --testing-config "kitten/scripts/javascript/differential-testing-config.yaml" \
+  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \
   --threads THREADS_PLACEHOLDER \
   --verbosity "FINE" \
   --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
