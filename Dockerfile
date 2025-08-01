@@ -123,13 +123,39 @@ echo "Checking if engines are available..."
 mkdir -p /usr/local/bin/js-engines
 echo "Available engines:"
 ls -la /usr/local/bin/js-engines/ || echo "No engines found"
-if [ ! -f "/usr/local/bin/js-engines/v8" ]; then
-    echo "WARNING: V8 not found in /usr/local/bin/js-engines/v8"
-    echo "Checking original location..."
-    ls -la $HOME/.jsvu/bin/v8 || echo "V8 not found in original location"
-else
-    echo "V8 found in /usr/local/bin/js-engines/v8"
+
+# Try to copy engines if they're not already copied
+echo "Checking for engines in ~/.jsvu/bin/..."
+if [ -f "$HOME/.jsvu/bin/v8" ] && [ ! -f "/usr/local/bin/js-engines/v8" ]; then
+    echo "Copying V8 from ~/.jsvu/bin/v8..."
+    cp $HOME/.jsvu/bin/v8 /usr/local/bin/js-engines/v8
 fi
+if [ -f "$HOME/.jsvu/bin/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then
+    echo "Copying Hermes from ~/.jsvu/bin/hermes..."
+    cp $HOME/.jsvu/bin/hermes /usr/local/bin/js-engines/hermes
+fi
+if [ -f "$HOME/.jsvu/bin/graaljs" ] && [ ! -f "/usr/local/bin/js-engines/graaljs" ]; then
+    echo "Copying GraalJS from ~/.jsvu/bin/graaljs..."
+    cp $HOME/.jsvu/bin/graaljs /usr/local/bin/js-engines/graaljs
+fi
+
+# Also check ~/.jsvu/engines/ directory as fallback
+echo "Checking for engines in ~/.jsvu/engines/..."
+if [ -f "$HOME/.jsvu/engines/v8/v8" ] && [ ! -f "/usr/local/bin/js-engines/v8" ]; then
+    echo "Copying V8 from ~/.jsvu/engines/v8/v8..."
+    cp $HOME/.jsvu/engines/v8/v8 /usr/local/bin/js-engines/v8
+fi
+if [ -f "$HOME/.jsvu/engines/hermes/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then
+    echo "Copying Hermes from ~/.jsvu/engines/hermes/hermes..."
+    cp $HOME/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes
+fi
+if [ -f "$HOME/.jsvu/engines/graaljs/graaljs" ] && [ ! -f "/usr/local/bin/js-engines/graaljs" ]; then
+    echo "Copying GraalJS from ~/.jsvu/engines/graaljs/graaljs..."
+    cp $HOME/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs
+fi
+
+echo "Final engine status:"
+ls -la /usr/local/bin/js-engines/ || echo "No engines found"
 
 echo "Checking symlinks:"
 ls -la /usr/local/bin/js-engines/
