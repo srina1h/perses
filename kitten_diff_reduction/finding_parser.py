@@ -124,6 +124,10 @@ class FindingParser:
                     print(f"Warning: Failed to parse engine {engine} in {self.finding_path}: {e}")
                     # Continue with other engines
         
+        # Ensure we have at least one engine output
+        if not engine_outputs:
+            raise ValueError(f"No valid engine outputs found in {self.finding_path}")
+        
         # Parse input files
         input_js = self._read_file("input.js")
         seed_js = self._read_file("seed.js")
@@ -155,18 +159,18 @@ class FindingParser:
     
     def _parse_engine_output(self, engine_path: Path, engine_name: str) -> EngineOutput:
         """Parse output from a specific engine."""
-        command = self._read_file(engine_path / "command.txt")
+        command = self._read_file(str(engine_path / "command.txt"))
         
         # Handle empty or invalid exit codes
-        exit_code_str = self._read_file(engine_path / "exit_code.txt").strip()
+        exit_code_str = self._read_file(str(engine_path / "exit_code.txt")).strip()
         try:
             exit_code = int(exit_code_str) if exit_code_str else -1
         except ValueError:
             # If exit code is not a valid integer, default to -1
             exit_code = -1
         
-        stdout = self._read_file(engine_path / "stdout.txt")
-        stderr = self._read_file(engine_path / "stderr.txt")
+        stdout = self._read_file(str(engine_path / "stdout.txt"))
+        stderr = self._read_file(str(engine_path / "stderr.txt"))
         
         return EngineOutput(
             engine_name=engine_name,
@@ -178,26 +182,34 @@ class FindingParser:
     
     def _is_folder_valid(self) -> bool:
         """Check if the finding folder has valid structure and non-empty required files."""
-        # Check if input.js exists and is not empty
-        input_file = self.finding_path / "input.js"
-        if not input_file.exists() or input_file.stat().st_size == 0:
+        try:
+            # Check if input.js exists and is not empty
+            input_file = self.finding_path / "input.js"
+            if not input_file.exists() or input_file.stat().st_size == 0:
+                return False
+            
+            # Check if at least one engine directory exists and has valid files
+            valid_engines = 0
+            for engine in self.engines:
+                engine_path = self.finding_path / engine
+                if engine_path.exists():
+                    # Check if engine has required files and exit_code.txt is not empty
+                    exit_code_file = engine_path / "exit_code.txt"
+                    if exit_code_file.exists() and exit_code_file.stat().st_size > 0:
+                        valid_engines += 1
+            
+            # Require at least one valid engine
+            return valid_engines > 0
+        except Exception:
+            # If any error occurs during validation, consider the folder invalid
             return False
-        
-        # Check if at least one engine directory exists and has valid files
-        valid_engines = 0
-        for engine in self.engines:
-            engine_path = self.finding_path / engine
-            if engine_path.exists():
-                # Check if engine has required files and exit_code.txt is not empty
-                exit_code_file = engine_path / "exit_code.txt"
-                if exit_code_file.exists() and exit_code_file.stat().st_size > 0:
-                    valid_engines += 1
-        
-        # Require at least one valid engine
-        return valid_engines > 0
     
-    def _read_file(self, file_path: Path) -> str:
+    def _read_file(self, file_path) -> str:
         """Read a file and return its contents."""
+        # Convert string to Path if needed
+        if isinstance(file_path, str):
+            file_path = Path(file_path)
+        
         full_path = self.finding_path / file_path if not file_path.is_absolute() else file_path
         try:
             with open(full_path, 'r', encoding='utf-8') as f:
