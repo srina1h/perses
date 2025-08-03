@@ -92,6 +92,26 @@ def main():
         help="DBSCAN epsilon parameter for clustering (default: 0.3)"
     )
     
+    parser.add_argument(
+        "--max-findings",
+        type=int,
+        default=None,
+        help="Maximum number of findings to process (for large datasets)"
+    )
+    
+    parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=None,
+        help="Sample size for semantic analysis (for large datasets)"
+    )
+    
+    parser.add_argument(
+        "--skip-semantic",
+        action="store_true",
+        help="Skip semantic analysis for faster processing"
+    )
+    
     args = parser.parse_args()
     
     try:
@@ -164,6 +184,14 @@ def process_multiple_findings(args):
     unknown_findings = findings_by_type[FindingType.UNKNOWN]
     
     print(f"Found {len(crashes)} crashes, {len(differential_findings)} differential findings, {len(unknown_findings)} unknown")
+    
+    # Handle large datasets
+    if args.max_findings:
+        if len(differential_findings) > args.max_findings:
+            print(f"Limiting to {args.max_findings} differential findings (random sample)")
+            import random
+            random.seed(42)  # For reproducibility
+            differential_findings = random.sample(differential_findings, args.max_findings)
     
     if not crashes and not differential_findings:
         print("No valid findings to process")
@@ -392,15 +420,24 @@ def process_finding_type(findings: List[DifferentialFinding], finding_type_name:
     """Process a specific type of findings (crashes or differential findings)."""
     print(f"Classifying {finding_type_name}...")
     
-    if args.semantic:
+    # Handle large datasets for semantic analysis
+    if args.semantic and args.sample_size and len(findings) > args.sample_size:
+        print(f"Sampling {args.sample_size} findings for semantic analysis (from {len(findings)})")
+        import random
+        random.seed(42)  # For reproducibility
+        sampled_findings = random.sample(findings, args.sample_size)
+    else:
+        sampled_findings = findings
+    
+    if args.semantic and not args.skip_semantic:
         print(f"Using semantic-enhanced classification for {finding_type_name}...")
         classifier = EnhancedErrorClassifier()
-        classified_errors = classifier.classify_with_semantic_similarity(findings)
+        classified_errors = classifier.classify_with_semantic_similarity(sampled_findings)
         
         # Use semantic clustering
         semantic_analyzer = SemanticErrorAnalyzer()
         semantic_clusters = semantic_analyzer.cluster_findings_semantically(
-            findings, eps=args.cluster_eps
+            sampled_findings, eps=args.cluster_eps
         )
         
         # Convert semantic clusters to error groups
@@ -415,11 +452,12 @@ def process_finding_type(findings: List[DifferentialFinding], finding_type_name:
         # Also perform semantic reduction
         semantic_reducer = SemanticReducer()
         semantic_result = semantic_reducer.reduce_with_semantic_grouping(
-            findings, args.semantic_threshold
+            sampled_findings, args.semantic_threshold
         )
         print(f"Semantic reduction ratio for {finding_type_name}: {semantic_result['reduction_ratio']:.2%}")
         
     else:
+        # Use pattern-based classification for all findings
         classifier = ErrorClassifier()
         classified_errors = classifier.classify_findings(findings)
         

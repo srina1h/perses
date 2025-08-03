@@ -109,6 +109,14 @@ class FindingParser:
         if not self.finding_path.exists():
             raise FileNotFoundError(f"Finding path does not exist: {self.finding_path}")
         
+        # Determine finding type first
+        finding_type = self._determine_finding_type()
+        
+        # Use different parsing logic for crashes vs differential findings
+        if finding_type == FindingType.CRASH:
+            return self._parse_crash_folder()
+        
+        # For differential findings, use the original logic
         # Check if folder is valid before parsing
         if not self._is_folder_valid():
             raise ValueError(f"Finding folder {self.finding_path} has invalid structure or empty files")
@@ -128,14 +136,11 @@ class FindingParser:
         if not engine_outputs:
             raise ValueError(f"No valid engine outputs found in {self.finding_path}")
         
-        # Parse input files
-        input_js = self._read_file("input.js")
-        seed_js = self._read_file("seed.js")
-        summary = self._read_file("summary.txt")
-        differential_results = self._read_file("differential_results.txt")
-        
-        # Determine finding type
-        finding_type = self._determine_finding_type()
+        # Parse input files (crash folders might not have input.js)
+        input_js = self._read_file("input.js") if (self.finding_path / "input.js").exists() else ""
+        seed_js = self._read_file("seed.js") if (self.finding_path / "seed.js").exists() else ""
+        summary = self._read_file("summary.txt") if (self.finding_path / "summary.txt").exists() else ""
+        differential_results = self._read_file("differential_results.txt") if (self.finding_path / "differential_results.txt").exists() else ""
         
         # Determine discrepancy type
         discrepancy_type = self._determine_discrepancy_type(engine_outputs)
@@ -180,26 +185,92 @@ class FindingParser:
             stderr=stderr
         )
     
+    def _parse_crash_folder(self) -> DifferentialFinding:
+        """Parse a crash folder with the crash-specific structure."""
+        # For crash folders, we need to handle the different file structure
+        # Read the crash-specific files
+        input_js = self._read_file("mutant_22_1754080481155.js") if (self.finding_path / "mutant_22_1754080481155.js").exists() else ""
+        seed_js = self._read_file("seed.js") if (self.finding_path / "seed.js").exists() else ""
+        summary = self._read_file("crash_signature.txt") if (self.finding_path / "crash_signature.txt").exists() else ""
+        differential_results = self._read_file("bug_descriptor.properties") if (self.finding_path / "bug_descriptor.properties").exists() else ""
+        
+        # Create mock engine outputs from the crash files
+        engine_outputs = {}
+        
+        # Read stdout and stderr from the crash folder
+        stdout = self._read_file("stdout.txt") if (self.finding_path / "stdout.txt").exists() else ""
+        stderr = self._read_file("stderr.txt") if (self.finding_path / "stderr.txt").exists() else ""
+        
+        # Create a mock engine output for the crash
+        # We'll use a generic engine name since crash folders don't have engine-specific outputs
+        engine_outputs["engine_crash"] = EngineOutput(
+            engine_name="engine_crash",
+            command="crash_reproduction",
+            exit_code=-1,  # Crashes typically have non-zero exit codes
+            stdout=stdout,
+            stderr=stderr
+        )
+        
+        # Determine finding type and discrepancy type
+        finding_type = FindingType.CRASH
+        discrepancy_type = DiscrepancyType.ERROR_DIFFERENCE  # Crashes are error differences
+        
+        # Extract metadata
+        metadata = {
+            "engines_present": ["engine_crash"],
+            "total_engines": 1,
+            "input_size": len(input_js),
+            "seed_size": len(seed_js),
+            "is_crash_folder": True
+        }
+        
+        return DifferentialFinding(
+            finding_path=self.finding_path,
+            finding_type=finding_type,
+            input_js=input_js,
+            seed_js=seed_js,
+            engine_outputs=engine_outputs,
+            discrepancy_type=discrepancy_type,
+            summary=summary,
+            differential_results=differential_results,
+            metadata=metadata
+        )
+    
     def _is_folder_valid(self) -> bool:
         """Check if the finding folder has valid structure and non-empty required files."""
         try:
-            # Check if input.js exists and is not empty
-            input_file = self.finding_path / "input.js"
-            if not input_file.exists() or input_file.stat().st_size == 0:
-                return False
+            # Determine if this is a crash folder
+            is_crash = self.finding_path.name.startswith("crash_")
             
-            # Check if at least one engine directory exists and has valid files
-            valid_engines = 0
-            for engine in self.engines:
-                engine_path = self.finding_path / engine
-                if engine_path.exists():
-                    # Check if engine has required files and exit_code.txt is not empty
-                    exit_code_file = engine_path / "exit_code.txt"
-                    if exit_code_file.exists() and exit_code_file.stat().st_size > 0:
-                        valid_engines += 1
-            
-            # Require at least one valid engine
-            return valid_engines > 0
+            if is_crash:
+                # For crash folders, check for crash-specific files
+                crash_files = ["mutant_22_1754080481155.js", "seed.js", "crash_signature.txt"]
+                valid_crash_files = 0
+                for file_name in crash_files:
+                    file_path = self.finding_path / file_name
+                    if file_path.exists() and file_path.stat().st_size > 0:
+                        valid_crash_files += 1
+                
+                # Require at least one valid crash file
+                return valid_crash_files > 0
+            else:
+                # For differential findings, require input.js
+                input_file = self.finding_path / "input.js"
+                if not input_file.exists() or input_file.stat().st_size == 0:
+                    return False
+                
+                # Check if at least one engine directory exists and has valid files
+                valid_engines = 0
+                for engine in self.engines:
+                    engine_path = self.finding_path / engine
+                    if engine_path.exists():
+                        # Check if engine has required files and exit_code.txt is not empty
+                        exit_code_file = engine_path / "exit_code.txt"
+                        if exit_code_file.exists() and exit_code_file.stat().st_size > 0:
+                            valid_engines += 1
+                
+                # Require at least one valid engine
+                return valid_engines > 0
         except Exception:
             # If any error occurs during validation, consider the folder invalid
             return False
@@ -281,9 +352,28 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
     if not base_path.exists():
         return findings
     
-    # Look for finding folders (directories that contain input.js)
+    # Look for finding folders (both differential and crash)
     for item in base_path.iterdir():
-        if item.is_dir() and (item / "input.js").exists():
+        if item.is_dir():
+            # Check if it's a crash folder or differential finding
+            is_crash = item.name.startswith("crash_")
+            is_differential = item.name.startswith("differential_finding_")
+            
+            # Skip if it's neither
+            if not is_crash and not is_differential:
+                continue
+            
+            # For differential findings, require input.js
+            if is_differential and not (item / "input.js").exists():
+                continue
+            
+            # For crash folders, check for crash-specific files
+            if is_crash:
+                crash_files = ["mutant_22_1754080481155.js", "seed.js", "crash_signature.txt"]
+                has_crash_files = any((item / file_name).exists() for file_name in crash_files)
+                if not has_crash_files:
+                    continue
+            
             try:
                 finding = parse_finding_folder(str(item))
                 findings.append(finding)

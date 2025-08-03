@@ -68,6 +68,12 @@ python main.py --input-dir results/differential_findings_javascript --semantic
 # Customize semantic analysis parameters
 python main.py --input-dir results/differential_findings_javascript --semantic --semantic-threshold 0.9 --cluster-eps 0.2
 
+# Handle large datasets efficiently
+python main.py --input-dir results/differential_findings_javascript --semantic --max-findings 10000 --sample-size 1000
+
+# Skip semantic analysis for faster processing
+python main.py --input-dir results/differential_findings_javascript --skip-semantic
+
 # Compare pattern-based vs semantic analysis
 python main.py --input-dir results/differential_findings_javascript --report-only  # Pattern-based
 python main.py --input-dir results/differential_findings_javascript --report-only --semantic  # Semantic-enhanced
