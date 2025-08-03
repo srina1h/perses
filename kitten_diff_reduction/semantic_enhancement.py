@@ -32,7 +32,11 @@ class SemanticErrorAnalyzer:
         """Extract semantic features from findings."""
         texts = []
         
-        for finding in findings:
+        print(f"    Processing {len(findings)} findings for embeddings...")
+        for i, finding in enumerate(findings):
+            if i % 1000 == 0 and i > 0:
+                print(f"    Processed {i}/{len(findings)} findings...")
+            
             # Combine multiple text sources for semantic analysis
             text_parts = []
             
@@ -53,19 +57,24 @@ class SemanticErrorAnalyzer:
             combined_text = " ".join(text_parts)
             texts.append(combined_text)
         
+        print(f"    Generating embeddings for {len(texts)} texts...")
         # Generate embeddings
         embeddings = self.model.encode(texts)
+        print(f"    Embeddings generated successfully!")
         return embeddings
     
     def cluster_findings_semantically(self, findings: List[DifferentialFinding], 
                                     eps: float = 0.3, min_samples: int = 2) -> List[List[int]]:
         """Cluster findings using semantic similarity."""
+        print(f"    Starting semantic clustering with {len(findings)} findings...")
         embeddings = self.extract_semantic_features(findings)
         
+        print(f"    Running DBSCAN clustering (eps={eps}, min_samples={min_samples})...")
         # Use DBSCAN for density-based clustering
         clustering = DBSCAN(eps=eps, min_samples=min_samples, metric='cosine')
         cluster_labels = clustering.fit_predict(embeddings)
         
+        print(f"    Organizing clusters...")
         # Group findings by cluster
         clusters = {}
         for i, label in enumerate(cluster_labels):
@@ -73,21 +82,35 @@ class SemanticErrorAnalyzer:
                 clusters[label] = []
             clusters[label].append(i)
         
-        return list(clusters.values())
+        cluster_list = list(clusters.values())
+        print(f"    Clustering complete! Found {len(cluster_list)} clusters")
+        return cluster_list
     
     def find_semantic_similarities(self, findings: List[DifferentialFinding], 
                                  threshold: float = 0.8) -> List[Tuple[int, int, float]]:
         """Find semantically similar findings above a threshold."""
+        print(f"    Computing semantic similarities for {len(findings)} findings...")
         embeddings = self.extract_semantic_features(findings)
+        
+        print(f"    Computing cosine similarity matrix...")
         similarities = cosine_similarity(embeddings)
         
+        print(f"    Finding similar pairs (threshold={threshold})...")
         similar_pairs = []
+        total_pairs = len(findings) * (len(findings) - 1) // 2
+        processed_pairs = 0
+        
         for i in range(len(findings)):
             for j in range(i + 1, len(findings)):
                 similarity = similarities[i][j]
                 if similarity >= threshold:
                     similar_pairs.append((i, j, similarity))
+                
+                processed_pairs += 1
+                if processed_pairs % 100000 == 0:
+                    print(f"    Processed {processed_pairs}/{total_pairs} pairs...")
         
+        print(f"    Found {len(similar_pairs)} similar pairs")
         return sorted(similar_pairs, key=lambda x: x[2], reverse=True)
     
     def _normalize_code(self, code: str) -> str:
@@ -123,14 +146,17 @@ class EnhancedErrorClassifier:
     
     def classify_with_semantic_similarity(self, findings: List[DifferentialFinding]) -> List[ClassifiedError]:
         """Classify findings using both pattern matching and semantic similarity."""
+        print("  Step 1/3: Basic pattern-based classification...")
         # First, do basic classification
         from error_classifier import ErrorClassifier
         basic_classifier = ErrorClassifier()
         classified_errors = basic_classifier.classify_findings(findings)
         
+        print("  Step 2/3: Generating semantic embeddings...")
         # Then, enhance with semantic analysis
         enhanced_errors = self._enhance_with_semantic_analysis(findings, classified_errors)
         
+        print("  Step 3/3: Semantic classification complete!")
         return enhanced_errors
     
     def _enhance_with_semantic_analysis(self, findings: List[DifferentialFinding], 

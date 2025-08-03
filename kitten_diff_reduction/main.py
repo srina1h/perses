@@ -431,15 +431,19 @@ def process_finding_type(findings: List[DifferentialFinding], finding_type_name:
     
     if args.semantic and not args.skip_semantic:
         print(f"Using semantic-enhanced classification for {finding_type_name}...")
+        print(f"  Processing {len(sampled_findings)} findings...")
+        
         classifier = EnhancedErrorClassifier()
         classified_errors = classifier.classify_with_semantic_similarity(sampled_findings)
         
+        print(f"  Performing semantic clustering...")
         # Use semantic clustering
         semantic_analyzer = SemanticErrorAnalyzer()
         semantic_clusters = semantic_analyzer.cluster_findings_semantically(
             sampled_findings, eps=args.cluster_eps
         )
         
+        print(f"  Converting clusters to error groups...")
         # Convert semantic clusters to error groups
         error_groups = []
         for cluster in semantic_clusters:
@@ -449,6 +453,7 @@ def process_finding_type(findings: List[DifferentialFinding], finding_type_name:
         
         print(f"Semantic clustering found {len(error_groups)} groups for {finding_type_name}")
         
+        print(f"  Computing semantic reduction...")
         # Also perform semantic reduction
         semantic_reducer = SemanticReducer()
         semantic_result = semantic_reducer.reduce_with_semantic_grouping(
@@ -458,6 +463,7 @@ def process_finding_type(findings: List[DifferentialFinding], finding_type_name:
         
     else:
         # Use pattern-based classification for all findings
+        print(f"Using pattern-based classification for {finding_type_name}...")
         classifier = ErrorClassifier()
         classified_errors = classifier.classify_findings(findings)
         
