@@ -10,7 +10,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from tqdm import tqdm
 
 from finding_parser import parse_multiple_findings, parse_findings_by_type, DifferentialFinding, FindingType
