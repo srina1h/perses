@@ -24,6 +24,7 @@ class ErrorSeverity(Enum):
 
 class ErrorCategory(Enum):
     """Categories of JavaScript errors."""
+    # Differential errors
     SYNTAX_ERROR = "syntax_error"
     RUNTIME_ERROR = "runtime_error"
     TYPE_ERROR = "type_error"
@@ -33,6 +34,14 @@ class ErrorCategory(Enum):
     EVAL_ERROR = "eval_error"
     TIMEOUT_ERROR = "timeout_error"
     MEMORY_ERROR = "memory_error"
+    
+    # Crash errors
+    SEGMENTATION_FAULT = "segmentation_fault"
+    ASSERTION_FAILURE = "assertion_failure"
+    FATAL_ERROR = "fatal_error"
+    ABORT_ERROR = "abort_error"
+    CORE_DUMP = "core_dump"
+    
     UNKNOWN_ERROR = "unknown_error"
 
 
@@ -126,6 +135,7 @@ class ErrorClassifier:
     def _initialize_error_patterns(self) -> Dict[ErrorCategory, List[str]]:
         """Initialize common JavaScript error patterns."""
         return {
+            # Differential error patterns
             ErrorCategory.SYNTAX_ERROR: [
                 r"SyntaxError",
                 r"Unexpected token",
@@ -167,12 +177,41 @@ class ErrorClassifier:
                 r"out of memory",
                 r"memory limit exceeded",
                 r"heap out of memory"
+            ],
+            
+            # Crash error patterns
+            ErrorCategory.SEGMENTATION_FAULT: [
+                r"segmentation fault",
+                r"segfault",
+                r"signal 11",
+                r"signal 6"
+            ],
+            ErrorCategory.ASSERTION_FAILURE: [
+                r"assertion failed",
+                r"assertion failure",
+                r"ASSERTION FAILED"
+            ],
+            ErrorCategory.FATAL_ERROR: [
+                r"fatal error",
+                r"FATAL ERROR",
+                r"fatal exception"
+            ],
+            ErrorCategory.ABORT_ERROR: [
+                r"abort",
+                r"ABORT",
+                r"aborted"
+            ],
+            ErrorCategory.CORE_DUMP: [
+                r"core dumped",
+                r"core dump",
+                r"dumped core"
             ]
         }
     
     def _initialize_severity_weights(self) -> Dict[ErrorCategory, ErrorSeverity]:
         """Initialize severity weights for different error categories."""
         return {
+            # Differential error severities
             ErrorCategory.SYNTAX_ERROR: ErrorSeverity.HIGH,
             ErrorCategory.TYPE_ERROR: ErrorSeverity.MEDIUM,
             ErrorCategory.REFERENCE_ERROR: ErrorSeverity.MEDIUM,
@@ -181,6 +220,14 @@ class ErrorClassifier:
             ErrorCategory.EVAL_ERROR: ErrorSeverity.HIGH,
             ErrorCategory.TIMEOUT_ERROR: ErrorSeverity.MEDIUM,
             ErrorCategory.MEMORY_ERROR: ErrorSeverity.CRITICAL,
+            
+            # Crash error severities (all critical)
+            ErrorCategory.SEGMENTATION_FAULT: ErrorSeverity.CRITICAL,
+            ErrorCategory.ASSERTION_FAILURE: ErrorSeverity.CRITICAL,
+            ErrorCategory.FATAL_ERROR: ErrorSeverity.CRITICAL,
+            ErrorCategory.ABORT_ERROR: ErrorSeverity.CRITICAL,
+            ErrorCategory.CORE_DUMP: ErrorSeverity.CRITICAL,
+            
             ErrorCategory.UNKNOWN_ERROR: ErrorSeverity.LOW
         }
     

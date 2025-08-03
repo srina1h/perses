@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import List, Dict
 from tqdm import tqdm
 
-from finding_parser import parse_multiple_findings, DifferentialFinding
+from finding_parser import parse_multiple_findings, parse_findings_by_type, DifferentialFinding, FindingType
 from error_classifier import ErrorClassifier, ClassifiedError
 from reducer import DifferentialReducer, ReductionResult
 from semantic_enhancement import SemanticErrorAnalyzer, EnhancedErrorClassifier, SemanticReducer
@@ -156,56 +156,46 @@ def process_multiple_findings(args):
     
     print(f"Scanning for findings in: {input_dir}")
     
-    # Parse all findings
-    findings = parse_multiple_findings(str(input_dir))
-    print(f"Found {len(findings)} findings")
+    # Parse findings by type
+    findings_by_type = parse_findings_by_type(str(input_dir))
     
-    if not findings:
-        print("No findings to process")
+    crashes = findings_by_type[FindingType.CRASH]
+    differential_findings = findings_by_type[FindingType.DIFFERENTIAL]
+    unknown_findings = findings_by_type[FindingType.UNKNOWN]
+    
+    print(f"Found {len(crashes)} crashes, {len(differential_findings)} differential findings, {len(unknown_findings)} unknown")
+    
+    if not crashes and not differential_findings:
+        print("No valid findings to process")
         return
     
-    # Classify errors
-    print("Classifying errors...")
-    if args.semantic:
-        print("Using semantic-enhanced classification and clustering...")
-        classifier = EnhancedErrorClassifier()
-        classified_errors = classifier.classify_with_semantic_similarity(findings)
-        
-        # Use semantic clustering
-        semantic_analyzer = SemanticErrorAnalyzer()
-        semantic_clusters = semantic_analyzer.cluster_findings_semantically(
-            findings, eps=args.cluster_eps
-        )
-        
-        # Convert semantic clusters to error groups
-        error_groups = []
-        for cluster in semantic_clusters:
-            if cluster:  # Skip empty clusters
-                group = [classified_errors[i] for i in cluster]
-                error_groups.append(group)
-        
-        print(f"Semantic clustering found {len(error_groups)} groups")
-        
-        # Also perform semantic reduction
-        semantic_reducer = SemanticReducer()
-        semantic_result = semantic_reducer.reduce_with_semantic_grouping(
-            findings, args.semantic_threshold
-        )
-        print(f"Semantic reduction ratio: {semantic_result['reduction_ratio']:.2%}")
-        
-    else:
-        classifier = ErrorClassifier()
-        classified_errors = classifier.classify_findings(findings)
-        
-        # Group similar errors
-        print("Grouping similar errors...")
-        error_groups = classifier.group_similar_errors(
-            classified_errors, 
-            args.similarity_threshold
-        )
+    # Process crashes and differential findings separately
+    all_classified_errors = []
+    all_error_groups = []
+    
+    # Process crashes
+    if crashes:
+        print(f"\nProcessing {len(crashes)} crashes...")
+        crash_errors, crash_groups = process_finding_type(crashes, "crashes", args)
+        all_classified_errors.extend(crash_errors)
+        all_error_groups.extend(crash_groups)
+    
+    # Process differential findings
+    if differential_findings:
+        print(f"\nProcessing {len(differential_findings)} differential findings...")
+        diff_errors, diff_groups = process_finding_type(differential_findings, "differential findings", args)
+        all_classified_errors.extend(diff_errors)
+        all_error_groups.extend(diff_groups)
+    
+    # Process unknown findings if any
+    if unknown_findings:
+        print(f"\nProcessing {len(unknown_findings)} unknown findings...")
+        unknown_errors, unknown_groups = process_finding_type(unknown_findings, "unknown findings", args)
+        all_classified_errors.extend(unknown_errors)
+        all_error_groups.extend(unknown_groups)
     
     # Generate summary report
-    generate_summary_report(classified_errors, error_groups, output_dir, args.semantic)
+    generate_summary_report(all_classified_errors, all_error_groups, output_dir, args.semantic)
     
     if args.report_only:
         print("Report-only mode: skipping reduction")
@@ -253,7 +243,12 @@ def generate_summary_report(classified_errors: List[ClassifiedError],
         "error_severities": {},
         "engine_combinations": {},
         "reduction_potential": {},
-        "analysis_method": "semantic_enhanced" if use_semantic else "pattern_based"
+        "analysis_method": "semantic_enhanced" if use_semantic else "pattern_based",
+        "findings_by_type": {
+            "crashes": 0,
+            "differential_findings": 0,
+            "unknown": 0
+        }
     }
     
     # Count by category
@@ -270,6 +265,16 @@ def generate_summary_report(classified_errors: List[ClassifiedError],
     for error in classified_errors:
         engines = "_".join(error.signature.engine_combination)
         report["engine_combinations"][engines] = report["engine_combinations"].get(engines, 0) + 1
+    
+    # Count by finding type
+    for error in classified_errors:
+        finding_type = error.finding.finding_type.value
+        if finding_type == "crash":
+            report["findings_by_type"]["crashes"] += 1
+        elif finding_type == "differential":
+            report["findings_by_type"]["differential_findings"] += 1
+        else:
+            report["findings_by_type"]["unknown"] += 1
     
     # Estimate reduction potential
     total_size = sum(len(error.finding.input_js) for error in classified_errors)
@@ -289,6 +294,11 @@ def generate_summary_report(classified_errors: List[ClassifiedError],
     print(f"Total findings: {report['total_findings']}")
     print(f"Unique error groups: {report['unique_error_groups']}")
     print(f"Average input size: {report['reduction_potential']['average_input_size']:.0f} characters")
+    
+    print(f"\nFindings by type:")
+    print(f"  Crashes: {report['findings_by_type']['crashes']}")
+    print(f"  Differential findings: {report['findings_by_type']['differential_findings']}")
+    print(f"  Unknown: {report['findings_by_type']['unknown']}")
     
     print("\nError categories:")
     for category, count in sorted(report["error_categories"].items()):
@@ -376,6 +386,52 @@ def save_semantic_metadata(group: List[ClassifiedError], group_dir: Path):
     
     with open(group_dir / "semantic_metadata.json", 'w') as f:
         json.dump(semantic_metadata, f, indent=2)
+
+
+def process_finding_type(findings: List[DifferentialFinding], finding_type_name: str, args) -> Tuple[List[ClassifiedError], List[List[ClassifiedError]]]:
+    """Process a specific type of findings (crashes or differential findings)."""
+    print(f"Classifying {finding_type_name}...")
+    
+    if args.semantic:
+        print(f"Using semantic-enhanced classification for {finding_type_name}...")
+        classifier = EnhancedErrorClassifier()
+        classified_errors = classifier.classify_with_semantic_similarity(findings)
+        
+        # Use semantic clustering
+        semantic_analyzer = SemanticErrorAnalyzer()
+        semantic_clusters = semantic_analyzer.cluster_findings_semantically(
+            findings, eps=args.cluster_eps
+        )
+        
+        # Convert semantic clusters to error groups
+        error_groups = []
+        for cluster in semantic_clusters:
+            if cluster:  # Skip empty clusters
+                group = [classified_errors[i] for i in cluster]
+                error_groups.append(group)
+        
+        print(f"Semantic clustering found {len(error_groups)} groups for {finding_type_name}")
+        
+        # Also perform semantic reduction
+        semantic_reducer = SemanticReducer()
+        semantic_result = semantic_reducer.reduce_with_semantic_grouping(
+            findings, args.semantic_threshold
+        )
+        print(f"Semantic reduction ratio for {finding_type_name}: {semantic_result['reduction_ratio']:.2%}")
+        
+    else:
+        classifier = ErrorClassifier()
+        classified_errors = classifier.classify_findings(findings)
+        
+        # Group similar errors
+        print(f"Grouping similar {finding_type_name}...")
+        error_groups = classifier.group_similar_errors(
+            classified_errors, 
+            args.similarity_threshold
+        )
+        print(f"Found {len(error_groups)} groups for {finding_type_name}")
+    
+    return classified_errors, error_groups
 
 
 if __name__ == "__main__":

@@ -50,7 +50,7 @@ The framework processes differential findings with the following structure:
 
 ### Basic Usage
 ```bash
-# Process all findings in a directory
+# Process all findings in a directory (automatically skips invalid folders)
 python main.py --input-dir results/differential_findings_javascript --output-dir reduced_findings
 
 # Analyze specific finding
@@ -71,6 +71,12 @@ python main.py --input-dir results/differential_findings_javascript --semantic -
 # Compare pattern-based vs semantic analysis
 python main.py --input-dir results/differential_findings_javascript --report-only  # Pattern-based
 python main.py --input-dir results/differential_findings_javascript --report-only --semantic  # Semantic-enhanced
+```
+
+### Quick Demo
+```bash
+# Run the demo script to compare both approaches
+python run_semantic_demo.py results/differential_findings_javascript
 ```
 
 ## Requirements

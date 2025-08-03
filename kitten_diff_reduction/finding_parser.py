@@ -13,6 +13,13 @@ from dataclasses import dataclass
 from enum import Enum
 
 
+class FindingType(Enum):
+    """Types of findings in differential testing."""
+    CRASH = "crash"
+    DIFFERENTIAL = "differential"
+    UNKNOWN = "unknown"
+
+
 class DiscrepancyType(Enum):
     """Types of discrepancies found in differential testing."""
     EXIT_CODE_DIFFERENCE = "exit_code_difference"
@@ -38,6 +45,7 @@ class EngineOutput:
 class DifferentialFinding:
     """Represents a complete differential finding."""
     finding_path: Path
+    finding_type: FindingType
     input_js: str
     seed_js: str
     engine_outputs: Dict[str, EngineOutput]
@@ -54,13 +62,56 @@ class FindingParser:
         self.finding_path = Path(finding_path)
         self.engines = ["engine_graaljs", "engine_hermes", "engine_v8"]
     
+    def _determine_finding_type(self) -> FindingType:
+        """Determine if this is a crash or differential finding based on folder name."""
+        folder_name = self.finding_path.name
+        
+        if folder_name.startswith("crash_"):
+            return FindingType.CRASH
+        elif folder_name.startswith("differential_finding_"):
+            return FindingType.DIFFERENTIAL
+        else:
+            # Try to infer from content
+            if self._has_crash_indicators():
+                return FindingType.CRASH
+            else:
+                return FindingType.DIFFERENTIAL
+    
+    def _has_crash_indicators(self) -> bool:
+        """Check if the finding has indicators of a crash."""
+        # Check for crash indicators in stderr
+        for engine in self.engines:
+            engine_path = self.finding_path / engine
+            if engine_path.exists():
+                stderr_file = engine_path / "stderr.txt"
+                if stderr_file.exists():
+                    try:
+                        with open(stderr_file, 'r') as f:
+                            stderr_content = f.read().lower()
+                            crash_indicators = [
+                                "segmentation fault",
+                                "segfault",
+                                "crash",
+                                "abort",
+                                "core dumped",
+                                "fatal error",
+                                "assertion failed"
+                            ]
+                            if any(indicator in stderr_content for indicator in crash_indicators):
+                                return True
+                    except:
+                        pass
+        
+        return False
+    
     def parse(self) -> DifferentialFinding:
         """Parse a complete differential finding folder."""
         if not self.finding_path.exists():
             raise FileNotFoundError(f"Finding path does not exist: {self.finding_path}")
         
-        # Validate required files
-        self._validate_finding_structure()
+        # Check if folder is valid before parsing
+        if not self._is_folder_valid():
+            raise ValueError(f"Finding folder {self.finding_path} has invalid structure or empty files")
         
         # Parse engine outputs
         engine_outputs = {}
@@ -79,6 +130,9 @@ class FindingParser:
         summary = self._read_file("summary.txt")
         differential_results = self._read_file("differential_results.txt")
         
+        # Determine finding type
+        finding_type = self._determine_finding_type()
+        
         # Determine discrepancy type
         discrepancy_type = self._determine_discrepancy_type(engine_outputs)
         
@@ -87,6 +141,7 @@ class FindingParser:
         
         return DifferentialFinding(
             finding_path=self.finding_path,
+            finding_type=finding_type,
             input_js=input_js,
             seed_js=seed_js,
             engine_outputs=engine_outputs,
@@ -96,35 +151,7 @@ class FindingParser:
             metadata=metadata
         )
     
-    def _validate_finding_structure(self):
-        """Validate the finding folder structure and provide helpful error messages."""
-        required_files = ["input.js"]
-        missing_files = []
-        
-        for file_name in required_files:
-            if not (self.finding_path / file_name).exists():
-                missing_files.append(file_name)
-        
-        if missing_files:
-            raise FileNotFoundError(f"Missing required files in {self.finding_path}: {missing_files}")
-        
-        # Check for at least one engine directory
-        engine_dirs = [engine for engine in self.engines if (self.finding_path / engine).exists()]
-        if not engine_dirs:
-            print(f"Warning: No engine directories found in {self.finding_path}")
-        
-        # Validate engine directory structure
-        for engine in engine_dirs:
-            engine_path = self.finding_path / engine
-            required_engine_files = ["command.txt", "exit_code.txt", "stdout.txt", "stderr.txt"]
-            missing_engine_files = []
-            
-            for file_name in required_engine_files:
-                if not (engine_path / file_name).exists():
-                    missing_engine_files.append(file_name)
-            
-            if missing_engine_files:
-                print(f"Warning: Missing files in {engine}: {missing_engine_files}")
+
     
     def _parse_engine_output(self, engine_path: Path, engine_name: str) -> EngineOutput:
         """Parse output from a specific engine."""
@@ -148,6 +175,26 @@ class FindingParser:
             stdout=stdout,
             stderr=stderr
         )
+    
+    def _is_folder_valid(self) -> bool:
+        """Check if the finding folder has valid structure and non-empty required files."""
+        # Check if input.js exists and is not empty
+        input_file = self.finding_path / "input.js"
+        if not input_file.exists() or input_file.stat().st_size == 0:
+            return False
+        
+        # Check if at least one engine directory exists and has valid files
+        valid_engines = 0
+        for engine in self.engines:
+            engine_path = self.finding_path / engine
+            if engine_path.exists():
+                # Check if engine has required files and exit_code.txt is not empty
+                exit_code_file = engine_path / "exit_code.txt"
+                if exit_code_file.exists() and exit_code_file.stat().st_size > 0:
+                    valid_engines += 1
+        
+        # Require at least one valid engine
+        return valid_engines > 0
     
     def _read_file(self, file_path: Path) -> str:
         """Read a file and return its contents."""
@@ -217,7 +264,7 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
     """Parse multiple finding folders from a base directory."""
     base_path = Path(base_path)
     findings = []
-    failed_findings = []
+    skipped_folders = 0
     
     if not base_path.exists():
         return findings
@@ -229,17 +276,26 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
                 finding = parse_finding_folder(str(item))
                 findings.append(finding)
             except Exception as e:
-                error_msg = f"Failed to parse finding {item}: {e}"
-                print(f"Warning: {error_msg}")
-                failed_findings.append((str(item), str(e)))
+                # Silently skip folders with empty files or invalid structure
+                skipped_folders += 1
     
-    if failed_findings:
-        print(f"\nSummary: Successfully parsed {len(findings)} findings, failed to parse {len(failed_findings)} findings")
-        if len(failed_findings) > 0:
-            print("Failed findings:")
-            for finding_path, error in failed_findings[:5]:  # Show first 5 failures
-                print(f"  - {finding_path}: {error}")
-            if len(failed_findings) > 5:
-                print(f"  ... and {len(failed_findings) - 5} more")
+    if skipped_folders > 0:
+        print(f"Note: Skipped {skipped_folders} folders with empty files or invalid structure")
     
-    return findings 
+    return findings
+
+
+def parse_findings_by_type(base_path: str) -> Dict[FindingType, List[DifferentialFinding]]:
+    """Parse findings and separate them by type (crash vs differential)."""
+    all_findings = parse_multiple_findings(base_path)
+    
+    findings_by_type = {
+        FindingType.CRASH: [],
+        FindingType.DIFFERENTIAL: [],
+        FindingType.UNKNOWN: []
+    }
+    
+    for finding in all_findings:
+        findings_by_type[finding.finding_type].append(finding)
+    
+    return findings_by_type 
