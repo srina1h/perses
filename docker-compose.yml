@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   kitten_df:
-    image: kitten_df
+    build: .
     container_name: kitten_df
     volumes:
       # Mount results directory to persist findings
