@@ -16,12 +16,40 @@ from finding_parser import DifferentialFinding
 from error_classifier import ClassifiedError, ErrorSignature
 
 
+def check_gpu_availability():
+    """Check and report GPU availability for semantic analysis."""
+    try:
+        import torch
+        if torch.cuda.is_available():
+            device_count = torch.cuda.device_count()
+            print(f"GPU acceleration available: {device_count} device(s)")
+            for i in range(device_count):
+                device_name = torch.cuda.get_device_name(i)
+                device_memory = torch.cuda.get_device_properties(i).total_memory / 1e9
+                print(f"  Device {i}: {device_name} ({device_memory:.1f} GB)")
+            return True
+        else:
+            print("GPU acceleration not available. Using CPU.")
+            return False
+    except ImportError:
+        print("PyTorch not available. Using CPU.")
+        return False
+
+
 class SemanticErrorAnalyzer:
     """Enhanced error analysis using semantic similarity and clustering."""
     
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         """Initialize with a sentence transformer model."""
-        self.model = SentenceTransformer(model_name)
+        # Check for GPU availability
+        import torch
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"    Using device: {device}")
+        if device == "cuda":
+            print(f"    GPU: {torch.cuda.get_device_name(0)}")
+            print(f"    GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
+        
+        self.model = SentenceTransformer(model_name, device=device)
         self.tfidf_vectorizer = TfidfVectorizer(
             max_features=1000,
             stop_words='english',
@@ -58,8 +86,11 @@ class SemanticErrorAnalyzer:
             texts.append(combined_text)
         
         print(f"    Generating embeddings for {len(texts)} texts...")
-        # Generate embeddings
-        embeddings = self.model.encode(texts)
+        # Generate embeddings with batch processing for better GPU utilization
+        batch_size = 32 if len(texts) > 32 else len(texts)
+        print(f"    Using batch size: {batch_size}")
+        
+        embeddings = self.model.encode(texts, batch_size=batch_size, show_progress_bar=True)
         print(f"    Embeddings generated successfully!")
         return embeddings
     

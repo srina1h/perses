@@ -433,6 +433,10 @@ def process_finding_type(findings: List[DifferentialFinding], finding_type_name:
         print(f"Using semantic-enhanced classification for {finding_type_name}...")
         print(f"  Processing {len(sampled_findings)} findings...")
         
+        # Check GPU availability
+        from semantic_enhancement import check_gpu_availability
+        check_gpu_availability()
+        
         classifier = EnhancedErrorClassifier()
         classified_errors = classifier.classify_with_semantic_similarity(sampled_findings)
         

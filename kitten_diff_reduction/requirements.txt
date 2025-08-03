@@ -28,4 +28,5 @@ pytest-cov>=4.0.0
 # Semantic similarity and clustering (optional enhancements)
 scikit-learn>=1.0.0
 sentence-transformers>=2.0.0
-numpy>=1.21.0 
+numpy>=1.21.0
+torch>=1.9.0 
