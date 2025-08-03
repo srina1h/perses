@@ -59,12 +59,19 @@ class FindingParser:
         if not self.finding_path.exists():
             raise FileNotFoundError(f"Finding path does not exist: {self.finding_path}")
         
+        # Validate required files
+        self._validate_finding_structure()
+        
         # Parse engine outputs
         engine_outputs = {}
         for engine in self.engines:
             engine_path = self.finding_path / engine
             if engine_path.exists():
-                engine_outputs[engine] = self._parse_engine_output(engine_path, engine)
+                try:
+                    engine_outputs[engine] = self._parse_engine_output(engine_path, engine)
+                except Exception as e:
+                    print(f"Warning: Failed to parse engine {engine} in {self.finding_path}: {e}")
+                    # Continue with other engines
         
         # Parse input files
         input_js = self._read_file("input.js")
@@ -89,10 +96,48 @@ class FindingParser:
             metadata=metadata
         )
     
+    def _validate_finding_structure(self):
+        """Validate the finding folder structure and provide helpful error messages."""
+        required_files = ["input.js"]
+        missing_files = []
+        
+        for file_name in required_files:
+            if not (self.finding_path / file_name).exists():
+                missing_files.append(file_name)
+        
+        if missing_files:
+            raise FileNotFoundError(f"Missing required files in {self.finding_path}: {missing_files}")
+        
+        # Check for at least one engine directory
+        engine_dirs = [engine for engine in self.engines if (self.finding_path / engine).exists()]
+        if not engine_dirs:
+            print(f"Warning: No engine directories found in {self.finding_path}")
+        
+        # Validate engine directory structure
+        for engine in engine_dirs:
+            engine_path = self.finding_path / engine
+            required_engine_files = ["command.txt", "exit_code.txt", "stdout.txt", "stderr.txt"]
+            missing_engine_files = []
+            
+            for file_name in required_engine_files:
+                if not (engine_path / file_name).exists():
+                    missing_engine_files.append(file_name)
+            
+            if missing_engine_files:
+                print(f"Warning: Missing files in {engine}: {missing_engine_files}")
+    
     def _parse_engine_output(self, engine_path: Path, engine_name: str) -> EngineOutput:
         """Parse output from a specific engine."""
         command = self._read_file(engine_path / "command.txt")
-        exit_code = int(self._read_file(engine_path / "exit_code.txt").strip())
+        
+        # Handle empty or invalid exit codes
+        exit_code_str = self._read_file(engine_path / "exit_code.txt").strip()
+        try:
+            exit_code = int(exit_code_str) if exit_code_str else -1
+        except ValueError:
+            # If exit code is not a valid integer, default to -1
+            exit_code = -1
+        
         stdout = self._read_file(engine_path / "stdout.txt")
         stderr = self._read_file(engine_path / "stderr.txt")
         
@@ -172,6 +217,7 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
     """Parse multiple finding folders from a base directory."""
     base_path = Path(base_path)
     findings = []
+    failed_findings = []
     
     if not base_path.exists():
         return findings
@@ -183,6 +229,17 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
                 finding = parse_finding_folder(str(item))
                 findings.append(finding)
             except Exception as e:
-                print(f"Warning: Failed to parse finding {item}: {e}")
+                error_msg = f"Failed to parse finding {item}: {e}"
+                print(f"Warning: {error_msg}")
+                failed_findings.append((str(item), str(e)))
+    
+    if failed_findings:
+        print(f"\nSummary: Successfully parsed {len(findings)} findings, failed to parse {len(failed_findings)} findings")
+        if len(failed_findings) > 0:
+            print("Failed findings:")
+            for finding_path, error in failed_findings[:5]:  # Show first 5 failures
+                print(f"  - {finding_path}: {error}")
+            if len(failed_findings) > 5:
+                print(f"  ... and {len(failed_findings) - 5} more")
     
     return findings 
