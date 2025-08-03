@@ -240,7 +240,7 @@ class ErrorClassifier:
                 lines = engine_output.stderr.split('\n')
                 for line in lines:
                     line = line.strip()
-                    if line and any(pattern in line for patterns in 
+                    if line and any(error_pattern in line for error_pattern in 
                                    [r"Error:", r"Exception:", r"SyntaxError", r"TypeError"]):
                         patterns.append(line)
         return patterns
