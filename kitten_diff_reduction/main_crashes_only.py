@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""
+Main Script for Crash Analysis Only
+
+This script processes only crash findings using fast pattern matching.
+No semantic analysis, no differential findings processing.
+"""
+
+import argparse
+import sys
+from pathlib import Path
+from finding_parser import FindingParser, FindingType
+from crash_analyzer import CrashAnalyzer
+
+
+def main():
+    """Main function for crash-only analysis."""
+    parser = argparse.ArgumentParser(
+        description="Analyze crash findings from JavaScript differential testing",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Analyze crashes in a directory
+  python main_crashes_only.py --input-dir ../results/differential_findings_javascript
+  
+  # Analyze with custom output
+  python main_crashes_only.py --input-dir ../results/differential_findings_javascript --output-dir crash_results
+        """
+    )
+    
+    parser.add_argument(
+        '--input-dir',
+        required=True,
+        help='Directory containing crash findings'
+    )
+    
+    parser.add_argument(
+        '--output-dir',
+        default='crash_analysis_output',
+        help='Output directory for results (default: crash_analysis_output)'
+    )
+    
+    parser.add_argument(
+        '--max-crashes',
+        type=int,
+        help='Maximum number of crashes to process (for testing)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Validate input directory
+    input_path = Path(args.input_dir)
+    if not input_path.exists():
+        print(f"Error: Input directory '{args.input_dir}' does not exist")
+        sys.exit(1)
+    
+    print(f"Starting crash analysis...")
+    print(f"Input directory: {args.input_dir}")
+    print(f"Output directory: {args.output_dir}")
+    print("=" * 60)
+    
+    try:
+        # Parse findings
+        print("Parsing findings...")
+        finding_parser = FindingParser()
+        all_findings = finding_parser.parse_multiple_findings(args.input_dir)
+        
+        # Filter for crashes only
+        crash_findings = [f for f in all_findings if f.finding_type == FindingType.CRASH]
+        print(f"Found {len(crash_findings)} crash findings")
+        
+        # Limit if requested
+        if args.max_crashes and len(crash_findings) > args.max_crashes:
+            print(f"Limiting to {args.max_crashes} crashes (random sample)")
+            import random
+            random.seed(42)
+            crash_findings = random.sample(crash_findings, args.max_crashes)
+        
+        if not crash_findings:
+            print("No crash findings found!")
+            return
+        
+        # Analyze crashes
+        print(f"Analyzing {len(crash_findings)} crashes...")
+        analyzer = CrashAnalyzer()
+        crash_groups = analyzer.analyze_crashes(crash_findings)
+        
+        # Generate summary
+        summary = analyzer.generate_crash_summary(crash_groups)
+        
+        # Create output directory
+        output_path = Path(args.output_dir)
+        output_path.mkdir(exist_ok=True)
+        
+        # Save detailed results
+        save_detailed_results(crash_groups, output_path)
+        
+        # Save summary
+        save_summary_report(summary, crash_groups, output_path)
+        
+        # Print summary
+        print_summary(summary, crash_groups)
+        
+        print(f"\nAnalysis complete! Results saved to: {args.output_dir}")
+        
+    except Exception as e:
+        print(f"Error during analysis: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+
+
+def save_detailed_results(crash_groups, output_path):
+    """Save detailed crash analysis results."""
+    # Save all groups
+    with open(output_path / "crash_groups_detailed.txt", 'w') as f:
+        f.write("DETAILED CRASH ANALYSIS\n")
+        f.write("=" * 50 + "\n\n")
+        
+        for i, group in enumerate(crash_groups):
+            f.write(f"GROUP {i+1}: {group.crash_type} ({group.count} crashes)\n")
+            f.write("-" * 40 + "\n")
+            f.write(f"Error Pattern: {group.signature.error_pattern}\n")
+            f.write(f"Exit Code: {group.signature.exit_code}\n")
+            f.write(f"Engines: {group.signature.engine_combination}\n")
+            f.write(f"Hash: {group.signature.hash}\n")
+            f.write(f"Representative: {group.representative.finding_path.name}\n\n")
+            
+            f.write("All findings in this group:\n")
+            for j, finding in enumerate(group.findings[:10]):  # Show first 10
+                f.write(f"  {j+1}. {finding.finding_path.name}\n")
+            if len(group.findings) > 10:
+                f.write(f"  ... and {len(group.findings) - 10} more\n")
+            f.write("\n" + "=" * 50 + "\n\n")
+
+
+def save_summary_report(summary, crash_groups, output_path):
+    """Save summary report."""
+    with open(output_path / "crash_summary.txt", 'w') as f:
+        f.write("CRASH ANALYSIS SUMMARY\n")
+        f.write("=" * 30 + "\n\n")
+        
+        f.write(f"Total crashes analyzed: {summary['total_crashes']}\n")
+        f.write(f"Unique crash types: {summary['unique_crash_types']}\n")
+        f.write(f"Crash groups created: {summary['crash_groups']}\n")
+        f.write(f"Reduction ratio: {summary['reduction_ratio']:.2%}\n\n")
+        
+        f.write("CRASH TYPE BREAKDOWN:\n")
+        f.write("-" * 25 + "\n")
+        for crash_type, count in summary['crash_types'].items():
+            f.write(f"{crash_type}: {count} crashes\n")
+        
+        f.write(f"\nTOP 10 CRASH GROUPS:\n")
+        f.write("-" * 20 + "\n")
+        for i, group in enumerate(summary['top_groups'][:10]):
+            f.write(f"{i+1}. {group['crash_type']} ({group['count']} crashes)\n")
+            f.write(f"   Pattern: {group['error_pattern']}\n")
+            f.write(f"   Representative: {group['representative_path']}\n\n")
+
+
+def print_summary(summary, crash_groups):
+    """Print summary to console."""
+    print("\n" + "=" * 60)
+    print("CRASH ANALYSIS SUMMARY")
+    print("=" * 60)
+    
+    print(f"Total crashes analyzed: {summary['total_crashes']}")
+    print(f"Unique crash types: {summary['unique_crash_types']}")
+    print(f"Crash groups created: {summary['crash_groups']}")
+    print(f"Reduction ratio: {summary['reduction_ratio']:.2%}")
+    
+    print(f"\nCrash type breakdown:")
+    for crash_type, count in summary['crash_types'].items():
+        print(f"  {crash_type}: {count} crashes")
+    
+    print(f"\nTop 5 crash groups:")
+    for i, group in enumerate(summary['top_groups'][:5]):
+        print(f"  {i+1}. {group['crash_type']} ({group['count']} crashes)")
+        print(f"     Pattern: {group['error_pattern']}")
+
+
+if __name__ == "__main__":
+    main() 
