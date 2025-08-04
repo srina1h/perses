@@ -62,8 +62,8 @@ Examples:
     try:
         # Parse findings
         print("Parsing findings...")
-        finding_parser = FindingParser()
-        all_findings = finding_parser.parse_multiple_findings(args.input_dir)
+        from finding_parser import parse_multiple_findings
+        all_findings = parse_multiple_findings(args.input_dir)
         
         # Filter for crashes only
         crash_findings = [f for f in all_findings if f.finding_type == FindingType.CRASH]

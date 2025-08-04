@@ -282,11 +282,10 @@ class CrashAnalyzer:
 
 def analyze_crash_folders(input_dir: str, output_dir: str = None) -> List[CrashGroup]:
     """Analyze crash folders and return grouped results."""
-    from finding_parser import FindingParser
+    from finding_parser import parse_multiple_findings
     
     # Parse only crash findings
-    parser = FindingParser()
-    findings = parser.parse_multiple_findings(input_dir)
+    findings = parse_multiple_findings(input_dir)
     
     # Filter for crashes only
     crash_findings = [f for f in findings if f.finding_type == FindingType.CRASH]
