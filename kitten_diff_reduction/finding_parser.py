@@ -343,8 +343,13 @@ def parse_finding_folder(finding_path: str) -> DifferentialFinding:
     return parser.parse()
 
 
-def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
-    """Parse multiple finding folders from a base directory."""
+def parse_multiple_findings(base_path: str, finding_types: List[FindingType] = None) -> List[DifferentialFinding]:
+    """Parse multiple finding folders from a base directory.
+    
+    Args:
+        base_path: Directory containing finding folders
+        finding_types: List of finding types to parse. If None, parses all types.
+    """
     base_path = Path(base_path)
     findings = []
     skipped_folders = 0
@@ -363,6 +368,13 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
             # Skip if it's neither
             if not is_crash and not is_differential:
                 continue
+            
+            # Filter by finding type if specified
+            if finding_types is not None:
+                if is_crash and FindingType.CRASH not in finding_types:
+                    continue
+                if is_differential and FindingType.DIFFERENTIAL not in finding_types:
+                    continue
             
             # For differential findings, require input.js
             if is_differential and not (item / "input.js").exists():

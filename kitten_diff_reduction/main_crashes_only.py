@@ -61,20 +61,15 @@ Examples:
     print("=" * 60)
     
     try:
-        # Parse findings
-        print("Parsing findings...")
+        # Parse findings (crash folders only)
+        print("Parsing crash folders only...")
         start_time = time.time()
         
-        from finding_parser import parse_multiple_findings
-        all_findings = parse_multiple_findings(args.input_dir)
+        from finding_parser import parse_multiple_findings, FindingType
+        crash_findings = parse_multiple_findings(args.input_dir, finding_types=[FindingType.CRASH])
         
         parse_time = time.time() - start_time
         print(f"Parsing completed in {parse_time:.2f} seconds")
-        print(f"Total findings found: {len(all_findings)}")
-        
-        # Filter for crashes only
-        print("Filtering for crashes...")
-        crash_findings = [f for f in all_findings if f.finding_type == FindingType.CRASH]
         print(f"Found {len(crash_findings)} crash findings")
         
         # Limit if requested
