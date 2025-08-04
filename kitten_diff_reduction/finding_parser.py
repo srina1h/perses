@@ -352,7 +352,8 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
     if not base_path.exists():
         return findings
     
-    # Look for finding folders (both differential and crash)
+    # First, collect all potential folders
+    potential_folders = []
     for item in base_path.iterdir():
         if item.is_dir():
             # Check if it's a crash folder or differential finding
@@ -374,12 +375,21 @@ def parse_multiple_findings(base_path: str) -> List[DifferentialFinding]:
                 if not has_crash_files:
                     continue
             
-            try:
-                finding = parse_finding_folder(str(item))
-                findings.append(finding)
-            except Exception as e:
-                # Silently skip folders with empty files or invalid structure
-                skipped_folders += 1
+            potential_folders.append(item)
+    
+    print(f"Found {len(potential_folders)} potential finding folders to parse")
+    
+    # Now parse each folder with progress monitoring
+    for i, item in enumerate(potential_folders):
+        if i % 1000 == 0 and i > 0:
+            print(f"  Parsed {i}/{len(potential_folders)} folders...")
+        
+        try:
+            finding = parse_finding_folder(str(item))
+            findings.append(finding)
+        except Exception as e:
+            # Silently skip folders with empty files or invalid structure
+            skipped_folders += 1
     
     if skipped_folders > 0:
         print(f"Note: Skipped {skipped_folders} folders with empty files or invalid structure")

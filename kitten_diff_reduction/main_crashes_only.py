@@ -8,6 +8,7 @@ No semantic analysis, no differential findings processing.
 
 import argparse
 import sys
+import time
 from pathlib import Path
 from finding_parser import FindingParser, FindingType
 from crash_analyzer import CrashAnalyzer
@@ -62,10 +63,17 @@ Examples:
     try:
         # Parse findings
         print("Parsing findings...")
+        start_time = time.time()
+        
         from finding_parser import parse_multiple_findings
         all_findings = parse_multiple_findings(args.input_dir)
         
+        parse_time = time.time() - start_time
+        print(f"Parsing completed in {parse_time:.2f} seconds")
+        print(f"Total findings found: {len(all_findings)}")
+        
         # Filter for crashes only
+        print("Filtering for crashes...")
         crash_findings = [f for f in all_findings if f.finding_type == FindingType.CRASH]
         print(f"Found {len(crash_findings)} crash findings")
         
@@ -82,26 +90,48 @@ Examples:
         
         # Analyze crashes
         print(f"Analyzing {len(crash_findings)} crashes...")
+        analysis_start = time.time()
+        
         analyzer = CrashAnalyzer()
         crash_groups = analyzer.analyze_crashes(crash_findings)
         
+        analysis_time = time.time() - analysis_start
+        print(f"Crash analysis completed in {analysis_time:.2f} seconds")
+        
         # Generate summary
+        print("Generating summary...")
+        summary_start = time.time()
         summary = analyzer.generate_crash_summary(crash_groups)
+        summary_time = time.time() - summary_start
+        print(f"Summary generation completed in {summary_time:.2f} seconds")
         
         # Create output directory
+        print(f"Creating output directory: {args.output_dir}")
         output_path = Path(args.output_dir)
         output_path.mkdir(exist_ok=True)
         
         # Save detailed results
+        print("Saving detailed results...")
+        save_start = time.time()
         save_detailed_results(crash_groups, output_path)
+        save_time = time.time() - save_start
+        print(f"Detailed results saved in {save_time:.2f} seconds")
         
         # Save summary
+        print("Saving summary report...")
+        summary_save_start = time.time()
         save_summary_report(summary, crash_groups, output_path)
+        summary_save_time = time.time() - summary_save_start
+        print(f"Summary report saved in {summary_save_time:.2f} seconds")
         
         # Print summary
         print_summary(summary, crash_groups)
         
-        print(f"\nAnalysis complete! Results saved to: {args.output_dir}")
+        total_time = time.time() - start_time
+        print(f"\n" + "=" * 60)
+        print(f"TOTAL EXECUTION TIME: {total_time:.2f} seconds")
+        print(f"Analysis complete! Results saved to: {args.output_dir}")
+        print("=" * 60)
         
     except Exception as e:
         print(f"Error during analysis: {e}")

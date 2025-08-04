@@ -93,20 +93,30 @@ class CrashAnalyzer:
         print(f"Analyzing {len(findings)} crashes...")
         
         # Extract crash signatures
+        print("  Extracting crash signatures...")
         signatures = []
-        for finding in findings:
+        for i, finding in enumerate(findings):
+            if i % 1000 == 0 and i > 0:
+                print(f"    Processed {i}/{len(findings)} findings...")
+            
             signature = self._extract_crash_signature(finding)
             if signature:
                 signatures.append((signature, finding))
         
-        print(f"Extracted {len(signatures)} valid crash signatures")
+        print(f"  Extracted {len(signatures)} valid crash signatures")
         
         # Group by signature
+        print("  Grouping by signature...")
         groups = self._group_by_signature(signatures)
+        print(f"  Created {len(groups)} initial groups")
         
         # Select representatives
+        print("  Selecting representatives...")
         crash_groups = []
-        for signature, findings_list in groups.items():
+        for i, (signature, findings_list) in enumerate(groups.items()):
+            if i % 50 == 0 and i > 0:
+                print(f"    Processed {i}/{len(groups)} groups...")
+            
             representative = self._select_representative(findings_list)
             group = CrashGroup(
                 signature=signature,
@@ -116,9 +126,10 @@ class CrashAnalyzer:
             crash_groups.append(group)
         
         # Sort by frequency
+        print("  Sorting groups by frequency...")
         crash_groups.sort(key=lambda g: g.count, reverse=True)
         
-        print(f"Created {len(crash_groups)} crash groups")
+        print(f"  Created {len(crash_groups)} final crash groups")
         return crash_groups
     
     def _extract_crash_signature(self, finding: DifferentialFinding) -> CrashSignature:
