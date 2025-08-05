@@ -15,7 +15,7 @@ import hashlib
 from finding_parser import DifferentialFinding, FindingType
 
 
-@dataclass
+@dataclass(frozen=True)
 class CrashSignature:
     """Represents a crash signature for grouping similar crashes."""
     crash_type: str
@@ -26,6 +26,17 @@ class CrashSignature:
     
     def __str__(self):
         return f"{self.crash_type}:{self.error_pattern[:50]}..."
+    
+    def __hash__(self):
+        return hash((self.crash_type, self.error_pattern[:50], self.exit_code, self.engine_combination))
+    
+    def __eq__(self, other):
+        if not isinstance(other, CrashSignature):
+            return False
+        return (self.crash_type == other.crash_type and 
+                self.error_pattern[:50] == other.error_pattern[:50] and
+                self.exit_code == other.exit_code and
+                self.engine_combination == other.engine_combination)
 
 
 @dataclass
@@ -233,18 +244,10 @@ class CrashAnalyzer:
         groups = defaultdict(list)
         
         for signature, finding in signatures:
-            # Create a key based on crash type and error pattern
-            key = (signature.crash_type, signature.error_pattern[:50])
-            groups[key].append(finding)
+            # Use the signature directly as the key (now that it's hashable)
+            groups[signature].append(finding)
         
-        # Convert to CrashSignature keys
-        result = {}
-        for (crash_type, error_pattern), findings_list in groups.items():
-            # Use the first signature as the representative
-            signature = signatures[0][0]
-            result[signature] = findings_list
-        
-        return result
+        return dict(groups)
     
     def _select_representative(self, findings: List[DifferentialFinding]) -> DifferentialFinding:
         """Select a representative finding from the group."""
