@@ -1,4 +1,0 @@
-internal compiler error: Segmentation fault
-crash_signal
-is_gimple_variable
-is_gimple_id

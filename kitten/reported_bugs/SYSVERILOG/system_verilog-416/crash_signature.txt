@@ -1,1 +1,0 @@
-internal compiler error: Assertion 'subroutine.subroutineKind != SubroutineKind::Task' failed

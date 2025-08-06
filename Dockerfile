@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     nodejs \
     npm \
+    libc6-dev \
+    libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Bazel 7.4.1 (specific version required by the project)
@@ -67,13 +69,15 @@ RUN git checkout diff
 
 # Prepare seeds by running the prepare_seeds.sh script
 RUN chmod +x prepare_seeds.sh && ./prepare_seeds.sh
-# Create necessary directoriesß
+
+# Create necessary directories for differential testing with instrumentation
 RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascript \
     && mkdir -p kitten/temp_testing_campaigns/differential_processing_folder_javascript \
     && mkdir -p kitten/temp_testing_campaigns/differential_duplicate_folder_javascript \
-    && mkdir -p kitten/reported_bugs/javascript
+    && mkdir -p kitten/reported_bugs/javascript \
+    && mkdir -p kitten/scripts/javascript/seeds
 
-# Build the project
+# Build the project with instrumentation support
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
 # Create a script to update the configuration with correct paths
@@ -100,12 +104,12 @@ EOF
 
 RUN chmod +x /workspace/update-config.sh
 
-# Create the main entry script with SLURM support
+# Create the main entry script with SLURM support and instrumentation
 RUN cat > /workspace/start-differential-testing.sh << 'EOF'
 #!/bin/bash
 set -e
 
-echo "Starting differential testing setup..."
+echo "Starting differential testing setup with instrumentation..."
 
 # Update configuration paths
 ./update-config.sh
@@ -162,7 +166,7 @@ if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
         echo "Searching for any graal executable:"
         find /usr/local/bin/js-engines/graaljs-temp/ -type f -executable -name "*graal*" -ls
         echo "Listing contents of graaljs-24.2.2-linux-amd64/bin directory:"
-        ls -la /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/
+        ls -la /usr/local/bin/js-engines/graaljs-24.2.2-linux-amd64/bin/
     fi
 elif [ -f "$HOME/.jsvu/bin/graaljs" ]; then
     echo "Copying GraalJS binary from ~/.jsvu/bin/graaljs..."
@@ -219,6 +223,17 @@ else
     ls -la $HOME/.jsvu/engines/graaljs/ || echo "GraalJS not found in original location"
 fi
 
+# Test instrumentation capabilities
+echo "Testing instrumentation capabilities..."
+cd /workspace
+if [ -f "kitten/scripts/javascript/test_instrumentation.sh" ]; then
+    echo "Running instrumentation test..."
+    chmod +x kitten/scripts/javascript/test_instrumentation.sh
+    kitten/scripts/javascript/test_instrumentation.sh || echo "Instrumentation test failed, continuing..."
+else
+    echo "No instrumentation test script found, skipping..."
+fi
+
 # Determine number of threads based on SLURM environment or system cores
 if [[ -n "${SLURM_CPUS_PER_TASK:-}" ]]; then
     THREADS="${SLURM_CPUS_PER_TASK}"
@@ -246,7 +261,7 @@ else
     echo "Using default JVM heap: ${JVM_HEAP}G"
 fi
 
-echo "Starting differential testing with ${THREADS} threads and ${JVM_HEAP}G heap..."
+echo "Starting differential testing with instrumentation using ${THREADS} threads and ${JVM_HEAP}G heap..."
 cd /workspace
 
 # Create a temporary script with the correct thread count
@@ -254,11 +269,12 @@ cat > /workspace/run-differential-testing-temp.sh << 'INNER_EOF'
 #!/bin/bash
 set -e
 
-echo "Starting differential testing with multiple JavaScript engines..."
+echo "Starting differential testing with instrumentation..."
 echo "Engines: V8, Hermes, GraalJS"
 echo "Threads: THREADS_PLACEHOLDER"
 echo "JVM Heap: JVM_HEAP_PLACEHOLDER"
 echo "Differential findings will be saved to: kitten/temp_testing_campaigns/differential_finding_folder_javascript"
+echo "Instrumentation will be applied to JavaScript files for enhanced differential testing"
 
 java -XmxJVM_HEAP_PLACEHOLDER -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
   --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \
@@ -267,8 +283,9 @@ java -XmxJVM_HEAP_PLACEHOLDER -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer
   --timeout 1000000000 \
   --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
 
-echo "Differential testing completed!"
+echo "Differential testing with instrumentation completed!"
 echo "Check kitten/temp_testing_campaigns/differential_finding_folder_javascript for differential findings."
+echo "Instrumented files will have 'instrumented_' prefix in the findings."
 INNER_EOF
 
 # Replace placeholders with actual values

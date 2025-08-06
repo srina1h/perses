@@ -1,2 +1,0 @@
-/tmp/tmp.F2MvT4tsOz/jerryscript/jerry-core/ecma/base/ecma-helpers-number.c:700:51: runtime error: left shift of negative value -8
-

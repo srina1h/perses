@@ -1,3 +1,0 @@
-thread 'rustc' panicked at 'attribute takes lit'
-error: internal compiler error: unexpected panic
-note: the compiler unexpectedly panicked. this is a bug.

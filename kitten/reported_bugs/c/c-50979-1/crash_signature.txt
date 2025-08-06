@@ -1,2 +1,0 @@
-void {anonymous}::LValue::setFrom(clang::ASTContext&, const clang::APValue&): Assertion `V.isLValue() && "Setting LValue from a non-LValue?"' failed.
-PLEASE submit a bug report to

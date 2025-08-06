@@ -27,6 +27,8 @@ import org.perses.fuzzer.compilers.DifferentialTestResult
 import org.perses.fuzzer.compilers.ICompilationAction
 import org.perses.fuzzer.compilers.ICompilerCrashDetector
 import org.perses.fuzzer.DifferentialFindingFolder
+import org.perses.fuzzer.instrumentation.InstrumentationConfig
+import org.perses.fuzzer.instrumentation.JavaScriptInstrumenter
 import org.perses.fuzzer.config.SeedFolder
 import org.perses.fuzzer.config.TestingConfiguration
 import org.perses.fuzzer.coveragecollector.CoverageCollectorFactory
@@ -484,7 +486,14 @@ class FuzzerDriver(
   ) {
     logger.ktAt(Level.FINE) { "Running differential testing on $mutantFile" }
     
-    val differentialResult = differentialTester.testDifferentially(mutantFile)
+    // Apply instrumentation if this is JavaScript
+    val fileToTest = if (testingConfiguration.language == "JAVASCRIPT") {
+      applyInstrumentation(mutantFile)
+    } else {
+      mutantFile
+    }
+    
+    val differentialResult = differentialTester.testDifferentially(fileToTest)
     
     if (differentialResult.hasDiscrepancy) {
       logger.ktAt(Level.FINE) {
@@ -497,7 +506,7 @@ class FuzzerDriver(
           findingFolder,
           seedProgram,
           seedFile,
-          mutantFile,
+          fileToTest,
           differentialResult,
           action
         )
@@ -511,8 +520,50 @@ class FuzzerDriver(
     // Also run traditional crash detection for backward compatibility
     for (facade in facades) {
       for (action in facade.compilationActions) {
-        testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
+        testActionOnMutant(action, fileToTest, seedFile, seedProgram, facade.crashDetector)
       }
+    }
+    
+    // Clean up instrumented file if it was created
+    if (fileToTest != mutantFile) {
+      fileToTest.delete()
+    }
+  }
+  
+  /**
+   * Apply instrumentation to a JavaScript file for differential testing.
+   */
+  private fun applyInstrumentation(originalFile: File): File {
+    try {
+      val sourceCode = originalFile.readText(Charsets.UTF_8)
+      
+      // Create instrumentation config
+      val config = InstrumentationConfig.defaultConfig()
+      
+      // Create instrumenter
+      val instrumenter = JavaScriptInstrumenter(config)
+      
+      // Instrument the code
+      val instrumentedCode = instrumenter.instrument(sourceCode)
+      
+      // Create a new file with instrumented code
+      val instrumentedFile = File(
+        originalFile.parentFile,
+        "instrumented_${originalFile.name}"
+      )
+      instrumentedFile.writeText(instrumentedCode, Charsets.UTF_8)
+      
+      logger.ktAt(Level.FINE) { 
+        "Applied instrumentation to ${originalFile.name}, created ${instrumentedFile.name}" 
+      }
+      
+      return instrumentedFile
+      
+    } catch (e: Exception) {
+      logger.atWarning().withCause(e).log(
+        "Failed to apply instrumentation to ${originalFile.name}, using original file"
+      )
+      return originalFile
     }
   }
 

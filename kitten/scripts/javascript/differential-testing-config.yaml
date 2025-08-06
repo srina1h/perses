@@ -1,4 +1,5 @@
 language: "JAVASCRIPT"
+
 seedFolders:
   - path: "kitten/scripts/javascript/seeds"
     fileExtentions: [".js"]

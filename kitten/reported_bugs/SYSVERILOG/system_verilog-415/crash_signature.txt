@@ -1,3 +1,0 @@
-internal compiler error: Assertion 'range.start()' failed
-Diagnostics.cpp
-function: slang::Diagnostic &slang::Diagnostic::operator<<(slang::SourceRange)

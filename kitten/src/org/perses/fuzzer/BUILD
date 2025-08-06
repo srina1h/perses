@@ -42,6 +42,7 @@ kt_jvm_library(
         "//kitten/src/org/perses/fuzzer/compilers/c",
         "//kitten/src/org/perses/fuzzer/compilers/javac:java",
         "//kitten/src/org/perses/fuzzer/compilers/javascript",
+        "//kitten/src/org/perses/fuzzer/instrumentation",
         "//kitten/src/org/perses/fuzzer/compilers/php",
         "//kitten/src/org/perses/fuzzer/compilers/ruby",
         "//kitten/src/org/perses/fuzzer/compilers/rust",

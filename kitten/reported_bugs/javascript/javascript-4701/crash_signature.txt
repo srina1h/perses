@@ -1,2 +1,0 @@
-jerryscript/jerry-core/vm/opcodes-ecma-bitwise.c
-runtime error: left shift of negative value -

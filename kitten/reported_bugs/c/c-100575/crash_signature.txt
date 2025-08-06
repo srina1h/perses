@@ -1,3 +1,0 @@
-internal compiler error: in expand_stack_alignment, at cfgexpand.c
-expand_stack_alignment
-execute

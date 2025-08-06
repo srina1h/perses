@@ -1,3 +1,0 @@
-internal compiler error: Assertion 'visitor.errored || seenBindDirectives.size() == numBinds' failed
-Compilation.cpp
-function: const slang::RootSymbol &slang::Compilation::getRoot(bool)

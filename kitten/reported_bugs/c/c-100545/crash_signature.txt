@@ -1,3 +1,0 @@
-internal compiler error: in gen_typedef_die, at dwarf2out.c
-gen_typedef_die
-gen_decl_die

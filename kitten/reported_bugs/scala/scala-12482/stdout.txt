@@ -1,2 +1,0 @@
-java.lang.AssertionError: assertion failed: class FileZipArchive has non-class parent: val <none> while compiling mutant.scala
-

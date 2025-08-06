@@ -1,3 +1,0 @@
-void clang::TypeLoc::initializeFullCopy(clang::TypeLoc): Assertion `getType() == Other.getType()' failed.
-PLEASE submit a bug report to
-PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:

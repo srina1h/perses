@@ -1,2 +1,0 @@
-jerryscript/jerry-core/ecma/operations/ecma-regexp-object.c
-runtime error: variable length array bound evaluates to non-positive value

@@ -1,3 +1,0 @@
-internal compiler error: in compute_antic, at tree-ssa-pre.c
-compute_antic
-execute

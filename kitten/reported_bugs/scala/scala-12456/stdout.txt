@@ -1,2 +1,0 @@
-java.lang.AssertionError: assertion failed: isType called on not-a-Type val <none> while compiling mutant.scala
-

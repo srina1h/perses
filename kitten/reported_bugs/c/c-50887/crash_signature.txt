@@ -1,3 +1,0 @@
-bool clang::Type::isConstantSizeType() const: Assertion `!isIncompleteType() && "This doesn't make sense for incomplete types"' failed.
-PLEASE submit a bug report to
-PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:

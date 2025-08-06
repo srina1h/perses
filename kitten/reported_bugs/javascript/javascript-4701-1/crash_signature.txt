@@ -1,4 +1,0 @@
-jerryscript/jerry-core/vm/opcodes-ecma-bitwise.c
-runtime error: left shift of
-by
-places cannot be represented in type 'int'

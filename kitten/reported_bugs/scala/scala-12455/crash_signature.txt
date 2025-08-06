@@ -1,3 +1,0 @@
-Exception in thread "main" java.util.NoSuchElementException: head of empty list
-at scala.collection.immutable.Nil$.head
-at dotty.tools.dotc.core.SymDenotations$SymDenotation.recurWithParamss$1

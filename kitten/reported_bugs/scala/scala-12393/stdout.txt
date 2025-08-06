@@ -1,2 +1,0 @@
-java.lang.AssertionError: assertion failed: duplicate attachment for key dotty.tools.dotc.util.Property$Key@761e788f while compiling mutant.scala
-

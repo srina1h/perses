@@ -1,3 +1,0 @@
-internal compiler error: Segmentation fault
-crash_signal
-vect_optimize_slp(vec_info*)
