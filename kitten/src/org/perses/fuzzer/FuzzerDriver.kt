@@ -576,6 +576,7 @@ class FuzzerDriver(
     numberLimitOfSeedFiles: Int,
     validateSeedsOnAllEngines: Boolean,
   ): ArrayList<SparTreeFuzzer> {
+    logger.ktInfo { "Starting seed creation with validation enabled: $validateSeedsOnAllEngines" }
     val result = ArrayList<SparTreeFuzzer>()
     var failedCounter = 0
     var passedCounter = 0
@@ -593,12 +594,17 @@ class FuzzerDriver(
         
         // First, validate that the seed works on all engines (if enabled)
         if (validateSeedsOnAllEngines) {
-          logger.ktAt(Level.FINE) { "Validating seed on all engines($index/$totalCount) $seed" }
-          if (!differentialTester.validateSeedOnAllEngines(seed)) {
+          logger.ktInfo { "About to validate seed on all engines($index/$totalCount) $seed" }
+          val validationResult = differentialTester.validateSeedOnAllEngines(seed)
+          logger.ktInfo { "Validation result for seed $seed: $validationResult" }
+          if (!validationResult) {
             ++engineValidationFailedCounter
-            logger.ktAt(Level.FINE) { "Seed failed engine validation($index/$totalCount) $seed" }
+            logger.ktInfo { "Seed failed engine validation($index/$totalCount) $seed" }
             continue
           }
+          logger.ktInfo { "Seed passed engine validation($index/$totalCount) $seed" }
+        } else {
+          logger.ktInfo { "Skipping validation for seed($index/$totalCount) $seed" }
         }
         
         val future = executor.submit<SparTreeFuzzer> {
@@ -631,6 +637,9 @@ class FuzzerDriver(
     }
     if (validateSeedsOnAllEngines && engineValidationFailedCounter != 0) {
       logger.atWarning().log("Failed engine validation for %s seed files in total.", engineValidationFailedCounter)
+    }
+    if (validateSeedsOnAllEngines) {
+      logger.ktInfo { "Seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
     }
     if (shuffleSeeds) {
       result.shuffle(random)
