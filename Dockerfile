@@ -3,8 +3,7 @@ FROM ubuntu:22.04
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV PATH=$JAVA_HOME/bin:/root/bin:$PATH
+ENV PATH=/root/bin:$PATH
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -22,20 +21,34 @@ RUN apt-get update && apt-get install -y \
     libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Bazel 7.4.1 (specific version required by the project)
-RUN BAZEL_VERSION=7.4.1 \
-    && curl -fsSL https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh -o bazel-installer.sh \
-    && chmod +x bazel-installer.sh \
-    && ./bazel-installer.sh --user \
-    && rm bazel-installer.sh \
-    && ln -sf $HOME/bin/bazel /usr/local/bin/bazel \
+# Install Bazel using pre-built binary (works on both x86_64 and ARM64)
+RUN ARCH=$(uname -m) \
+    && if [ "$ARCH" = "x86_64" ]; then \
+        curl -fsSL https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-x86_64 -o /usr/local/bin/bazel; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        curl -fsSL https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-arm64 -o /usr/local/bin/bazel; \
+    fi \
+    && chmod +x /usr/local/bin/bazel \
     && bazel --version
+
+# Set JAVA_HOME to the correct path
+RUN JAVA_HOME=$(update-alternatives --query java | grep 'Value:' | head -1 | awk '{print $2}' | sed 's|/bin/java||') \
+    && echo "export JAVA_HOME=$JAVA_HOME" >> /etc/environment \
+    && echo "export JAVA_HOME=$JAVA_HOME" >> /root/.bashrc \
+    && export JAVA_HOME=$JAVA_HOME
 
 # Install JSVU (JavaScript Version Updater)
 RUN npm install -g jsvu
 
-# Install JavaScript engines via JSVU (install all together)
-RUN jsvu --os=linux64 --engines=graaljs,hermes,v8 \
+# Install JavaScript engines via JSVU (use correct architecture)
+RUN ARCH=$(uname -m) \
+    && if [ "$ARCH" = "x86_64" ]; then \
+        jsvu --os=linux64 --engines=graaljs,hermes,v8; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        jsvu --os=linux64 --engines=graaljs,hermes; \
+        # For ARM64, we'll skip V8 for now and use only GraalJS and Hermes \
+        && echo "Skipping V8 on ARM64 - using GraalJS and Hermes only"; \
+    fi \
     && echo "Checking what engines were installed:" \
     && ls -la ~/.jsvu/bin/ || echo "No bin directory found"
 
@@ -81,220 +94,210 @@ RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascrip
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
 # Create a script to update the configuration with correct paths
-RUN cat > /workspace/update-config.sh << 'EOF'
-#!/bin/bash
-# Update the differential testing config with correct paths
-cd /workspace
-echo "Current directory: $(pwd)"
-echo "Checking if config file exists:"
-if [ -f "kitten/scripts/javascript/all-compilers-config.yaml" ]; then
-    echo "Config file found!"
-    echo "Updating configuration paths..."
-    sed -i 's|/Users/srinath/.jsvu/bin/v8|/usr/local/bin/js-engines/v8|g' kitten/scripts/javascript/all-compilers-config.yaml
-    sed -i 's|/Users/srinath/.jsvu/bin/hermes|/usr/local/bin/js-engines/hermes|g' kitten/scripts/javascript/all-compilers-config.yaml
-    sed -i 's|/Users/srinath/.jsvu/bin/graaljs|/usr/local/bin/js-engines/graaljs|g' kitten/scripts/javascript/all-compilers-config.yaml
-    echo "Configuration update completed."
-else
-    echo "ERROR: Config file not found!"
-    echo "Available files in kitten/scripts/javascript/:"
-    ls -la kitten/scripts/javascript/ || echo "Directory not found!"
-    exit 1
-fi
-EOF
+RUN echo '#!/bin/bash' > /workspace/update-config.sh && \
+    echo '# Update the differential testing config with correct paths' >> /workspace/update-config.sh && \
+    echo 'cd /workspace' >> /workspace/update-config.sh && \
+    echo 'echo "Current directory: $(pwd)"' >> /workspace/update-config.sh && \
+    echo 'echo "Checking if config file exists:"' >> /workspace/update-config.sh && \
+    echo 'if [ -f "kitten/scripts/javascript/all-compilers-config.yaml" ]; then' >> /workspace/update-config.sh && \
+    echo '    echo "Config file found!"' >> /workspace/update-config.sh && \
+    echo '    echo "Updating configuration paths..."' >> /workspace/update-config.sh && \
+    echo '    sed -i "s|/Users/srinath/.jsvu/bin/hermes|/usr/local/bin/js-engines/hermes|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
+    echo '    sed -i "s|/Users/srinath/.jsvu/bin/graaljs|/usr/local/bin/js-engines/graaljs|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
+    echo '    # Remove V8 configuration on ARM64' >> /workspace/update-config.sh && \
+    echo '    if [ "$(uname -m)" = "aarch64" ]; then' >> /workspace/update-config.sh && \
+    echo '        echo "Removing V8 configuration on ARM64..."' >> /workspace/update-config.sh && \
+    echo '        sed -i "/command: \"\/usr\/local\/bin\/js-engines\/v8\/v8\"/,/crashDetectorClassName: \"org.perses.fuzzer.compilers.javascript.V8CrashDetector\"/d" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
+    echo '    else' >> /workspace/update-config.sh && \
+    echo '        sed -i "s|/Users/srinath/.jsvu/bin/v8|/usr/local/bin/js-engines/v8|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
+    echo '    fi' >> /workspace/update-config.sh && \
+    echo '    echo "Configuration update completed."' >> /workspace/update-config.sh && \
+    echo 'else' >> /workspace/update-config.sh && \
+    echo '    echo "ERROR: Config file not found!"' >> /workspace/update-config.sh && \
+    echo '    echo "Available files in kitten/scripts/javascript/:"' >> /workspace/update-config.sh && \
+    echo '    ls -la kitten/scripts/javascript/ || echo "Directory not found!"' >> /workspace/update-config.sh && \
+    echo '    exit 1' >> /workspace/update-config.sh && \
+    echo 'fi' >> /workspace/update-config.sh
 
 RUN chmod +x /workspace/update-config.sh
 
 # Create the main entry script with SLURM support and instrumentation
-RUN cat > /workspace/start-differential-testing.sh << 'EOF'
-#!/bin/bash
-set -e
-
-echo "Starting differential testing setup with instrumentation..."
-
-# Update configuration paths
-./update-config.sh
-
-# Verify JavaScript engines are available
-echo "Verifying JavaScript engines..."
-
-# Debug: Show what we're about to do
-echo "DEBUG: About to check and create symlinks..."
-echo "DEBUG: HOME=$HOME"
-echo "DEBUG: Checking if V8 exists at $HOME/.jsvu/engines/v8/v8"
-
-# Ensure engines are available (they should be copied during build)
-echo "Checking if engines are available..."
-mkdir -p /usr/local/bin/js-engines
-echo "Available engines:"
-ls -la /usr/local/bin/js-engines/ || echo "No engines found"
-
-# Try to copy engines if they're not already copied
-echo "Checking for engines in ~/.jsvu/bin/..."
-if [ -f "$HOME/.jsvu/bin/v8" ] && [ ! -f "/usr/local/bin/js-engines/v8" ]; then
-    echo "Copying V8 from ~/.jsvu/bin/v8..."
-    cp $HOME/.jsvu/bin/v8 /usr/local/bin/js-engines/v8
-fi
-if [ -f "$HOME/.jsvu/bin/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then
-    echo "Copying Hermes from ~/.jsvu/bin/hermes..."
-    cp $HOME/.jsvu/bin/hermes /usr/local/bin/js-engines/hermes
-fi
-if [ -d "$HOME/.jsvu/engines/graaljs" ]; then
-    echo "Copying GraalJS directory from ~/.jsvu/engines/graaljs/..."
-    cp -r $HOME/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs-temp/
-    echo "Copying GraalJS binary to standard location..."
-    echo "Checking what's in graaljs-temp:"
-    ls -la /usr/local/bin/js-engines/graaljs-temp/
-    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/js" ]; then
-        echo "Found graaljs-24.2.2-linux-amd64/bin/js, creating wrapper script..."
-        echo '#!/bin/bash' > /usr/local/bin/js-engines/graaljs
-        echo 'export GRAALVM_HOME="/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64"' >> /usr/local/bin/js-engines/graaljs
-        echo 'export JAVA_HOME="$GRAALVM_HOME"' >> /usr/local/bin/js-engines/graaljs
-        echo 'export PATH="$GRAALVM_HOME/bin:$PATH"' >> /usr/local/bin/js-engines/graaljs
-        echo 'exec "$GRAALVM_HOME/bin/js" "$@"' >> /usr/local/bin/js-engines/graaljs
-        chmod +x /usr/local/bin/js-engines/graaljs
-    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs" ]; then
-        echo "Found graaljs-24.2.2-linux-amd64/graaljs, copying..."
-        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs /usr/local/bin/js-engines/graaljs
-    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64" ]; then
-        echo "Found graaljs-24.2.2-linux-amd64, copying..."
-        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64 /usr/local/bin/js-engines/graaljs
-    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs" ]; then
-        echo "Found graaljs, copying..."
-        cp /usr/local/bin/js-engines/graaljs-temp/graaljs /usr/local/bin/js-engines/graaljs
-    else
-        echo "ERROR: No GraalJS binary found in temp directory!"
-        echo "Searching for any graal executable:"
-        find /usr/local/bin/js-engines/graaljs-temp/ -type f -executable -name "*graal*" -ls
-        echo "Listing contents of graaljs-24.2.2-linux-amd64/bin directory:"
-        ls -la /usr/local/bin/js-engines/graaljs-24.2.2-linux-amd64/bin/
-    fi
-elif [ -f "$HOME/.jsvu/bin/graaljs" ]; then
-    echo "Copying GraalJS binary from ~/.jsvu/bin/graaljs..."
-    cp $HOME/.jsvu/bin/graaljs /usr/local/bin/js-engines/graaljs
-fi
-
-# Also check ~/.jsvu/engines/ directory as fallback
-echo "Checking for engines in ~/.jsvu/engines/..."
-if [ -d "$HOME/.jsvu/engines/v8" ] && [ ! -d "/usr/local/bin/js-engines/v8" ]; then
-    echo "Copying V8 directory from ~/.jsvu/engines/v8/..."
-    cp -r $HOME/.jsvu/engines/v8/ /usr/local/bin/js-engines/v8/
-fi
-if [ -f "$HOME/.jsvu/engines/hermes/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then
-    echo "Copying Hermes from ~/.jsvu/engines/hermes/hermes..."
-    cp $HOME/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes
-fi
-if [ -f "$HOME/.jsvu/engines/graaljs/graaljs" ] && [ ! -f "/usr/local/bin/js-engines/graaljs" ]; then
-    echo "Copying GraalJS from ~/.jsvu/engines/graaljs/graaljs..."
-    cp $HOME/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs
-fi
-
-echo "Final engine status:"
-ls -la /usr/local/bin/js-engines/ || echo "No engines found"
-
-echo "Checking symlinks:"
-ls -la /usr/local/bin/js-engines/
-echo "Checking original files:"
-ls -la $HOME/.jsvu/engines/
-echo "Testing engines:"
-echo "DEBUG: About to test V8..."
-if [ -f "/usr/local/bin/js-engines/v8/v8" ]; then
-    echo "DEBUG: V8 exists, testing..."
-    echo "console.log('V8 test successful');" | /usr/local/bin/js-engines/v8/v8
-else
-    echo "ERROR: V8 not found!"
-    echo "Checking if V8 exists in original location:"
-    ls -la $HOME/.jsvu/engines/v8/v8 || echo "V8 not found in original location"
-    echo "DEBUG: Skipping V8 test since engine doesn't exist"
-fi
-if [ -f "/usr/local/bin/js-engines/hermes" ]; then
-    echo "DEBUG: About to test Hermes..."
-    /usr/local/bin/js-engines/hermes --version
-else
-    echo "ERROR: Hermes not found!"
-    echo "Checking if Hermes exists in original location:"
-    ls -la $HOME/.jsvu/bin/hermes || echo "Hermes not found in original location"
-fi
-if [ -f "/usr/local/bin/js-engines/graaljs" ]; then
-    echo "DEBUG: About to test GraalJS..."
-    echo "console.log('GraalJS test successful');" | /usr/local/bin/js-engines/graaljs
-else
-    echo "ERROR: GraalJS not found!"
-    echo "Checking if GraalJS exists in original location:"
-    ls -la $HOME/.jsvu/engines/graaljs/ || echo "GraalJS not found in original location"
-fi
-
-# Test instrumentation capabilities
-echo "Testing instrumentation capabilities..."
-cd /workspace
-if [ -f "kitten/scripts/javascript/test_instrumentation.sh" ]; then
-    echo "Running instrumentation test..."
-    chmod +x kitten/scripts/javascript/test_instrumentation.sh
-    kitten/scripts/javascript/test_instrumentation.sh || echo "Instrumentation test failed, continuing..."
-else
-    echo "No instrumentation test script found, skipping..."
-fi
-
-# Determine number of threads based on SLURM environment or system cores
-if [[ -n "${SLURM_CPUS_PER_TASK:-}" ]]; then
-    THREADS="${SLURM_CPUS_PER_TASK}"
-    echo "Using SLURM_CPUS_PER_TASK: ${THREADS} threads"
-elif [[ -n "${SLURM_JOB_CPUS_PER_NODE:-}" ]]; then
-    THREADS="${SLURM_JOB_CPUS_PER_NODE}"
-    echo "Using SLURM_JOB_CPUS_PER_NODE: ${THREADS} threads"
-elif [[ -n "${SLURM_NTASKS:-}" ]]; then
-    THREADS="${SLURM_NTASKS}"
-    echo "Using SLURM_NTASKS: ${THREADS} threads"
-else
-    THREADS=$(nproc)
-    echo "Using system cores: ${THREADS} threads"
-fi
-
-# Determine memory allocation based on SLURM environment
-if [[ -n "${SLURM_MEM_PER_NODE:-}" ]]; then
-    # Convert SLURM memory (in MB) to GB for JVM
-    MEM_GB=$((SLURM_MEM_PER_NODE / 1024))
-    # Reserve 2GB for system, use rest for JVM
-    JVM_HEAP=$((MEM_GB - 2))
-    echo "SLURM memory: ${SLURM_MEM_PER_NODE}MB, JVM heap: ${JVM_HEAP}G"
-else
-    JVM_HEAP=16
-    echo "Using default JVM heap: ${JVM_HEAP}G"
-fi
-
-echo "Starting differential testing with instrumentation using ${THREADS} threads and ${JVM_HEAP}G heap..."
-cd /workspace
-
-# Create a temporary script with the correct thread count
-cat > /workspace/run-differential-testing-temp.sh << 'INNER_EOF'
-#!/bin/bash
-set -e
-
-echo "Starting differential testing with instrumentation..."
-echo "Engines: V8, Hermes, GraalJS"
-echo "Threads: THREADS_PLACEHOLDER"
-echo "JVM Heap: JVM_HEAP_PLACEHOLDER"
-echo "Differential findings will be saved to: kitten/temp_testing_campaigns/differential_finding_folder_javascript"
-echo "Instrumentation will be applied to JavaScript files for enhanced differential testing"
-
-java -XmxJVM_HEAP_PLACEHOLDER -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
-  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \
-  --threads THREADS_PLACEHOLDER \
-  --verbosity "FINE" \
-  --timeout 1000000000 \
-  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
-
-echo "Differential testing with instrumentation completed!"
-echo "Check kitten/temp_testing_campaigns/differential_finding_folder_javascript for differential findings."
-echo "Instrumented files will have 'instrumented_' prefix in the findings."
-INNER_EOF
-
-# Replace placeholders with actual values
-sed -i "s/THREADS_PLACEHOLDER/${THREADS}/g" /workspace/run-differential-testing-temp.sh
-sed -i "s/JVM_HEAP_PLACEHOLDER/${JVM_HEAP}G/g" /workspace/run-differential-testing-temp.sh
-
-chmod +x /workspace/run-differential-testing-temp.sh
-./run-differential-testing-temp.sh
-EOF
+RUN echo '#!/bin/bash' > /workspace/start-differential-testing.sh && \
+    echo 'set -e' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Starting differential testing setup with instrumentation..."' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Update configuration paths' >> /workspace/start-differential-testing.sh && \
+    echo './update-config.sh' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Verify JavaScript engines are available' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Verifying JavaScript engines..."' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Debug: Show what we are about to do' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "DEBUG: About to check and create symlinks..."' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "DEBUG: HOME=$HOME"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "DEBUG: Checking if V8 exists at $HOME/.jsvu/engines/v8/v8"' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Ensure engines are available (they should be copied during build)' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Checking if engines are available..."' >> /workspace/start-differential-testing.sh && \
+    echo 'mkdir -p /usr/local/bin/js-engines' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Available engines:"' >> /workspace/start-differential-testing.sh && \
+    echo 'ls -la /usr/local/bin/js-engines/ || echo "No engines found"' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Try to copy engines if they are not already copied' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Checking for engines in ~/.jsvu/bin/..."' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "$HOME/.jsvu/bin/v8" ] && [ ! -f "/usr/local/bin/js-engines/v8" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying V8 from ~/.jsvu/bin/v8..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp $HOME/.jsvu/bin/v8 /usr/local/bin/js-engines/v8' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "$HOME/.jsvu/bin/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying Hermes from ~/.jsvu/bin/hermes..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp $HOME/.jsvu/bin/hermes /usr/local/bin/js-engines/hermes' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -d "$HOME/.jsvu/engines/graaljs" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying GraalJS directory from ~/.jsvu/engines/graaljs/..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp -r $HOME/.jsvu/engines/graaljs/ /usr/local/bin/js-engines/graaljs-temp/' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying GraalJS binary to standard location..."' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Checking what is in graaljs-temp:"' >> /workspace/start-differential-testing.sh && \
+    echo '    ls -la /usr/local/bin/js-engines/graaljs-temp/' >> /workspace/start-differential-testing.sh && \
+    echo '    if [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/bin/js" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "Found graaljs-24.2.2-linux-amd64/bin/js, creating wrapper script..."' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "#!/bin/bash" > /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "export GRAALVM_HOME=/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64" >> /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "export JAVA_HOME=$GRAALVM_HOME" >> /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "export PATH=$GRAALVM_HOME/bin:$PATH" >> /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "exec $GRAALVM_HOME/bin/js \"$@\"" >> /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '        chmod +x /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "Found graaljs-24.2.2-linux-amd64/graaljs, copying..."' >> /workspace/start-differential-testing.sh && \
+    echo '        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64/graaljs /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "Found graaljs-24.2.2-linux-amd64, copying..."' >> /workspace/start-differential-testing.sh && \
+    echo '        cp /usr/local/bin/js-engines/graaljs-temp/graaljs-24.2.2-linux-amd64 /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '    elif [ -f "/usr/local/bin/js-engines/graaljs-temp/graaljs" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "Found graaljs, copying..."' >> /workspace/start-differential-testing.sh && \
+    echo '        cp /usr/local/bin/js-engines/graaljs-temp/graaljs /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo '    else' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "ERROR: No GraalJS binary found in temp directory!"' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "Searching for any graal executable:"' >> /workspace/start-differential-testing.sh && \
+    echo '        find /usr/local/bin/js-engines/graaljs-temp/ -type f -executable -name "*graal*" -ls' >> /workspace/start-differential-testing.sh && \
+    echo '        echo "Listing contents of graaljs-24.2.2-linux-amd64/bin directory:"' >> /workspace/start-differential-testing.sh && \
+    echo '        ls -la /usr/local/bin/js-engines/graaljs-24.2.2-linux-amd64/bin/' >> /workspace/start-differential-testing.sh && \
+    echo '    fi' >> /workspace/start-differential-testing.sh && \
+    echo 'elif [ -f "$HOME/.jsvu/bin/graaljs" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying GraalJS binary from ~/.jsvu/bin/graaljs..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp $HOME/.jsvu/bin/graaljs /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Also check ~/.jsvu/engines/ directory as fallback' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Checking for engines in ~/.jsvu/engines/..."' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -d "$HOME/.jsvu/engines/v8" ] && [ ! -d "/usr/local/bin/js-engines/v8" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying V8 directory from ~/.jsvu/engines/v8/..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp -r $HOME/.jsvu/engines/v8/ /usr/local/bin/js-engines/v8/' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "$HOME/.jsvu/engines/hermes/hermes" ] && [ ! -f "/usr/local/bin/js-engines/hermes" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying Hermes from ~/.jsvu/engines/hermes/hermes..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp $HOME/.jsvu/engines/hermes/hermes /usr/local/bin/js-engines/hermes' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "$HOME/.jsvu/engines/graaljs/graaljs" ] && [ ! -f "/usr/local/bin/js-engines/graaljs" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Copying GraalJS from ~/.jsvu/engines/graaljs/graaljs..."' >> /workspace/start-differential-testing.sh && \
+    echo '    cp $HOME/.jsvu/engines/graaljs/graaljs /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Final engine status:"' >> /workspace/start-differential-testing.sh && \
+    echo 'ls -la /usr/local/bin/js-engines/ || echo "No engines found"' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Checking symlinks:"' >> /workspace/start-differential-testing.sh && \
+    echo 'ls -la /usr/local/bin/js-engines/' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Checking original files:"' >> /workspace/start-differential-testing.sh && \
+    echo 'ls -la $HOME/.jsvu/engines/' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Testing engines:"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "DEBUG: About to test V8..."' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "/usr/local/bin/js-engines/v8/v8" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "DEBUG: V8 exists, testing..."' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "console.log(\"V8 test successful\");" | /usr/local/bin/js-engines/v8/v8' >> /workspace/start-differential-testing.sh && \
+    echo 'else' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "ERROR: V8 not found!"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Checking if V8 exists in original location:"' >> /workspace/start-differential-testing.sh && \
+    echo '    ls -la $HOME/.jsvu/engines/v8/v8 || echo "V8 not found in original location"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "DEBUG: Skipping V8 test since engine does not exist"' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "/usr/local/bin/js-engines/hermes" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "DEBUG: About to test Hermes..."' >> /workspace/start-differential-testing.sh && \
+    echo '    /usr/local/bin/js-engines/hermes --version' >> /workspace/start-differential-testing.sh && \
+    echo 'else' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "ERROR: Hermes not found!"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Checking if Hermes exists in original location:"' >> /workspace/start-differential-testing.sh && \
+    echo '    ls -la $HOME/.jsvu/bin/hermes || echo "Hermes not found in original location"' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "/usr/local/bin/js-engines/graaljs" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "DEBUG: About to test GraalJS..."' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "console.log(\"GraalJS test successful\");" | /usr/local/bin/js-engines/graaljs' >> /workspace/start-differential-testing.sh && \
+    echo 'else' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "ERROR: GraalJS not found!"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Checking if GraalJS exists in original location:"' >> /workspace/start-differential-testing.sh && \
+    echo '    ls -la $HOME/.jsvu/engines/graaljs/ || echo "GraalJS not found in original location"' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Test instrumentation capabilities' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Testing instrumentation capabilities..."' >> /workspace/start-differential-testing.sh && \
+    echo 'cd /workspace' >> /workspace/start-differential-testing.sh && \
+    echo 'if [ -f "kitten/scripts/javascript/test_instrumentation.sh" ]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Running instrumentation test..."' >> /workspace/start-differential-testing.sh && \
+    echo '    chmod +x kitten/scripts/javascript/test_instrumentation.sh' >> /workspace/start-differential-testing.sh && \
+    echo '    kitten/scripts/javascript/test_instrumentation.sh || echo "Instrumentation test failed, continuing..."' >> /workspace/start-differential-testing.sh && \
+    echo 'else' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "No instrumentation test script found, skipping..."' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Determine number of threads based on SLURM environment or system cores' >> /workspace/start-differential-testing.sh && \
+    echo 'if [[ -n "${SLURM_CPUS_PER_TASK:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    THREADS="${SLURM_CPUS_PER_TASK}"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Using SLURM_CPUS_PER_TASK: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
+    echo 'elif [[ -n "${SLURM_JOB_CPUS_PER_NODE:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    THREADS="${SLURM_JOB_CPUS_PER_NODE}"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Using SLURM_JOB_CPUS_PER_NODE: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
+    echo 'elif [[ -n "${SLURM_NTASKS:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    THREADS="${SLURM_NTASKS}"' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Using SLURM_NTASKS: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
+    echo 'else' >> /workspace/start-differential-testing.sh && \
+    echo '    THREADS=$(nproc)' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Using system cores: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Determine memory allocation based on SLURM environment' >> /workspace/start-differential-testing.sh && \
+    echo 'if [[ -n "${SLURM_MEM_PER_NODE:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
+    echo '    # Convert SLURM memory (in MB) to GB for JVM' >> /workspace/start-differential-testing.sh && \
+    echo '    MEM_GB=$((SLURM_MEM_PER_NODE / 1024))' >> /workspace/start-differential-testing.sh && \
+    echo '    # Reserve 2GB for system, use rest for JVM' >> /workspace/start-differential-testing.sh && \
+    echo '    JVM_HEAP=$((MEM_GB - 2))' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "SLURM memory: ${SLURM_MEM_PER_NODE}MB, JVM heap: ${JVM_HEAP}G"' >> /workspace/start-differential-testing.sh && \
+    echo 'else' >> /workspace/start-differential-testing.sh && \
+    echo '    JVM_HEAP=16' >> /workspace/start-differential-testing.sh && \
+    echo '    echo "Using default JVM heap: ${JVM_HEAP}G"' >> /workspace/start-differential-testing.sh && \
+    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Starting differential testing with instrumentation using ${THREADS} threads and ${JVM_HEAP}G heap..."' >> /workspace/start-differential-testing.sh && \
+    echo 'cd /workspace' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo '# Run the differential testing directly' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Starting differential testing with instrumentation..."' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Engines: Hermes, GraalJS (V8 skipped on ARM64)"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Threads: ${THREADS}"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "JVM Heap: ${JVM_HEAP}G"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Differential findings will be saved to: kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Instrumentation will be applied to JavaScript files for enhanced differential testing"' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo 'java -Xmx${JVM_HEAP}G -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \' >> /workspace/start-differential-testing.sh && \
+    echo '  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \' >> /workspace/start-differential-testing.sh && \
+    echo '  --threads ${THREADS} \' >> /workspace/start-differential-testing.sh && \
+    echo '  --verbosity "FINE" \' >> /workspace/start-differential-testing.sh && \
+    echo '  --timeout 1000000000 \' >> /workspace/start-differential-testing.sh && \
+    echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start-differential-testing.sh && \
+    echo '' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Differential testing with instrumentation completed!"' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Check kitten/temp_testing_campaigns/differential_finding_folder_javascript for differential findings."' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Instrumented files will have \"instrumented_\" prefix in the findings."' >> /workspace/start-differential-testing.sh
 
 RUN chmod +x /workspace/start-differential-testing.sh
 
