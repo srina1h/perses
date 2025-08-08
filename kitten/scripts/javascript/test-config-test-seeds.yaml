@@ -4,31 +4,23 @@ seedFolders:
     fileExtentions: [".js"]
 
 programsUnderTest:
-  # - command: "jerry-trunk-asan_ubsan"
-  #   flagsToTest:
-  #     - flags: []
-  #   versionFlags:
-  #     flags: ["--version"]
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JerryScriptCrashDetector"
-  
-  - command: "/usr/local/bin/js-engines/v8/v8"
+  - command: "/Users/srinath/.jsvu/bin/v8"
     flagsToTest:
       - flags: []
     versionFlags:
-      flags: ["-e 'print(version())'"]
+      flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
   
-  - command: "~/.jsvu/bin/hermes"
+  - command: "/Users/srinath/.jsvu/bin/hermes"
     flagsToTest:
       - flags: []
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
   
-  - command: "~/.jsvu/bin/graaljs"
+  - command: "/Users/srinath/.jsvu/bin/graaljs"
     flagsToTest:
       - flags: []
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
-  
