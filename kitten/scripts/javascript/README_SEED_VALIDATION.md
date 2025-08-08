@@ -16,7 +16,7 @@ Previously, the fuzzer would include any seed that could be parsed successfully,
 
 ## Solution
 
-The seed validation feature is now **enabled by default** and validates each seed against all configured engines before adding it to the fuzzing pool. A seed is only included if:
+The seed validation feature **always validates each seed against all configured engines** before adding it to the fuzzing pool. A seed is only included if:
 
 1. It can be parsed successfully
 2. It runs successfully on all engines (exit code 0)
@@ -24,9 +24,9 @@ The seed validation feature is now **enabled by default** and validates each see
 
 ## Usage
 
-### Default Behavior (Seed Validation Enabled)
+### Always-On Seed Validation
 
-Seed validation is now enabled by default for all differential fuzzing runs:
+Seed validation is always enabled for all differential fuzzing runs:
 
 ```bash
 java -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
@@ -35,7 +35,7 @@ java -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
   --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
 ```
 
-This will automatically validate all seeds against all configured engines before adding them to the fuzzing pool.
+This will automatically validate all seeds against all configured engines before adding them to the fuzzing pool. No additional configuration is needed.
 
 ## Implementation Details
 

@@ -170,8 +170,7 @@ class CommandOptions : AbstractCommandOptions() {
     )
     var allowToEnableGuidance = true
 
-    // Seed validation is now enabled by default for differential fuzzing
-    var validateSeedsOnAllEngines = true
+
     fun getMutantsFolder(): File {
       if (mutantsFolder == null) {
         mutantsFolder = File(

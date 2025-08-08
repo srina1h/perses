@@ -574,9 +574,8 @@ class FuzzerDriver(
   private fun createSparTreeFuzzers(
     seedFiles: ImmutableList<File>,
     numberLimitOfSeedFiles: Int,
-    validateSeedsOnAllEngines: Boolean,
   ): ArrayList<SparTreeFuzzer> {
-    logger.ktInfo { "Starting seed creation with validation enabled: $validateSeedsOnAllEngines" }
+    logger.ktInfo { "Starting seed creation with validation enabled" }
     val result = ArrayList<SparTreeFuzzer>()
     var failedCounter = 0
     var passedCounter = 0
@@ -592,20 +591,21 @@ class FuzzerDriver(
           break
         }
         
-        // First, validate that the seed works on all engines (if enabled)
-        if (validateSeedsOnAllEngines) {
-          logger.ktInfo { "About to validate seed on all engines($index/$totalCount) $seed" }
-          val validationResult = differentialTester.validateSeedOnAllEngines(seed)
-          logger.ktInfo { "Validation result for seed $seed: $validationResult" }
-          if (!validationResult) {
-            ++engineValidationFailedCounter
-            logger.ktInfo { "Seed failed engine validation($index/$totalCount) $seed" }
-            continue
-          }
-          logger.ktInfo { "Seed passed engine validation($index/$totalCount) $seed" }
-        } else {
-          logger.ktInfo { "Skipping validation for seed($index/$totalCount) $seed" }
+        // Always validate that the seed works on all engines
+        logger.ktInfo { "About to validate seed on all engines($index/$totalCount) $seed" }
+        logger.ktInfo { "differentialTester is null: ${differentialTester == null}" }
+        if (differentialTester == null) {
+          logger.ktInfo { "ERROR: differentialTester is null, cannot validate seed" }
+          continue
         }
+        val validationResult = differentialTester.validateSeedOnAllEngines(seed)
+        logger.ktInfo { "Validation result for seed $seed: $validationResult" }
+        if (!validationResult) {
+          ++engineValidationFailedCounter
+          logger.ktInfo { "Seed failed engine validation($index/$totalCount) $seed" }
+          continue
+        }
+        logger.ktInfo { "Seed passed engine validation($index/$totalCount) $seed" }
         
         val future = executor.submit<SparTreeFuzzer> {
           logger.ktAt(Level.FINE) { "Parsing($index/$totalCount) $seed" }
@@ -617,11 +617,7 @@ class FuzzerDriver(
         }
         result.add(future.get(1, TimeUnit.SECONDS))
         ++passedCounter
-        if (validateSeedsOnAllEngines) {
-          logger.ktAt(Level.FINE) { "Parsed and validated($index/$totalCount) $seed" }
-        } else {
-          logger.ktAt(Level.FINE) { "Parsed($index/$totalCount) $seed" }
-        }
+        logger.ktAt(Level.FINE) { "Parsed and validated($index/$totalCount) $seed" }
       } catch (e: Exception) {
         ++failedCounter
         e.printStackTrace()
@@ -635,12 +631,10 @@ class FuzzerDriver(
     if (failedCounter != 0) {
       logger.atWarning().log("Failed to parse %s seed files in total.", failedCounter)
     }
-    if (validateSeedsOnAllEngines && engineValidationFailedCounter != 0) {
+    if (engineValidationFailedCounter != 0) {
       logger.atWarning().log("Failed engine validation for %s seed files in total.", engineValidationFailedCounter)
     }
-    if (validateSeedsOnAllEngines) {
-      logger.ktInfo { "Seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
-    }
+    logger.ktInfo { "Seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
     if (shuffleSeeds) {
       result.shuffle(random)
     }
@@ -672,7 +666,6 @@ class FuzzerDriver(
         createSparTreeFuzzers(
           seedFiles,
           options.generalFlags.numberLimitOfSeedFiles,
-          options.generalFlags.validateSeedsOnAllEngines,
         ),
       )
     } else {
