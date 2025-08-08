@@ -71,7 +71,7 @@ java -Xmx2G -Xms512M -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.j
   --finding-folder kitten/temp_seed_validation_test/with_validation \
   --timeout 30 \
   --max-seed-pool-size 10 \
-  --validate-seeds-on-all-engines true \
+
   --fuzzer-mode ONLY_ON_INITIAL_SEED || true
 
 echo "Test completed. Checking results..."

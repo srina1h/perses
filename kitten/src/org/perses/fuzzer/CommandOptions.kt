@@ -170,12 +170,8 @@ class CommandOptions : AbstractCommandOptions() {
     )
     var allowToEnableGuidance = true
 
-    @Parameter(
-      names = ["--validate-seeds-on-all-engines"],
-      description = "validate that initial seeds work on all engines before adding to fuzzing pool",
-      order = FlagOrder.GENERAL_CONTROL + 1700,
-    )
-    var validateSeedsOnAllEngines = false
+    // Seed validation is now enabled by default for differential fuzzing
+    var validateSeedsOnAllEngines = true
     fun getMutantsFolder(): File {
       if (mutantsFolder == null) {
         mutantsFolder = File(

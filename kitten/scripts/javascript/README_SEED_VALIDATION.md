@@ -16,7 +16,7 @@ Previously, the fuzzer would include any seed that could be parsed successfully,
 
 ## Solution
 
-The new seed validation feature (`--validate-seeds-on-all-engines`) validates each seed against all configured engines before adding it to the fuzzing pool. A seed is only included if:
+The seed validation feature is now **enabled by default** and validates each seed against all configured engines before adding it to the fuzzing pool. A seed is only included if:
 
 1. It can be parsed successfully
 2. It runs successfully on all engines (exit code 0)
@@ -24,21 +24,9 @@ The new seed validation feature (`--validate-seeds-on-all-engines`) validates ea
 
 ## Usage
 
-### Enable Seed Validation
+### Default Behavior (Seed Validation Enabled)
 
-To enable seed validation, add the `--validate-seeds-on-all-engines true` flag to your fuzzer command:
-
-```bash
-java -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
-  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \
-  --threads 4 \
-  --validate-seeds-on-all-engines true \
-  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
-```
-
-### Disable Seed Validation (Default)
-
-By default, seed validation is disabled. You can explicitly disable it by omitting the flag or setting it to false:
+Seed validation is now enabled by default for all differential fuzzing runs:
 
 ```bash
 java -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
@@ -46,6 +34,8 @@ java -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
   --threads 4 \
   --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"
 ```
+
+This will automatically validate all seeds against all configured engines before adding them to the fuzzing pool.
 
 ## Implementation Details
 
@@ -81,7 +71,7 @@ You can test the seed validation feature using the provided test script:
 ./kitten/scripts/javascript/test_seed_validation.sh
 ```
 
-This script creates test seeds with different characteristics and compares the results with and without validation enabled.
+This script creates test seeds with different characteristics and demonstrates the validation behavior.
 
 ## Configuration
 
@@ -107,4 +97,4 @@ If seed validation is too slow:
 
 ## Integration with Docker
 
-The Docker setup automatically enables seed validation for differential fuzzing. This ensures that the containerized environment only uses seeds that work on all configured engines.
+The Docker setup automatically uses seed validation for differential fuzzing. This ensures that the containerized environment only uses seeds that work on all configured engines.

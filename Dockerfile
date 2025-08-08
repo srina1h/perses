@@ -292,7 +292,7 @@ RUN echo '#!/bin/bash' > /workspace/start-differential-testing.sh && \
     echo '  --threads ${THREADS} \' >> /workspace/start-differential-testing.sh && \
     echo '  --verbosity "FINE" \' >> /workspace/start-differential-testing.sh && \
     echo '  --timeout 1000000000 \' >> /workspace/start-differential-testing.sh && \
-    echo '  --validate-seeds-on-all-engines \' >> /workspace/start-differential-testing.sh && \
+
     echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start-differential-testing.sh && \
     echo '' >> /workspace/start-differential-testing.sh && \
     echo 'echo "Differential testing with instrumentation completed!"' >> /workspace/start-differential-testing.sh && \
