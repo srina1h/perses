@@ -77,7 +77,7 @@ RUN mkdir -p /usr/local/bin/js-engines \
 # Clone the perses repository
 WORKDIR /workspace
 RUN git clone https://github.com/srina1h/perses.git .
-RUN git checkout diff
+RUN git checkout diff_instrumented
 
 # Prepare seeds by running the prepare_seeds.sh script
 RUN chmod +x prepare_seeds.sh && ./prepare_seeds.sh
