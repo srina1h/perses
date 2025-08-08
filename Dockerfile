@@ -45,8 +45,7 @@ RUN ARCH=$(uname -m) \
     && if [ "$ARCH" = "x86_64" ]; then \
         jsvu --os=linux64 --engines=graaljs,hermes,v8; \
     elif [ "$ARCH" = "aarch64" ]; then \
-        jsvu --os=linux64 --engines=graaljs,hermes; \
-        # For ARM64, we'll skip V8 for now and use only GraalJS and Hermes \
+        jsvu --os=linux64 --engines=graaljs,hermes \
         && echo "Skipping V8 on ARM64 - using GraalJS and Hermes only"; \
     fi \
     && echo "Checking what engines were installed:" \
