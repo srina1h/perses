@@ -31,7 +31,8 @@ java -Xmx4G -Xms1G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar
   --verbosity "INFO" \
   --finding-folder "${TEST_FINDING_FOLDER}" \
   --timeout 60 \
-  --max-seed-pool-size 5
+  --max-seed-pool-size 5 \
+  --validate-seeds-on-all-engines true
 
 echo "Test completed!"
 echo "Check ${TEST_FINDING_FOLDER} for any differential findings."

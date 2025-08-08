@@ -27,6 +27,59 @@ class DifferentialTester(
   private val facades: List<AbstractCompilerConfigurationFacade>
 ) {
   
+  /**
+   * Validates that a seed works on all engines without detecting discrepancies.
+   * This is used for initial seed filtering to ensure only seeds that work
+   * on all engines are included in the fuzzing pool.
+   */
+  fun validateSeedOnAllEngines(seedFile: File): Boolean {
+    val engineResults = mutableMapOf<String, DifferentialTestResult.EngineResult>()
+    
+    // Run the seed on all engines
+    for (facade in facades) {
+      for (action in facade.compilationActions) {
+        val engineName = getEngineName(action)
+        try {
+          val result = action.compile(seedFile)
+          
+          engineResults[engineName] = DifferentialTestResult.EngineResult(
+            engineName = engineName,
+            action = action,
+            cmdOutput = result.cmdOutput,
+            cmd = result.cmd,
+            exitCode = result.cmdOutput.exitCode.intValue,
+            stdout = result.cmdOutput.stdout.combinedLines,
+            stderr = result.cmdOutput.stderr.combinedLines
+          )
+        } catch (e: Exception) {
+          logger.atWarning().withCause(e).log("Failed to run seed %s on engine %s", seedFile, engineName)
+          return false
+        }
+      }
+    }
+    
+    // Check if all engines succeeded (exit code 0) and didn't crash
+    for ((engineName, result) in engineResults) {
+      // Check if the engine crashed
+      val crashDetector = getCrashDetectorForEngine(engineName)
+      val crashResult = crashDetector.detectCrash(result.cmdOutput)
+      
+      if (crashResult.isCrashDetected()) {
+        logger.atFine().log("Seed %s crashed on engine %s", seedFile, engineName)
+        return false
+      }
+      
+      // Check if the engine failed (non-zero exit code)
+      if (result.exitCode != 0) {
+        logger.atFine().log("Seed %s failed on engine %s with exit code %d", seedFile, engineName, result.exitCode)
+        return false
+      }
+    }
+    
+    logger.atFine().log("Seed %s passed on all engines", seedFile)
+    return true
+  }
+  
   fun testDifferentially(inputFile: File): DifferentialTestResult {
     val engineResults = mutableMapOf<String, DifferentialTestResult.EngineResult>()
     

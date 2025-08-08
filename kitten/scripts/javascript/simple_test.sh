@@ -45,7 +45,8 @@ timeout 10s java -Xmx2G -Xms512M -jar bazel-bin/kitten/src/org/perses/fuzzer/kit
   --verbosity "INFO" \
   --finding-folder kitten/temp_simple_test \
   --timeout 10 \
-  --max-seed-pool-size 1 || true
+  --max-seed-pool-size 1 \
+  --validate-seeds-on-all-engines true || true
 
 echo "Test completed. Checking results..."
 

@@ -574,10 +574,12 @@ class FuzzerDriver(
   private fun createSparTreeFuzzers(
     seedFiles: ImmutableList<File>,
     numberLimitOfSeedFiles: Int,
+    validateSeedsOnAllEngines: Boolean,
   ): ArrayList<SparTreeFuzzer> {
     val result = ArrayList<SparTreeFuzzer>()
     var failedCounter = 0
     var passedCounter = 0
+    var engineValidationFailedCounter = 0
     val totalCount = seedFiles.size
     val shuffledSeedFiles = seedFiles.shuffled(random)
     for (seedWithIndex in shuffledSeedFiles.withIndex()) {
@@ -588,6 +590,17 @@ class FuzzerDriver(
           logger.ktInfo { "Reached the limit of seed files: $numberLimitOfSeedFiles" }
           break
         }
+        
+        // First, validate that the seed works on all engines (if enabled)
+        if (validateSeedsOnAllEngines) {
+          logger.ktAt(Level.FINE) { "Validating seed on all engines($index/$totalCount) $seed" }
+          if (!differentialTester.validateSeedOnAllEngines(seed)) {
+            ++engineValidationFailedCounter
+            logger.ktAt(Level.FINE) { "Seed failed engine validation($index/$totalCount) $seed" }
+            continue
+          }
+        }
+        
         val future = executor.submit<SparTreeFuzzer> {
           logger.ktAt(Level.FINE) { "Parsing($index/$totalCount) $seed" }
           SparTreeFuzzer.fromFile(
@@ -598,7 +611,11 @@ class FuzzerDriver(
         }
         result.add(future.get(1, TimeUnit.SECONDS))
         ++passedCounter
-        logger.ktAt(Level.FINE) { "Parsed($index/$totalCount) $seed" }
+        if (validateSeedsOnAllEngines) {
+          logger.ktAt(Level.FINE) { "Parsed and validated($index/$totalCount) $seed" }
+        } else {
+          logger.ktAt(Level.FINE) { "Parsed($index/$totalCount) $seed" }
+        }
       } catch (e: Exception) {
         ++failedCounter
         e.printStackTrace()
@@ -611,6 +628,9 @@ class FuzzerDriver(
     }
     if (failedCounter != 0) {
       logger.atWarning().log("Failed to parse %s seed files in total.", failedCounter)
+    }
+    if (validateSeedsOnAllEngines && engineValidationFailedCounter != 0) {
+      logger.atWarning().log("Failed engine validation for %s seed files in total.", engineValidationFailedCounter)
     }
     if (shuffleSeeds) {
       result.shuffle(random)
@@ -643,6 +663,7 @@ class FuzzerDriver(
         createSparTreeFuzzers(
           seedFiles,
           options.generalFlags.numberLimitOfSeedFiles,
+          options.generalFlags.validateSeedsOnAllEngines,
         ),
       )
     } else {
