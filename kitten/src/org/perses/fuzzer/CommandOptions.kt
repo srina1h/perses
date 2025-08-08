@@ -173,7 +173,6 @@ class CommandOptions : AbstractCommandOptions() {
     @Parameter(
       names = ["--validate-seeds-on-all-engines"],
       description = "validate that initial seeds work on all engines before adding to fuzzing pool",
-      arity = 1,
       order = FlagOrder.GENERAL_CONTROL + 1700,
     )
     var validateSeedsOnAllEngines = false
