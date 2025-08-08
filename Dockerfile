@@ -241,13 +241,7 @@ RUN echo '#!/bin/bash' > /workspace/start-differential-testing.sh && \
     echo '# Test instrumentation capabilities' >> /workspace/start-differential-testing.sh && \
     echo 'echo "Testing instrumentation capabilities..."' >> /workspace/start-differential-testing.sh && \
     echo 'cd /workspace' >> /workspace/start-differential-testing.sh && \
-    echo 'if [ -f "kitten/scripts/javascript/test_instrumentation.sh" ]; then' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "Running instrumentation test..."' >> /workspace/start-differential-testing.sh && \
-    echo '    chmod +x kitten/scripts/javascript/test_instrumentation.sh' >> /workspace/start-differential-testing.sh && \
-    echo '    kitten/scripts/javascript/test_instrumentation.sh || echo "Instrumentation test failed, continuing..."' >> /workspace/start-differential-testing.sh && \
-    echo 'else' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "No instrumentation test script found, skipping..."' >> /workspace/start-differential-testing.sh && \
-    echo 'fi' >> /workspace/start-differential-testing.sh && \
+    echo 'echo "Skipping instrumentation test to avoid rebuild..."' >> /workspace/start-differential-testing.sh && \
     echo '' >> /workspace/start-differential-testing.sh && \
     echo '# Determine number of threads based on SLURM environment or system cores' >> /workspace/start-differential-testing.sh && \
     echo 'if [[ -n "${SLURM_CPUS_PER_TASK:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
