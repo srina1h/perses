@@ -33,17 +33,17 @@ class DifferentialTester(
    * on all engines are included in the fuzzing pool.
    */
   fun validateSeedOnAllEngines(seedFile: File): Boolean {
-    logger.atInfo().log("Starting validation of seed: %s", seedFile)
-    logger.atInfo().log("Number of facades: %d", facades.size)
+    logger.atFine().log("Starting validation of seed: %s", seedFile)
+    logger.atFine().log("Number of facades: %d", facades.size)
     val engineResults = mutableMapOf<String, DifferentialTestResult.EngineResult>()
     
     // Run the seed on all engines
     for (facade in facades) {
-      logger.atInfo().log("Processing facade with %d compilation actions", facade.compilationActions.size)
+      logger.atFine().log("Processing facade with %d compilation actions", facade.compilationActions.size)
       for (action in facade.compilationActions) {
         val engineName = getEngineName(action)
         val cmd = action.constructCompileCmd(File("dummy"))
-        logger.atInfo().log("Testing seed on engine: %s (command: %s)", engineName, cmd)
+        logger.atFine().log("Testing seed on engine: %s (command: %s)", engineName, cmd)
         try {
           val result = action.compile(seedFile)
           
@@ -56,7 +56,7 @@ class DifferentialTester(
             stdout = result.cmdOutput.stdout.combinedLines,
             stderr = result.cmdOutput.stderr.combinedLines
           )
-          logger.atInfo().log("Engine %s result: exit code %d, stdout: '%s', stderr: '%s'", 
+          logger.atFine().log("Engine %s result: exit code %d, stdout: '%s', stderr: '%s'", 
             engineName, result.cmdOutput.exitCode.intValue, 
             result.cmdOutput.stdout.combinedLines.take(100), 
             result.cmdOutput.stderr.combinedLines.take(100))
@@ -74,18 +74,18 @@ class DifferentialTester(
       val crashResult = crashDetector.detectCrash(result.cmdOutput)
       
       if (crashResult.isCrashDetected()) {
-        logger.atInfo().log("Seed %s crashed on engine %s", seedFile, engineName)
+        logger.atFine().log("Seed %s crashed on engine %s", seedFile, engineName)
         return false
       }
       
       // Check if the engine failed (non-zero exit code)
       if (result.exitCode != 0) {
-        logger.atInfo().log("Seed %s failed on engine %s with exit code %d", seedFile, engineName, result.exitCode)
+        logger.atFine().log("Seed %s failed on engine %s with exit code %d", seedFile, engineName, result.exitCode)
         return false
       }
     }
     
-    logger.atInfo().log("Seed %s passed on all engines", seedFile)
+    logger.atFine().log("Seed %s passed on all engines", seedFile)
     return true
   }
   

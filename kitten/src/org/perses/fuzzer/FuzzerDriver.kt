@@ -51,6 +51,7 @@ import org.perses.util.DaemonThreadPool
 import org.perses.util.TimeUtil
 import org.perses.util.ifEnabled
 import org.perses.util.ktAt
+import org.perses.util.ktFine
 import org.perses.util.ktInfo
 import java.io.File
 import java.io.IOException
@@ -575,7 +576,7 @@ class FuzzerDriver(
     seedFiles: ImmutableList<File>,
     numberLimitOfSeedFiles: Int,
   ): ArrayList<SparTreeFuzzer> {
-    logger.ktInfo { "Starting seed creation with validation enabled" }
+    logger.ktFine { "Starting seed creation with validation enabled" }
     val result = ArrayList<SparTreeFuzzer>()
     var failedCounter = 0
     var passedCounter = 0
@@ -592,20 +593,15 @@ class FuzzerDriver(
         }
         
         // Always validate that the seed works on all engines
-        logger.ktInfo { "About to validate seed on all engines($index/$totalCount) $seed" }
-        logger.ktInfo { "differentialTester is null: ${differentialTester == null}" }
-        if (differentialTester == null) {
-          logger.ktInfo { "ERROR: differentialTester is null, cannot validate seed" }
-          continue
-        }
+        logger.ktFine { "About to validate seed on all engines($index/$totalCount) $seed" }
         val validationResult = differentialTester.validateSeedOnAllEngines(seed)
-        logger.ktInfo { "Validation result for seed $seed: $validationResult" }
+        logger.ktFine { "Validation result for seed $seed: $validationResult" }
         if (!validationResult) {
           ++engineValidationFailedCounter
-          logger.ktInfo { "Seed failed engine validation($index/$totalCount) $seed" }
+          logger.ktFine { "Seed failed engine validation($index/$totalCount) $seed" }
           continue
         }
-        logger.ktInfo { "Seed passed engine validation($index/$totalCount) $seed" }
+        logger.ktFine { "Seed passed engine validation($index/$totalCount) $seed" }
         
         val future = executor.submit<SparTreeFuzzer> {
           logger.ktAt(Level.FINE) { "Parsing($index/$totalCount) $seed" }
@@ -634,7 +630,7 @@ class FuzzerDriver(
     if (engineValidationFailedCounter != 0) {
       logger.atWarning().log("Failed engine validation for %s seed files in total.", engineValidationFailedCounter)
     }
-    logger.ktInfo { "Seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
+    logger.ktFine { "Seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
     if (shuffleSeeds) {
       result.shuffle(random)
     }
