@@ -1,0 +1,12 @@
+language: "JAVASCRIPT"
+seedFolders:
+  - path: "test_data/javascript"
+    fileExtentions: [".js"]
+
+programsUnderTest:
+  - command: "/Users/srinath/.jsvu/bin/hermes"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"

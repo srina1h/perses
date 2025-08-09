@@ -26,6 +26,8 @@ import java.io.File
 class DifferentialTester(
   private val facades: List<AbstractCompilerConfigurationFacade>
 ) {
+  private enum class Status { SUCCESS, ERROR, CRASH, HANG }
+  private data class Outcome(val status: Status, val errorKind: String? = null)
   
   /**
    * Validates that a seed works on all engines without detecting discrepancies.
@@ -155,88 +157,173 @@ class DifferentialTester(
       return discrepancies
     }
     
-    // Compare each pair of engines
+    fun isHang(result: DifferentialTestResult.EngineResult): Boolean {
+      val stderrLower = result.stderr.lowercase()
+      val stdoutLower = result.stdout.lowercase()
+      // GNU/coreutils timeout commonly returns 124; also check textual hints
+      return result.exitCode == 124 ||
+        stderrLower.contains("timeout") || stderrLower.contains("timed out") ||
+        stdoutLower.contains("timeout") || stdoutLower.contains("timed out") ||
+        stderrLower.contains("execution timeout") || stdoutLower.contains("execution timeout")
+    }
+
+    fun detectErrorKind(stderr: String): String {
+      // Extract canonical JS error type; ignore the rest of message content
+      val canonicalMap = mapOf(
+        "typeerror" to "TypeError",
+        "referenceerror" to "ReferenceError",
+        "syntaxerror" to "SyntaxError",
+        "rangeerror" to "RangeError",
+        "urierror" to "URIError",
+        "evalerror" to "EvalError",
+      )
+      val regex = Regex("(TypeError|ReferenceError|SyntaxError|RangeError|URIError|EvalError)", RegexOption.IGNORE_CASE)
+      val match = regex.find(stderr)
+      if (match != null) {
+        val key = match.value.lowercase()
+        return canonicalMap[key] ?: match.value
+      }
+      return "RuntimeError"
+    }
+
+    fun outcomeOf(engineName: String, result: DifferentialTestResult.EngineResult): Outcome {
+      val crashed = getCrashDetectorForEngine(engineName).detectCrash(result.cmdOutput).isCrashDetected()
+      if (crashed) return Outcome(Status.CRASH)
+      if (isHang(result)) return Outcome(Status.HANG)
+      return if (result.exitCode == 0) Outcome(Status.SUCCESS) else Outcome(Status.ERROR, detectErrorKind(result.stderr))
+    }
+
+    fun normalizeStdout(out: String): String {
+      // Trim and collapse whitespace
+      var s = out.trim()
+      s = s.replace("\r\n", "\n").replace("\r", "\n")
+      s = Regex("\\s+").replace(s, " ")
+
+      // Normalize floating-point numbers to fixed precision (6 decimals)
+      val floatRegex = Regex("(?<![A-Za-z0-9_])([+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?)")
+      s = floatRegex.replace(s) { m ->
+        val token = m.groupValues[1]
+        // Try to parse as Double; if fail, keep original
+        try {
+          val value = token.toDouble()
+          // Use String.format to 6 decimal places, strip trailing zeros and dot
+          val fixed = String.format(java.util.Locale.ROOT, "%.6f", value)
+          fixed.trimEnd('0').trimEnd('.')
+        } catch (t: Throwable) {
+          token
+        }
+      }
+      return s
+    }
+
+    // Global normalization gates: ignore uninteresting uniform cases
+    val allOutcomes: Map<String, Outcome> = engines.associateWith { eng ->
+      val res = engineResults[eng]!!
+      outcomeOf(eng, res)
+    }
+    val allSuccess = allOutcomes.values.all { it.status == Status.SUCCESS }
+    if (allSuccess) {
+      val normalizedStdouts = engines.map { eng -> normalizeStdout(engineResults[eng]!!.stdout) }.toSet()
+      if (normalizedStdouts.size == 1) {
+        return emptyList()
+      }
+    }
+    val allFail = allOutcomes.values.all { it.status != Status.SUCCESS }
+    if (allFail) {
+      return emptyList()
+    }
+
+    // Compare each pair of engines with simplified, high-signal rules
     for (i in 0 until engines.size - 1) {
       for (j in i + 1 until engines.size) {
         val engine1 = engines[i]
         val engine2 = engines[j]
         val result1 = engineResults[engine1]!!
         val result2 = engineResults[engine2]!!
-        
-        // Check exit code discrepancies
-        if (result1.exitCode != result2.exitCode) {
+
+        val outcome1 = allOutcomes[engine1] ?: outcomeOf(engine1, result1)
+        val outcome2 = allOutcomes[engine2] ?: outcomeOf(engine2, result2)
+
+        // 1) Specification divergence: both succeed but produce different outputs
+        if (outcome1.status == Status.SUCCESS && outcome2.status == Status.SUCCESS) {
+          val out1 = normalizeStdout(result1.stdout)
+          val out2 = normalizeStdout(result2.stdout)
+          if (out1 != out2) {
+            discrepancies.add(
+              DifferentialTestResult.Discrepancy(
+                type = DifferentialTestResult.Discrepancy.DiscrepancyType.SPEC_DIVERGENCE,
+                description = "Different observable outputs for the same input",
+                engine1 = engine1,
+                engine2 = engine2,
+                value1 = out1,
+                value2 = out2,
+              ),
+            )
+          }
+        }
+
+        // 2) Success vs. Error: one succeeds, the other fails (error/crash/hang)
+        if ((outcome1.status == Status.SUCCESS) != (outcome2.status == Status.SUCCESS)) {
           discrepancies.add(
             DifferentialTestResult.Discrepancy(
-              type = DifferentialTestResult.Discrepancy.DiscrepancyType.EXIT_CODE_MISMATCH,
-              description = "Exit code mismatch between $engine1 and $engine2",
+              type = DifferentialTestResult.Discrepancy.DiscrepancyType.SUCCESS_VS_ERROR,
+              description = "One engine succeeded while the other failed",
               engine1 = engine1,
               engine2 = engine2,
-              value1 = result1.exitCode.toString(),
-              value2 = result2.exitCode.toString()
-            )
+              value1 = outcome1.status.name,
+              value2 = outcome2.status.name,
+            ),
           )
         }
-        
-        // Check stdout discrepancies (only if both succeeded)
-        if (result1.exitCode == 0 && result2.exitCode == 0 && result1.stdout != result2.stdout) {
+
+        // 3) Crash or Hang: if exactly one side crashed/hanged, flag it
+        val isCrashOrHang1 = outcome1.status == Status.CRASH || outcome1.status == Status.HANG
+        val isCrashOrHang2 = outcome2.status == Status.CRASH || outcome2.status == Status.HANG
+        if (isCrashOrHang1 != isCrashOrHang2) {
           discrepancies.add(
             DifferentialTestResult.Discrepancy(
-              type = DifferentialTestResult.Discrepancy.DiscrepancyType.STDOUT_MISMATCH,
-              description = "STDOUT mismatch between $engine1 and $engine2",
+              type = DifferentialTestResult.Discrepancy.DiscrepancyType.CRASH_OR_HANG,
+              description = "Crash/Hang observed on one engine but not the other",
               engine1 = engine1,
               engine2 = engine2,
-              value1 = result1.stdout,
-              value2 = result2.stdout
-            )
+              value1 = outcome1.status.name,
+              value2 = outcome2.status.name,
+            ),
           )
         }
-        
-        // Check stderr discrepancies
-        if (result1.stderr != result2.stderr) {
-          discrepancies.add(
-            DifferentialTestResult.Discrepancy(
-              type = DifferentialTestResult.Discrepancy.DiscrepancyType.STDERR_MISMATCH,
-              description = "STDERR mismatch between $engine1 and $engine2",
-              engine1 = engine1,
-              engine2 = engine2,
-              value1 = result1.stderr,
-              value2 = result2.stderr
+
+        // 4) Different error types: both error, but kinds differ (TypeError vs ReferenceError, etc.)
+        if (outcome1.status == Status.ERROR && outcome2.status == Status.ERROR) {
+          val kind1 = outcome1.errorKind ?: "Error"
+          val kind2 = outcome2.errorKind ?: "Error"
+          if (kind1 != kind2) {
+            discrepancies.add(
+              DifferentialTestResult.Discrepancy(
+                type = DifferentialTestResult.Discrepancy.DiscrepancyType.DIFFERENT_ERROR_TYPES,
+                description = "Different JavaScript error types",
+                engine1 = engine1,
+                engine2 = engine2,
+                value1 = kind1,
+                value2 = kind2,
+              ),
             )
-          )
+          }
         }
-        
-        // Check crash vs no crash discrepancies
-        val crash1 = getCrashDetectorForEngine(engine1).detectCrash(result1.cmdOutput).isCrashDetected()
-        val crash2 = getCrashDetectorForEngine(engine2).detectCrash(result2.cmdOutput).isCrashDetected()
-        
-        if (crash1 != crash2) {
-          discrepancies.add(
-            DifferentialTestResult.Discrepancy(
-              type = DifferentialTestResult.Discrepancy.DiscrepancyType.CRASH_VS_NO_CRASH,
-              description = "Crash behavior mismatch: $engine1 ${if (crash1) "crashed" else "didn't crash"}, $engine2 ${if (crash2) "crashed" else "didn't crash"}",
-              engine1 = engine1,
-              engine2 = engine2,
-              value1 = if (crash1) "CRASH" else "NO_CRASH",
-              value2 = if (crash2) "CRASH" else "NO_CRASH"
-            )
-          )
-        }
-        
-        // Check different crash signatures
-        if (crash1 && crash2) {
+
+        // 5) If both crashed, optionally record different crash signatures
+        if (outcome1.status == Status.CRASH && outcome2.status == Status.CRASH) {
           val signature1 = getCrashDetectorForEngine(engine1).detectCrash(result1.cmdOutput).asCrash().signature.toString()
           val signature2 = getCrashDetectorForEngine(engine2).detectCrash(result2.cmdOutput).asCrash().signature.toString()
-          
           if (signature1 != signature2) {
             discrepancies.add(
               DifferentialTestResult.Discrepancy(
                 type = DifferentialTestResult.Discrepancy.DiscrepancyType.DIFFERENT_CRASH_SIGNATURES,
-                description = "Different crash signatures between $engine1 and $engine2",
+                description = "Different crash signatures",
                 engine1 = engine1,
                 engine2 = engine2,
                 value1 = signature1,
-                value2 = signature2
-              )
+                value2 = signature2,
+              ),
             )
           }
         }

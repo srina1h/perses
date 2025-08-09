@@ -48,10 +48,19 @@ data class DifferentialTestResult(
     val value2: String
   ) {
     enum class DiscrepancyType {
+      // Legacy/low-signal categories (kept for backwards compatibility)
       EXIT_CODE_MISMATCH,
       STDOUT_MISMATCH,
       STDERR_MISMATCH,
       CRASH_VS_NO_CRASH,
+
+      // High-signal simplified categories
+      SPEC_DIVERGENCE,        // Both succeed but produce different outputs
+      SUCCESS_VS_ERROR,       // One succeeds, the other errors/crashes/hangs
+      DIFFERENT_ERROR_TYPES,  // Both error, but error kinds differ (e.g., TypeError vs ReferenceError)
+      CRASH_OR_HANG,          // Any crash or hang is observed (vs. not)
+
+      // Useful additional signal
       DIFFERENT_CRASH_SIGNATURES
     }
   }
