@@ -9,7 +9,7 @@ programsUnderTest:
     flagsToTest:
       - flags: []
     versionFlags:
-      flags: ["--version"]
+      flags: ["--help"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
   
   # SpiderMonkey JavaScript Engine
