@@ -130,6 +130,7 @@ class DifferentialTester(
       cmd.contains("hermes") -> "Hermes"
       cmd.contains("graaljs") -> "GraalJS"
       cmd.contains("jsc") -> "JavaScriptCore"
+      cmd.contains("spidermonkey") -> "SpiderMonkey"
       cmd.contains("jerry") -> "JerryScript"
       else -> cmd.split(" ").firstOrNull()?.let { File(it).name } ?: "Unknown"
     }
