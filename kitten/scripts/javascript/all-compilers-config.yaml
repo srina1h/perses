@@ -1,6 +1,6 @@
 language: "JAVASCRIPT"
 seedFolders:
-  - path: "test_seeds"
+  - path: "seeds"
     fileExtentions: [".js"]
 
 programsUnderTest:
