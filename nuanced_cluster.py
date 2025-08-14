@@ -250,8 +250,139 @@ class NuancedClusterer:
         
         return hashlib.md5(str(normalized).encode()).hexdigest()[:8]
     
+    def _apply_level1_clustering(self):
+        """Apply Level 1 clustering hierarchically"""
+        print("Level 1: Basic exit code clustering...")
+        
+        new_clusters = {}
+        for cluster_name, cluster_findings in self.clusters.items():
+            # Group findings in this cluster by exit code pattern
+            pattern_groups = defaultdict(list)
+            
+            for finding in cluster_findings:
+                exit_codes = finding['exit_codes']
+                if len(exit_codes) != 4:
+                    pattern_groups["invalid_exit_codes"].append(finding)
+                    continue
+                    
+                # Create pattern key
+                pattern = tuple(exit_codes.get(engine, -1) for engine in 
+                              ['v8', 'spidermonkey', 'javascriptcore', 'graaljs'])
+                
+                # Categorize pattern
+                category = self._categorize_exit_pattern(pattern)
+                pattern_groups[category].append(finding)
+            
+            # Create new clusters for each pattern
+            for pattern, findings in pattern_groups.items():
+                if findings:  # Only create clusters with findings
+                    new_clusters[f"{cluster_name}_level1_{pattern}"] = findings
+        
+        self.clusters = new_clusters
+        print(f"Level 1 created {len(self.clusters)} clusters")
+
+    def _apply_level2_clustering(self):
+        """Apply Level 2 clustering hierarchically"""
+        print("Level 2: Error type clustering...")
+        
+        new_clusters = {}
+        for cluster_name, cluster_findings in self.clusters.items():
+            # Group findings in this cluster by error types
+            error_groups = defaultdict(list)
+            
+            for finding in cluster_findings:
+                error_types = finding['error_types']
+                if not error_types:
+                    error_groups["no_errors"].append(finding)
+                else:
+                    # Create error type signature
+                    error_signature = tuple(sorted(error_types.items()))
+                    error_groups[f"errors_{hash(error_signature)}"].append(finding)
+            
+            # Create new clusters for each error group
+            for error_group, findings in error_groups.items():
+                if findings:  # Only create clusters with findings
+                    new_clusters[f"{cluster_name}_level2_{error_group}"] = findings
+        
+        self.clusters = new_clusters
+        print(f"Level 2 created {len(self.clusters)} clusters")
+
+    def _apply_level3_clustering(self):
+        """Apply Level 3 clustering hierarchically"""
+        print("Level 3: Semantic similarity clustering...")
+        
+        new_clusters = {}
+        for cluster_name, cluster_findings in self.clusters.items():
+            # Group findings in this cluster by error message similarity
+            msg_groups = defaultdict(list)
+            
+            for finding in cluster_findings:
+                error_messages = finding['error_messages']
+                if not error_messages:
+                    msg_groups["no_messages"].append(finding)
+                else:
+                    # Create a signature from error messages
+                    msg_signature = self._create_message_signature(error_messages)
+                    msg_groups[f"semantic_{msg_signature}"].append(finding)
+            
+            # Create new clusters for each message group
+            for msg_group, findings in msg_groups.items():
+                if findings:  # Only create clusters with findings
+                    new_clusters[f"{cluster_name}_level3_{msg_group}"] = findings
+        
+        self.clusters = new_clusters
+        print(f"Level 3 created {len(self.clusters)} clusters")
+
+    def _apply_level4_clustering(self):
+        """Apply Level 4 clustering hierarchically"""
+        print("Level 4: Code pattern clustering...")
+        
+        new_clusters = {}
+        for cluster_name, cluster_findings in self.clusters.items():
+            # Group findings in this cluster by code patterns
+            code_groups = defaultdict(list)
+            
+            for finding in cluster_findings:
+                features = finding['code_features']
+                if not features:
+                    code_groups["no_features"].append(finding)
+                else:
+                    # Create code pattern signature
+                    pattern_signature = self._create_code_pattern_signature(features)
+                    code_groups[f"code_{pattern_signature}"].append(finding)
+            
+            # Create new clusters for each code group
+            for code_group, findings in code_groups.items():
+                if findings:  # Only create clusters with findings
+                    new_clusters[f"{cluster_name}_level4_{code_group}"] = findings
+        
+        self.clusters = new_clusters
+        print(f"Level 4 created {len(self.clusters)} clusters")
+
+    def _apply_level5_clustering(self):
+        """Apply Level 5 clustering hierarchically"""
+        print("Level 5: Advanced deduplication...")
+        
+        new_clusters = {}
+        for cluster_name, cluster_findings in self.clusters.items():
+            # Group findings in this cluster by comprehensive signature
+            sig_groups = defaultdict(list)
+            
+            for finding in cluster_findings:
+                # Create comprehensive signature
+                signature = self._create_comprehensive_signature(finding)
+                sig_groups[f"advanced_{signature}"].append(finding)
+            
+            # Create new clusters for each signature group
+            for sig_group, findings in sig_groups.items():
+                if findings:  # Only create clusters with findings
+                    new_clusters[f"{cluster_name}_level5_{sig_group}"] = findings
+        
+        self.clusters = new_clusters
+        print(f"Level 5 created {len(self.clusters)} clusters")
+
     def level5_advanced_deduplication(self):
-        """Level 5: Advanced deduplication"""
+        """Level 5: Advanced deduplication (legacy method - kept for compatibility)"""
         print("Level 5: Advanced deduplication...")
         
         # Group by multiple criteria
@@ -286,19 +417,33 @@ class NuancedClusterer:
         print(f"Selecting up to {max_per_cluster} representatives per cluster...")
         
         representatives = []
+        selected_findings = set()  # Track which findings have been selected
         
-        for cluster_name, cluster_findings in self.clusters.items():
+        # Sort clusters by size (largest first) to prioritize bigger clusters
+        sorted_clusters = sorted(self.clusters.items(), 
+                               key=lambda x: len(x[1]), reverse=True)
+        
+        for cluster_name, cluster_findings in sorted_clusters:
             if not cluster_findings:
                 continue
                 
-            # Sort by input size and take top N
+            # Sort by input size and take top N (avoiding duplicates)
             sorted_findings = sorted(cluster_findings, 
                                    key=lambda f: f['input_size'])
             
-            selected = sorted_findings[:max_per_cluster]
-            representatives.extend(selected)
-            
-            print(f"  {cluster_name}: {len(cluster_findings)} findings -> {len(selected)} representatives")
+            selected_count = 0
+            for finding in sorted_findings:
+                if selected_count >= max_per_cluster:
+                    break
+                    
+                # Use finding path as unique identifier
+                finding_id = str(finding['path'])
+                if finding_id not in selected_findings:
+                    representatives.append(finding)
+                    selected_findings.add(finding_id)
+                    selected_count += 1
+                
+            print(f"  {cluster_name}: {len(cluster_findings)} findings -> {selected_count} representatives")
         
         return representatives
     
@@ -381,17 +526,23 @@ class NuancedClusterer:
         
         self.load_findings()
         
-        # Apply clustering levels
+        # Start with all findings in one cluster
+        self.clusters = {"initial": self.findings.copy()}
+        
+        # Apply clustering levels hierarchically
         if level >= 1:
-            self.level1_basic_clustering()
+            self._apply_level1_clustering()
         if level >= 2:
-            self.level2_error_type_clustering()
+            self._apply_level2_clustering()
         if level >= 3:
-            self.level3_semantic_clustering()
+            self._apply_level3_clustering()
         if level >= 4:
-            self.level4_code_pattern_clustering()
+            self._apply_level4_clustering()
         if level >= 5:
-            self.level5_advanced_deduplication()
+            self._apply_level5_clustering()
+        
+        # Remove empty clusters
+        self.clusters = {k: v for k, v in self.clusters.items() if v}
         
         # Select representatives
         representatives = self.select_representatives(max_per_cluster)
@@ -404,6 +555,7 @@ class NuancedClusterer:
         
         print(f"\nClustering complete!")
         print(f"Original findings: {len(self.findings)}")
+        print(f"Total clusters: {len(self.clusters)}")
         print(f"Representative findings: {len(representatives)}")
         print(f"Reduction ratio: {len(representatives)/len(self.findings)*100:.1f}%")
         print(f"Results saved to: {self.output_dir}")
