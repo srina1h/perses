@@ -1,6 +1,9 @@
 # Use Ubuntu 22.04 as base image
 FROM ubuntu:22.04
 
+# Set build argument for seed mode
+ARG SEED_MODE=normal
+
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH=/root/bin:$PATH
@@ -59,20 +62,36 @@ ENV PATH="/root/.jsvu/bin:$PATH"
 RUN set -eux; \
     eshost --version; \
     mkdir -p /root/.eshost; \
-    if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs; fi; \
-    if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore; fi; \
-    # if [ -x /root/.jsvu/bin/quickjs ]; then eshost --add 'QuickJS' qjs /root/.jsvu/bin/quickjs; fi; \
-    if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey; fi; \
-    if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8; fi; \
-    # if [ -x /root/.jsvu/bin/xs ]; then eshost --add 'XS' xs /root/.jsvu/bin/xs; fi; \
+    if [ "$SEED_MODE" = "normal" ]; then \
+        echo "Configuring eshost for normal mode"; \
+        if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs; fi; \
+        if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore; fi; \
+        if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey; fi; \
+        if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8; fi; \
+    elif [ "$SEED_MODE" = "test262" ]; then \
+        echo "Configuring eshost for test262 mode with fuzzing harnesses"; \
+        if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs -h /workspace/fuzzing_harness/graal.js; fi; \
+        if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore -h /workspace/fuzzing_harness/jsc.js; fi; \
+        if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey -h /workspace/fuzzing_harness/sm.js; fi; \
+        if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8 -h /workspace/fuzzing_harness/v8.js; fi; \
+    else \
+        echo "Invalid SEED_MODE: $SEED_MODE. Must be 'normal' or 'test262'"; \
+        exit 1; \
+    fi; \
     eshost --list || true
 
 # Copy the current repository into the image (simpler than cloning)
 WORKDIR /workspace
 COPY . .
 
-# Prepare seeds by running the prepare_seeds.sh script
-RUN chmod +x prepare_seeds.sh && ./prepare_seeds.sh
+# Prepare seeds based on SEED_MODE
+RUN if [ "$SEED_MODE" = "test262" ]; then \
+        echo "Preparing test262 seeds"; \
+        chmod +x prepare_test262_seeds.sh && ./prepare_test262_seeds.sh; \
+    elif [ "$SEED_MODE" = "normal" ]; then \
+        echo "Preparing normal regression seeds"; \
+        chmod +x prepare_seeds.sh && ./prepare_seeds.sh; \
+    fi
 
 # Create necessary directories for differential testing with instrumentation
 RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascript \

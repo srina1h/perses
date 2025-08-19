@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Script to clone DIE-corpus repository and extract JavaScript files from v8 and jsc folders
+# Script to clone Test262 repository and extract JavaScript files from /test directory
 # to the seeds directory
 
 set -e  # Exit on any error
 
 # Configuration
-REPO_URL="https://github.com/sslab-gatech/DIE-corpus"
-REPO_NAME="DIE-corpus"
+REPO_URL="https://github.com/tc39/test262"
+REPO_NAME="test262"
 SEEDS_DIR="seeds"
-TEMP_DIR="temp_die_corpus"
+TEMP_DIR="temp_test262"
 
-echo "Starting DIE-corpus JavaScript file extraction..."
+echo "Starting Test262 JavaScript file extraction..."
 
 # Create seeds directory if it doesn't exist
 if [ ! -d "$SEEDS_DIR" ]; then
@@ -26,7 +26,7 @@ if [ -d "$TEMP_DIR" ]; then
 fi
 
 # Clone the repository
-echo "Cloning DIE-corpus repository..."
+echo "Cloning Test262 repository..."
 git clone "$REPO_URL" "$TEMP_DIR"
 
 # Check if cloning was successful
@@ -68,30 +68,9 @@ copy_js_files() {
     fi
 }
 
-# Process v8 folder
-echo "Extracting JavaScript files from v8 folder..."
-copy_js_files "$TEMP_DIR/v8" "$SEEDS_DIR"
-
-# Process jsc folder
-echo "Extracting JavaScript files from jsc folder..."
-copy_js_files "$TEMP_DIR/jsc" "$SEEDS_DIR"
-
-# Process jit folder
-echo "Extracting JavaScript files from jit folder..."
-copy_js_files "$TEMP_DIR/jit" "$SEEDS_DIR"
-
-# Process firefox folder
-echo "Extracting JavaScript files from firefox folder..."
-copy_js_files "$TEMP_DIR/firefox" "$SEEDS_DIR"
-
-# Process ChakraCore folder
-echo "Extracting JavaScript files from ChakraCore folder..."
-copy_js_files "$TEMP_DIR/ChakraCore" "$SEEDS_DIR"
-
-# Process js-vuln-db folder
-echo "Extracting JavaScript files from js-vuln-db folder..."
-copy_js_files "$TEMP_DIR/js-vuln-db" "$SEEDS_DIR"
-
+# Process test folder
+echo "Extracting JavaScript files from test folder..."
+copy_js_files "$TEMP_DIR/test" "$SEEDS_DIR"
 
 # Count the total number of JavaScript files copied
 total_files=$(find "$SEEDS_DIR" -name "*.js" -type f | wc -l)
@@ -101,5 +80,5 @@ echo "Total JavaScript files extracted: $total_files"
 echo "Cleaning up temporary directory..."
 rm -rf "$TEMP_DIR"
 
-echo "DIE-corpus JavaScript file extraction completed successfully!"
+echo "Test262 JavaScript file extraction completed successfully!"
 echo "Files have been copied to the $SEEDS_DIR directory."
