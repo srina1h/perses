@@ -49,3 +49,8 @@ seeds_full
 /kitten/default_finding_folder*
 /kitten/default_temp_folder*
 /kitten/default_mutants_folder*
+
+output_clustered_fixed*
+testing_crashes
+test_findings
+test_seeds

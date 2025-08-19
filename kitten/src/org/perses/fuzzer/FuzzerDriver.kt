@@ -494,7 +494,11 @@ class FuzzerDriver(
       mutantFile
     }
     
-    val differentialResult = differentialTester.testDifferentially(fileToTest)
+    // Use the new standardized logging method
+    val (differentialResult, standardizedOutputs) = differentialTester.testDifferentiallyWithStandardizedLogging(
+      fileToTest,
+      findingFolder.root
+    )
     
     if (differentialResult.hasDiscrepancy) {
       logger.ktAt(Level.FINE) {
@@ -515,6 +519,11 @@ class FuzzerDriver(
       
       logger.ktInfo {
         "Found ${differentialResult.discrepancies.size} discrepancies between engines"
+      }
+      
+      // Log standardized output summary
+      logger.ktInfo {
+        "Standardized output generated with test ID: ${standardizedOutputs.firstOrNull()?.testId ?: "unknown"}"
       }
     }
     
@@ -576,7 +585,7 @@ class FuzzerDriver(
     seedFiles: ImmutableList<File>,
     numberLimitOfSeedFiles: Int,
   ): ArrayList<SparTreeFuzzer> {
-    logger.ktFine { "Starting seed creation with validation enabled" }
+    logger.ktFine { "Starting seed creation with comprehensive validation enabled" }
     val result = ArrayList<SparTreeFuzzer>()
     var failedCounter = 0
     var passedCounter = 0
@@ -592,16 +601,16 @@ class FuzzerDriver(
           break
         }
         
-        // Always validate that the seed works on all engines
-        logger.ktFine { "About to validate seed on all engines($index/$totalCount) $seed" }
-        val validationResult = differentialTester.validateSeedOnAllEngines(seed)
-        logger.ktFine { "Validation result for seed $seed: $validationResult" }
+        // Always validate that the seed works on all engines with comprehensive checks
+        logger.ktFine { "About to validate seed comprehensively on all engines($index/$totalCount) $seed" }
+        val validationResult = differentialTester.validateSeedComprehensively(seed)
+        logger.ktFine { "Comprehensive validation result for seed $seed: $validationResult" }
         if (!validationResult) {
           ++engineValidationFailedCounter
-          logger.ktFine { "Seed failed engine validation($index/$totalCount) $seed" }
+          logger.ktFine { "Seed failed comprehensive validation($index/$totalCount) $seed" }
           continue
         }
-        logger.ktFine { "Seed passed engine validation($index/$totalCount) $seed" }
+        logger.ktFine { "Seed passed comprehensive validation($index/$totalCount) $seed" }
         
         val future = executor.submit<SparTreeFuzzer> {
           logger.ktAt(Level.FINE) { "Parsing($index/$totalCount) $seed" }
@@ -628,9 +637,9 @@ class FuzzerDriver(
       logger.atWarning().log("Failed to parse %s seed files in total.", failedCounter)
     }
     if (engineValidationFailedCounter != 0) {
-      logger.atWarning().log("Failed engine validation for %s seed files in total.", engineValidationFailedCounter)
+      logger.atWarning().log("Failed comprehensive validation for %s seed files in total.", engineValidationFailedCounter)
     }
-    logger.ktFine { "Seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
+    logger.ktFine { "Comprehensive seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
     if (shuffleSeeds) {
       result.shuffle(random)
     }

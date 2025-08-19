@@ -18,6 +18,8 @@ package org.perses.fuzzer.compilers
 
 import com.google.common.flogger.FluentLogger
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Performs differential testing by running the same input on multiple engines
@@ -29,6 +31,35 @@ class DifferentialTester(
   private enum class Status { SUCCESS, ERROR, CRASH, HANG }
   private data class Outcome(val status: Status, val errorKind: String? = null)
   
+  private val outputLogger = StandardizedOutputLogger()
+  
+  /**
+   * Normalizes stdout output for comparison by trimming whitespace, normalizing line endings,
+   * collapsing multiple whitespace characters, and normalizing floating-point numbers.
+   */
+  private fun normalizeStdout(out: String): String {
+    // Trim and collapse whitespace
+    var s = out.trim()
+    s = s.replace("\r\n", "\n").replace("\r", "\n")
+    s = Regex("\\s+").replace(s, " ")
+
+    // Normalize floating-point numbers to fixed precision (6 decimals)
+    val floatRegex = Regex("(?<![A-Za-z0-9_])([+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?)")
+    s = floatRegex.replace(s) { m ->
+      val token = m.groupValues[1]
+      // Try to parse as Double; if fail, keep original
+      try {
+        val value = token.toDouble()
+        // Use String.format to 6 decimal places, strip trailing zeros and dot
+        val fixed = String.format(java.util.Locale.ROOT, "%.6f", value)
+        fixed.trimEnd('0').trimEnd('.')
+      } catch (t: Throwable) {
+        token
+      }
+    }
+    return s
+  }
+
   /**
    * Validates that a seed works on all engines without detecting discrepancies.
    * This is used for initial seed filtering to ensure only seeds that work
@@ -87,7 +118,99 @@ class DifferentialTester(
       }
     }
     
-    logger.atFine().log("Seed %s passed on all engines", seedFile)
+    // NEW: Check that all engines produce the same stdout output
+    if (engineResults.size > 1) {
+      val firstStdout = normalizeStdout(engineResults.values.first().stdout)
+      for ((engineName, result) in engineResults) {
+        val normalizedStdout = normalizeStdout(result.stdout)
+        if (normalizedStdout != firstStdout) {
+          logger.atFine().log("Seed %s produces different stdout on engine %s: expected '%s', got '%s'", 
+            seedFile, engineName, firstStdout, normalizedStdout)
+          return false
+        }
+      }
+    }
+    
+    logger.atFine().log("Seed %s passed comprehensive validation on all engines", seedFile)
+    return true
+  }
+
+  /**
+   * Comprehensive seed validation that ensures:
+   * 1. All engines exit with code 0 (clean exit)
+   * 2. No engine crashes
+   * 3. All engines produce identical stdout output
+   * 
+   * This method is more thorough than validateSeedOnAllEngines and should be used
+   * for initial seed filtering to prevent false positives during fuzzing.
+   */
+  fun validateSeedComprehensively(seedFile: File): Boolean {
+    logger.atFine().log("Starting comprehensive validation of seed: %s", seedFile)
+    logger.atFine().log("Number of facades: %d", facades.size)
+    val engineResults = mutableMapOf<String, DifferentialTestResult.EngineResult>()
+    
+    // Run the seed on all engines
+    for (facade in facades) {
+      logger.atFine().log("Processing facade with %d compilation actions", facade.compilationActions.size)
+      for (action in facade.compilationActions) {
+        val engineName = getEngineName(action)
+        val cmd = action.constructCompileCmd(File("dummy"))
+        logger.atFine().log("Testing seed on engine: %s (command: %s)", engineName, cmd)
+        try {
+          val result = action.compile(seedFile)
+          
+          engineResults[engineName] = DifferentialTestResult.EngineResult(
+            engineName = engineName,
+            action = action,
+            cmdOutput = result.cmdOutput,
+            cmd = result.cmd,
+            exitCode = result.cmdOutput.exitCode.intValue,
+            stdout = result.cmdOutput.stdout.combinedLines,
+            stderr = result.cmdOutput.stderr.combinedLines
+          )
+          logger.atFine().log("Engine %s result: exit code %d, stdout: '%s', stderr: '%s'", 
+            engineName, result.cmdOutput.exitCode.intValue, 
+            result.cmdOutput.stdout.combinedLines.take(100), 
+            result.cmdOutput.stderr.combinedLines.take(100))
+        } catch (e: Exception) {
+          logger.atWarning().withCause(e).log("Failed to run seed %s on engine %s", seedFile, engineName)
+          return false
+        }
+      }
+    }
+    
+    // Step 1: Check if all engines succeeded (exit code 0) and didn't crash
+    for ((engineName, result) in engineResults) {
+      // Check if the engine crashed
+      val crashDetector = getCrashDetectorForEngine(engineName)
+      val crashResult = crashDetector.detectCrash(result.cmdOutput)
+      
+      if (crashResult.isCrashDetected()) {
+        logger.atFine().log("Seed %s crashed on engine %s", seedFile, engineName)
+        return false
+      }
+      
+      // Check if the engine failed (non-zero exit code)
+      if (result.exitCode != 0) {
+        logger.atFine().log("Seed %s failed on engine %s with exit code %d", seedFile, engineName, result.exitCode)
+        return false
+      }
+    }
+    
+    // Step 2: Check that all engines produce the same stdout output
+    if (engineResults.size > 1) {
+      val firstStdout = normalizeStdout(engineResults.values.first().stdout)
+      for ((engineName, result) in engineResults) {
+        val normalizedStdout = normalizeStdout(result.stdout)
+        if (normalizedStdout != firstStdout) {
+          logger.atFine().log("Seed %s produces different stdout on engine %s: expected '%s', got '%s'", 
+            seedFile, engineName, firstStdout, normalizedStdout)
+          return false
+        }
+      }
+    }
+    
+    logger.atFine().log("Seed %s passed comprehensive validation on all engines", seedFile)
     return true
   }
   
@@ -120,6 +243,141 @@ class DifferentialTester(
       engineResults = engineResults,
       discrepancies = discrepancies
     )
+  }
+  
+  /**
+   * Performs differential testing with standardized logging output.
+   * This method provides detailed, line-by-line comparison of engine outputs
+   * in a table format for easy discrepancy detection.
+   */
+  fun testDifferentiallyWithStandardizedLogging(
+    inputFile: File,
+    outputDirectory: File? = null
+  ): Pair<DifferentialTestResult, StandardizedOutputLogger.StandardizedOutput> {
+    val startTime = System.currentTimeMillis()
+    val testId = outputLogger.generateTestId(inputFile)
+    val standardizedOutputs = mutableListOf<StandardizedOutputLogger.StandardizedOutput>()
+    
+    logger.atFine().log("Starting standardized differential testing for test ID: %s", testId)
+    
+    // Run the input on all engines and collect standardized outputs
+    for (facade in facades) {
+      for (action in facade.compilationActions) {
+        val engineName = getEngineName(action)
+        val engineStartTime = System.currentTimeMillis()
+        
+        try {
+          val result = action.compile(inputFile)
+          val executionTimeMs = System.currentTimeMillis() - engineStartTime
+          
+          val standardizedOutput = outputLogger.standardizeOutput(
+            testId = testId,
+            inputFile = inputFile,
+            engineName = engineName,
+            result = DifferentialTestResult.EngineResult(
+              engineName = engineName,
+              action = action,
+              cmdOutput = result.cmdOutput,
+              cmd = result.cmd,
+              exitCode = result.cmdOutput.exitCode.intValue,
+              stdout = result.cmdOutput.stdout.combinedLines,
+              stderr = result.cmdOutput.stderr.combinedLines
+            ),
+            executionTimeMs = executionTimeMs
+          )
+          
+          standardizedOutputs.add(standardizedOutput)
+          
+          logger.atFine().log("Engine %s completed in %d ms with status: %s", 
+            engineName, executionTimeMs, standardizedOutput.status)
+            
+        } catch (e: Exception) {
+          logger.atWarning().withCause(e).log("Failed to run test on engine %s", engineName)
+          
+          // Create a standardized output for the failed execution
+          val executionTimeMs = System.currentTimeMillis() - engineStartTime
+          val failedOutput = StandardizedOutputLogger.StandardizedOutput(
+            testId = testId,
+            timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+            inputFile = inputFile.name,
+            engineName = engineName,
+            exitCode = -1,
+            executionTimeMs = executionTimeMs,
+            status = StandardizedOutputLogger.StandardizedOutput.ExecutionStatus.ERROR,
+            stdoutLines = emptyList(),
+            stderrLines = listOf("Execution failed: ${e.message}"),
+            crashSignature = null,
+            errorType = "ExecutionError"
+          )
+          
+          standardizedOutputs.add(failedOutput)
+        }
+      }
+    }
+    
+    // Create the traditional DifferentialTestResult for backward compatibility
+    val engineResults = standardizedOutputs.associate { output ->
+      output.engineName to DifferentialTestResult.EngineResult(
+        engineName = output.engineName,
+        action = facades.flatMap { it.compilationActions }.find { getEngineName(it) == output.engineName }!!,
+        cmdOutput = org.perses.util.shell.CmdOutput(
+          org.perses.util.shell.ExitCode(output.exitCode),
+          org.perses.util.shell.Output(output.stdoutLines.joinToString("\n")),
+          org.perses.util.shell.Output(output.stderrLines.joinToString("\n"))
+        ),
+        cmd = "standardized_output",
+        exitCode = output.exitCode,
+        stdout = output.stdoutLines.joinToString("\n"),
+        stderr = output.stderrLines.joinToString("\n")
+      )
+    }
+    
+    val discrepancies = detectDiscrepancies(engineResults)
+    val differentialResult = DifferentialTestResult(
+      inputFile = inputFile,
+      engineResults = engineResults,
+      discrepancies = discrepancies
+    )
+    
+    // Generate and save standardized output only if there are discrepancies
+    if (outputDirectory != null && discrepancies.isNotEmpty()) {
+      val outputFile = File(outputDirectory, "standardized_output_${testId}.txt")
+      val csvFile = File(outputDirectory, "standardized_output_${testId}.csv")
+      
+      outputLogger.saveToFile(standardizedOutputs, outputFile)
+      csvFile.writeText(outputLogger.formatAsCSV(standardizedOutputs))
+      
+      logger.atInfo().log("Standardized output saved to: %s and %s", outputFile.absolutePath, csvFile.absolutePath)
+    }
+    
+    // Create comparison map for quick discrepancy detection
+    val comparisonMap = outputLogger.createComparisonMap(standardizedOutputs)
+    val quickDiscrepancies = outputLogger.detectDiscrepanciesQuick(comparisonMap)
+    val lineDifferences = outputLogger.findLineDifferences(comparisonMap)
+    
+    // Log the formatted table output
+    val formattedOutput = outputLogger.formatAsTable(standardizedOutputs)
+    logger.atFine().log("Standardized output for test %s:\n%s", testId, formattedOutput)
+    
+    // Log quick discrepancy detection results
+    if (quickDiscrepancies.isNotEmpty()) {
+      logger.atInfo().log("Quick discrepancy detection found %d discrepancies for test %s", quickDiscrepancies.size, testId)
+      quickDiscrepancies.forEach { discrepancy ->
+        logger.atFine().log("Discrepancy: %s - %s", discrepancy.type, discrepancy.description)
+      }
+    }
+    
+    if (lineDifferences.isNotEmpty()) {
+      logger.atInfo().log("Found %d line-by-line differences for test %s", lineDifferences.size, testId)
+      lineDifferences.forEach { diff ->
+        logger.atFine().log("Line %d (%s): %s", diff.lineNumber, diff.streamType, diff.uniqueContent)
+      }
+    }
+    
+    val totalExecutionTime = System.currentTimeMillis() - startTime
+    logger.atInfo().log("Standardized differential testing completed for test %s in %d ms", testId, totalExecutionTime)
+    
+    return Pair(differentialResult, standardizedOutputs)
   }
   
   private fun getEngineName(action: ICompilationAction): String {
@@ -194,28 +452,7 @@ class DifferentialTester(
       return if (result.exitCode == 0) Outcome(Status.SUCCESS) else Outcome(Status.ERROR, detectErrorKind(result.stderr))
     }
 
-    fun normalizeStdout(out: String): String {
-      // Trim and collapse whitespace
-      var s = out.trim()
-      s = s.replace("\r\n", "\n").replace("\r", "\n")
-      s = Regex("\\s+").replace(s, " ")
 
-      // Normalize floating-point numbers to fixed precision (6 decimals)
-      val floatRegex = Regex("(?<![A-Za-z0-9_])([+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?)")
-      s = floatRegex.replace(s) { m ->
-        val token = m.groupValues[1]
-        // Try to parse as Double; if fail, keep original
-        try {
-          val value = token.toDouble()
-          // Use String.format to 6 decimal places, strip trailing zeros and dot
-          val fixed = String.format(java.util.Locale.ROOT, "%.6f", value)
-          fixed.trimEnd('0').trimEnd('.')
-        } catch (t: Throwable) {
-          token
-        }
-      }
-      return s
-    }
 
     // Global normalization gates: ignore uninteresting uniform cases
     val allOutcomes: Map<String, Outcome> = engines.associateWith { eng ->

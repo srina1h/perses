@@ -17,6 +17,7 @@ kt_jvm_library(
         "ICompilationAction.kt",
         "ICompilerCrashDetector.kt",
         "SanitizerCrashSignatureExtractor.kt",
+        "StandardizedOutputLogger.kt",
     ],
     deps = [
         "//kitten/src/org/perses/fuzzer/config:testing_configuration",

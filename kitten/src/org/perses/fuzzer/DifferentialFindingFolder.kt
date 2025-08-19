@@ -19,6 +19,7 @@ package org.perses.fuzzer
 import com.google.common.flogger.FluentLogger
 import org.perses.fuzzer.compilers.DifferentialTestResult
 import org.perses.fuzzer.compilers.ICompilationAction
+import org.perses.fuzzer.compilers.StandardizedOutputLogger
 import org.perses.program.TokenizedProgram
 import java.io.File
 import java.text.SimpleDateFormat
@@ -86,20 +87,10 @@ class DifferentialFindingFolder private constructor(
       val seedFileCopy = File(folder, "seed.${getFileExtension(seedFile.name)}")
       seedFile.copyTo(seedFileCopy)
 
-      // Save differential test results
-      saveDifferentialResults(folder, differentialResult)
-
-      // Save engine outputs
-      saveEngineOutputs(folder, differentialResult)
-
-      // Save summary
-      saveSummary(folder, differentialResult)
-      
-      // Save concise difference summary
-      saveDifferenceSummary(folder, differentialResult)
-      
-      // Save diff view
-      saveDiffView(folder, differentialResult)
+      // Save standardized output only if there are discrepancies
+      if (differentialResult.hasDiscrepancy) {
+        saveStandardizedOutput(folder, differentialResult)
+      }
     } catch (e: Exception) {
       logger.atWarning().withCause(e).log("Failed to save files to folder: $folder")
     }
@@ -358,6 +349,32 @@ class DifferentialFindingFolder private constructor(
           appendLine("✓ No differences found")
         }
       })
+    }
+    
+    private fun saveStandardizedOutput(folder: File, result: DifferentialTestResult) {
+      val outputLogger = StandardizedOutputLogger()
+      val testId = outputLogger.generateTestId(result.inputFile)
+      val standardizedOutputs = mutableListOf<StandardizedOutputLogger.StandardizedOutput>()
+      
+      // Convert DifferentialTestResult to StandardizedOutput format
+      result.engineResults.values.forEach { engineResult ->
+        val standardizedOutput = outputLogger.standardizeOutput(
+          testId = testId,
+          inputFile = result.inputFile,
+          engineName = engineResult.engineName,
+          result = engineResult
+        )
+        standardizedOutputs.add(standardizedOutput)
+      }
+      
+      // Save both table and CSV formats
+      val tableFile = File(folder, "standardized_output_table.txt")
+      val csvFile = File(folder, "standardized_output.csv")
+      
+      outputLogger.saveToFile(standardizedOutputs, tableFile)
+      csvFile.writeText(outputLogger.formatAsCSV(standardizedOutputs))
+      
+      logger.atInfo().log("Standardized output saved to: %s and %s", tableFile.absolutePath, csvFile.absolutePath)
     }
   }
 } 
