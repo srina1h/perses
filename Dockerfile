@@ -64,15 +64,16 @@ ENV PATH="/root/.jsvu/bin:$PATH"
 
 # Configure eshost hosts using JSVU-installed binaries (only add if present)
 RUN set -eux; \
+    eshost --version; \
     mkdir -p /root/.eshost; \
     if [ "$SEED_MODE" = "test262" ]; then \
-        echo "Configuring eshost for normal mode"; \
+        echo "Configuring eshost for test262 mode"; \
         if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs; fi; \
         if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore; fi; \
         if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey; fi; \
         if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8; fi; \
     elif [ "$SEED_MODE" = "normal" ]; then \
-        echo "Configuring eshost for test262 mode with fuzzing harnesses"; \
+        echo "Configuring eshost for normal mode with fuzzing harnesses"; \
         if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs -h /workspace/fuzzing_harness/graal.js; fi; \
         if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore -h /workspace/fuzzing_harness/jsc.js; fi; \
         if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey -h /workspace/fuzzing_harness/sm.js; fi; \
@@ -87,18 +88,13 @@ RUN set -eux; \
 WORKDIR /workspace
 COPY . .
 
-# Create version information for Docker build (Git not available)
-RUN mkdir -p bazel-out && \
-    echo "PERSES_GIT_COMMIT_HASH docker-build" > bazel-out/volatile-status.txt && \
-    echo "PERSES_GIT_BRANCH docker" >> bazel-out/volatile-status.txt && \
-    echo "PERSES_GIT_STATUS Clean" >> bazel-out/volatile-status.txt
-
-# Disable workspace status command for Docker build (Git not available)
-RUN echo "# Docker build configuration" > .bazelrc.docker && \
-    echo "build --workspace_status_command=" >> .bazelrc.docker && \
-    echo "build --output_groups=+clippy_checks" >> .bazelrc.docker && \
-    echo "common --enable_bzlmod" >> .bazelrc.docker && \
-    mv .bazelrc.docker .bazelrc
+# Initialize Git repository for Bazel workspace status (if .git is not present)
+RUN if [ ! -d .git ]; then \
+        git init \
+        && git add . \
+        && git commit -m "Initial commit for Docker build" \
+        && echo "Initialized Git repository for Bazel build"; \
+    fi
 
 # Prepare seeds based on SEED_MODE
 RUN if [ "$SEED_MODE" = "test262" ]; then \
