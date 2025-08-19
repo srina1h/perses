@@ -87,6 +87,12 @@ RUN set -eux; \
 WORKDIR /workspace
 COPY . .
 
+# Create version information for Docker build (Git not available)
+RUN mkdir -p bazel-out && \
+    echo "PERSES_GIT_COMMIT_HASH docker-build" > bazel-out/volatile-status.txt && \
+    echo "PERSES_GIT_BRANCH docker" >> bazel-out/volatile-status.txt && \
+    echo "PERSES_GIT_STATUS Clean" >> bazel-out/volatile-status.txt
+
 # Disable workspace status command for Docker build (Git not available)
 RUN echo "# Docker build configuration" > .bazelrc.docker && \
     echo "build --workspace_status_command=" >> .bazelrc.docker && \
