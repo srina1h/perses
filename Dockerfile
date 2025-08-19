@@ -85,15 +85,8 @@ RUN set -eux; \
 
 # Copy the current repository into the image
 WORKDIR /workspace
-COPY . .
-
-# Initialize Git repository for Bazel workspace status (if .git is not present)
-RUN if [ ! -d .git ]; then \
-        git init \
-        && git add . \
-        && git commit -m "Initial commit for Docker build" \
-        && echo "Initialized Git repository for Bazel build"; \
-    fi
+RUN git clone https://github.com/srina1h/perses.git .
+RUN git checkout diff_eshost
 
 # Prepare seeds based on SEED_MODE
 RUN if [ "$SEED_MODE" = "test262" ]; then \
