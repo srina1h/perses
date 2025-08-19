@@ -17,6 +17,7 @@
 package org.perses.fuzzer.compilers
 
 import com.google.common.flogger.FluentLogger
+import com.google.common.collect.ImmutableList
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -253,7 +254,7 @@ class DifferentialTester(
   fun testDifferentiallyWithStandardizedLogging(
     inputFile: File,
     outputDirectory: File? = null
-  ): Pair<DifferentialTestResult, StandardizedOutputLogger.StandardizedOutput> {
+  ): Pair<DifferentialTestResult, List<StandardizedOutputLogger.StandardizedOutput>> {
     val startTime = System.currentTimeMillis()
     val testId = outputLogger.generateTestId(inputFile)
     val standardizedOutputs = mutableListOf<StandardizedOutputLogger.StandardizedOutput>()
@@ -322,8 +323,8 @@ class DifferentialTester(
         action = facades.flatMap { it.compilationActions }.find { getEngineName(it) == output.engineName }!!,
         cmdOutput = org.perses.util.shell.CmdOutput(
           org.perses.util.shell.ExitCode(output.exitCode),
-          org.perses.util.shell.Output(output.stdoutLines.joinToString("\n")),
-          org.perses.util.shell.Output(output.stderrLines.joinToString("\n"))
+          org.perses.util.shell.ShellOutputLines(com.google.common.collect.ImmutableList.copyOf(output.stdoutLines)),
+          org.perses.util.shell.ShellOutputLines(com.google.common.collect.ImmutableList.copyOf(output.stderrLines))
         ),
         cmd = "standardized_output",
         exitCode = output.exitCode,

@@ -38,7 +38,7 @@ class StandardizedOutputLogger {
     val engineName: String,
     val exitCode: Int,
     val executionTimeMs: Long,
-    val status: ExecutionStatus,
+    val status: StandardizedOutput.ExecutionStatus,
     val stdoutLines: List<String>,
     val stderrLines: List<String>,
     val crashSignature: String? = null,
@@ -440,7 +440,7 @@ class StandardizedOutputLogger {
         description = "Different error types: ${errorTypes.joinToString(" vs ")}",
         engines = comparisonMap.engineNames,
         values = errorTypes.toList(),
-        details = comparisonMap.errorTypeMap
+        details = comparisonMap.errorTypeMap.mapValues { it.value as Any? ?: "" }
       ))
     }
     
@@ -452,7 +452,7 @@ class StandardizedOutputLogger {
         description = "Different crash signatures: ${crashSignatures.joinToString(" vs ")}",
         engines = comparisonMap.engineNames,
         values = crashSignatures.toList(),
-        details = comparisonMap.crashSignatureMap
+        details = comparisonMap.crashSignatureMap.mapValues { it.value as Any? ?: "" }
       ))
     }
     
@@ -544,7 +544,7 @@ class StandardizedOutputLogger {
   data class ComparisonMap(
     val testId: String,
     val engineNames: List<String>,
-    val statusMap: Map<String, ExecutionStatus>,
+    val statusMap: Map<String, StandardizedOutput.ExecutionStatus>,
     val exitCodeMap: Map<String, Int>,
     val executionTimeMap: Map<String, Long>,
     val errorTypeMap: Map<String, String?>,
