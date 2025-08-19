@@ -64,7 +64,6 @@ ENV PATH="/root/.jsvu/bin:$PATH"
 
 # Configure eshost hosts using JSVU-installed binaries (only add if present)
 RUN set -eux; \
-    eshost --version; \
     mkdir -p /root/.eshost; \
     if [ "$SEED_MODE" = "test262" ]; then \
         echo "Configuring eshost for test262 mode"; \
