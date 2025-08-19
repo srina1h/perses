@@ -62,13 +62,13 @@ ENV PATH="/root/.jsvu/bin:$PATH"
 RUN set -eux; \
     eshost --version; \
     mkdir -p /root/.eshost; \
-    if [ "$SEED_MODE" = "normal" ]; then \
+    if [ "$SEED_MODE" = "test262" ]; then \
         echo "Configuring eshost for normal mode"; \
         if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs; fi; \
         if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore; fi; \
         if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey; fi; \
         if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8; fi; \
-    elif [ "$SEED_MODE" = "test262" ]; then \
+    elif [ "$SEED_MODE" = "normal" ]; then \
         echo "Configuring eshost for test262 mode with fuzzing harnesses"; \
         if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs -h /workspace/fuzzing_harness/graal.js; fi; \
         if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore -h /workspace/fuzzing_harness/jsc.js; fi; \
