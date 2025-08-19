@@ -27,6 +27,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Configure Git for Bazel workspace status (needed for build)
+RUN git config --global user.name "Docker Build" \
+    && git config --global user.email "docker@build.local"
+
 # Install Bazel using pre-built binary (works on both x86_64 and ARM64)
 RUN ARCH=$(uname -m) \
     && if [ "$ARCH" = "x86_64" ]; then \
@@ -79,9 +83,16 @@ RUN set -eux; \
     fi; \
     eshost --list || true
 
-# Copy the current repository into the image (simpler than cloning)
+# Copy the current repository into the image
 WORKDIR /workspace
 COPY . .
+
+# Disable workspace status command for Docker build (Git not available)
+RUN echo "# Docker build configuration" > .bazelrc.docker && \
+    echo "build --workspace_status_command=" >> .bazelrc.docker && \
+    echo "build --output_groups=+clippy_checks" >> .bazelrc.docker && \
+    echo "common --enable_bzlmod" >> .bazelrc.docker && \
+    mv .bazelrc.docker .bazelrc
 
 # Prepare seeds based on SEED_MODE
 RUN if [ "$SEED_MODE" = "test262" ]; then \
