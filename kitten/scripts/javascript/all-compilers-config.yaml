@@ -4,67 +4,12 @@ seedFolders:
     fileExtentions: [".js"]
 
 programsUnderTest:
-  # V8 JavaScript Engine
-  - command: "v8"
+  # Unified ESHOST runner (exits 0 if all engines agree and expected; 1 otherwise)
+  - command: "eshost"
     flagsToTest:
-      - flags: ["--predictable", "--use-strict", "--random-seed=0", "--hash-seed=0", "--correctness-fuzzer-supressions"]
+      - flags: ["-u"]
     versionFlags:
-      flags: ["--help"]
+      flags: ["--version"]
+    # Use any JS crash detector; eshost non-zero does not imply engine crash
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
-  
-  # SpiderMonkey JavaScript Engine
-  - command: "spidermonkey"
-    flagsToTest:
-      - flags: ["--fuzzing-safe", "-s", "-W"]
-    versionFlags:
-      flags: ["--version"]
-    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.SpiderMonkeyCrashDetector"
-  
-  # JavaScriptCore (JSC) Engine
-  - command: "jsc"
-    flagsToTest:
-      - flags: ["-s"]
-    versionFlags:
-      flags: ["--version"]
-    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JSCCrashDetector"
-  
-  # XS JavaScript Engine
-  # - command: "xs"
-  #   flagsToTest:
-  #     - flags: []
-  #   versionFlags:
-  #     flags: ["-v"]
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.XSCrashDetector"
-  
-  # GraalJS Engine
-  - command: "graaljs"
-    flagsToTest:
-      - flags: ["--strict", "--js.intl-402=false"]
-    versionFlags:
-      flags: ["--version"]
-    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
-  
-  # QuickJS Engine
-  # - command: "quickjs"
-  #   flagsToTest:
-  #     - flags: []
-  #   versionFlags:
-  #     flags: ["--version"]
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.QuickJSCrashDetector"
-  
-  # Hermes Engine
-  # - command: "hermes"
-  #   flagsToTest:
-  #     - flags: []
-  #   versionFlags:
-  #     flags: ["--version"]
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.HermesCrashDetector"
-  
-  # JerryScript Engine (commented out as it may not be available in JSVU)
-  # - command: "jerry"
-  #   flagsToTest:
-  #     - flags: []
-  #   versionFlags:
-  #     flags: ["--version"]
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JerryScriptCrashDetector"
   

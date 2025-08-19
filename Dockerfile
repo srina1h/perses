@@ -40,8 +40,8 @@ RUN JAVA_HOME=$(update-alternatives --query java | grep 'Value:' | head -1 | awk
     && echo "export JAVA_HOME=$JAVA_HOME" >> /root/.bashrc \
     && export JAVA_HOME=$JAVA_HOME
 
-# Install JSVU globally
-RUN npm install jsvu -g
+# Install eshost and JSVU globally
+RUN npm install -g eshost-cli jsvu
 
 # Install JavaScript engines via JSVU (use correct architecture)
 RUN ARCH=$(uname -m) \
@@ -55,10 +55,21 @@ RUN ARCH=$(uname -m) \
 # Add JSVU bin directory to PATH
 ENV PATH="/root/.jsvu/bin:$PATH"
 
-# Clone the perses repository
+# Configure eshost hosts using JSVU-installed binaries (only add if present)
+RUN set -eux; \
+    eshost --version; \
+    mkdir -p /root/.eshost; \
+    if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs; fi; \
+    if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore; fi; \
+    # if [ -x /root/.jsvu/bin/quickjs ]; then eshost --add 'QuickJS' qjs /root/.jsvu/bin/quickjs; fi; \
+    if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey; fi; \
+    if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8; fi; \
+    # if [ -x /root/.jsvu/bin/xs ]; then eshost --add 'XS' xs /root/.jsvu/bin/xs; fi; \
+    eshost --list || true
+
+# Copy the current repository into the image (simpler than cloning)
 WORKDIR /workspace
-RUN git clone https://github.com/srina1h/perses.git .
-RUN git checkout diff_instrumented
+COPY . .
 
 # Prepare seeds by running the prepare_seeds.sh script
 RUN chmod +x prepare_seeds.sh && ./prepare_seeds.sh
@@ -73,92 +84,19 @@ RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascrip
 # Build the project with instrumentation support
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
-# Create a script to update the configuration with correct paths
-RUN echo '#!/bin/bash' > /workspace/update-config.sh && \
-    echo '# Update the differential testing config with correct paths' >> /workspace/update-config.sh && \
-    echo 'cd /workspace' >> /workspace/update-config.sh && \
-    echo 'if [ -f "kitten/scripts/javascript/all-compilers-config.yaml" ]; then' >> /workspace/update-config.sh && \
-    echo '    echo "Updating configuration paths..."' >> /workspace/update-config.sh && \
-    echo '    # Update all engine paths to use global commands' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/hermes|hermes|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/graaljs|graaljs|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/v8|v8|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/spidermonkey|spidermonkey|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/jsc|jsc|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/xs|xs|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    sed -i "s|/Users/srinath/.jsvu/bin/quickjs|quickjs|g" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    # Remove V8 configuration on ARM64' >> /workspace/update-config.sh && \
-    echo '    if [ "$(uname -m)" = "aarch64" ]; then' >> /workspace/update-config.sh && \
-    echo '        echo "Removing V8 configuration on ARM64..."' >> /workspace/update-config.sh && \
-    echo '        sed -i "/command: \"v8\"/,/crashDetectorClassName: \"org.perses.fuzzer.compilers.javascript.V8CrashDetector\"/d" kitten/scripts/javascript/all-compilers-config.yaml' >> /workspace/update-config.sh && \
-    echo '    fi' >> /workspace/update-config.sh && \
-    echo '    echo "Configuration update completed."' >> /workspace/update-config.sh && \
-    echo 'else' >> /workspace/update-config.sh && \
-    echo '    echo "ERROR: Config file not found!"' >> /workspace/update-config.sh && \
-    echo '    exit 1' >> /workspace/update-config.sh && \
-    echo 'fi' >> /workspace/update-config.sh
+# Minimal start script using eshost-driven config
+RUN echo '#!/bin/bash' > /workspace/start.sh && \
+    echo 'set -euo pipefail' >> /workspace/start.sh && \
+    echo 'THREADS=${THREADS:-$(nproc)}' >> /workspace/start.sh && \
+    echo 'JVM_HEAP=${JVM_HEAP:-8}' >> /workspace/start.sh && \
+    echo 'echo "Threads: ${THREADS}, JVM heap: ${JVM_HEAP}G"' >> /workspace/start.sh && \
+    echo 'exec java -Xmx${JVM_HEAP}G -Xms1G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \' >> /workspace/start.sh && \
+    echo '  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \' >> /workspace/start.sh && \
+    echo '  --threads ${THREADS} \' >> /workspace/start.sh && \
+    echo '  --verbosity "FINE" \' >> /workspace/start.sh && \
+    echo '  --timeout 1000000000 \' >> /workspace/start.sh && \
+    echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start.sh && \
+    chmod +x /workspace/start.sh
 
-RUN chmod +x /workspace/update-config.sh
-
-# Create the main entry script
-RUN echo '#!/bin/bash' > /workspace/start-differential-testing.sh && \
-    echo 'set -e' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Starting differential testing setup..."' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo '# Update configuration paths' >> /workspace/start-differential-testing.sh && \
-    echo './update-config.sh' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo '# Verify JavaScript engines are available' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Verifying JavaScript engines..."' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking V8:" && which v8 && echo "console.log(\"V8 test\");" | timeout 5s v8 2>/dev/null || echo "V8 test completed"' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking SpiderMonkey:" && which spidermonkey && timeout 5s spidermonkey --version 2>/dev/null || echo "SpiderMonkey test completed"' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking JavaScriptCore:" && which jsc && timeout 5s jsc --version 2>/dev/null || echo "JSC test completed"' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking XS:" && which xs && timeout 5s xs -v 2>/dev/null || echo "XS test completed"' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking GraalJS:" && which graaljs && timeout 5s graaljs --version 2>/dev/null || echo "GraalJS test completed"' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking QuickJS:" && which quickjs && timeout 5s quickjs --version 2>/dev/null || echo "QuickJS test completed"' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Checking Hermes:" && which hermes && timeout 5s hermes --version 2>/dev/null || echo "Hermes test completed"' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo '# Determine number of threads based on SLURM environment or system cores' >> /workspace/start-differential-testing.sh && \
-    echo 'if [[ -n "${SLURM_CPUS_PER_TASK:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
-    echo '    THREADS="${SLURM_CPUS_PER_TASK}"' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "Using SLURM_CPUS_PER_TASK: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
-    echo 'elif [[ -n "${SLURM_JOB_CPUS_PER_NODE:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
-    echo '    THREADS="${SLURM_JOB_CPUS_PER_NODE}"' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "Using SLURM_JOB_CPUS_PER_NODE: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
-    echo 'elif [[ -n "${SLURM_NTASKS:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
-    echo '    THREADS="${SLURM_NTASKS}"' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "Using SLURM_NTASKS: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
-    echo 'else' >> /workspace/start-differential-testing.sh && \
-    echo '    THREADS=$(nproc)' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "Using system cores: ${THREADS} threads"' >> /workspace/start-differential-testing.sh && \
-    echo 'fi' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo '# Determine memory allocation based on SLURM environment' >> /workspace/start-differential-testing.sh && \
-    echo 'if [[ -n "${SLURM_MEM_PER_NODE:-}" ]]; then' >> /workspace/start-differential-testing.sh && \
-    echo '    # Convert SLURM memory (in MB) to GB for JVM' >> /workspace/start-differential-testing.sh && \
-    echo '    MEM_GB=$((SLURM_MEM_PER_NODE / 1024))' >> /workspace/start-differential-testing.sh && \
-    echo '    # Reserve 2GB for system, use rest for JVM' >> /workspace/start-differential-testing.sh && \
-    echo '    JVM_HEAP=$((MEM_GB - 2))' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "SLURM memory: ${SLURM_MEM_PER_NODE}MB, JVM heap: ${JVM_HEAP}G"' >> /workspace/start-differential-testing.sh && \
-    echo 'else' >> /workspace/start-differential-testing.sh && \
-    echo '    JVM_HEAP=16' >> /workspace/start-differential-testing.sh && \
-    echo '    echo "Using default JVM heap: ${JVM_HEAP}G"' >> /workspace/start-differential-testing.sh && \
-    echo 'fi' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Starting differential testing with ${THREADS} threads and ${JVM_HEAP}G heap..."' >> /workspace/start-differential-testing.sh && \
-    echo 'cd /workspace' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo 'java -Xmx${JVM_HEAP}G -Xms4G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \' >> /workspace/start-differential-testing.sh && \
-    echo '  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \' >> /workspace/start-differential-testing.sh && \
-    echo '  --threads ${THREADS} \' >> /workspace/start-differential-testing.sh && \
-    echo '  --verbosity "FINE" \' >> /workspace/start-differential-testing.sh && \
-    echo '  --timeout 1000000000 \' >> /workspace/start-differential-testing.sh && \
-    echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start-differential-testing.sh && \
-    echo '' >> /workspace/start-differential-testing.sh && \
-    echo 'echo "Differential testing completed!"' >> /workspace/start-differential-testing.sh
-
-RUN chmod +x /workspace/start-differential-testing.sh
-
-# Set the default command
-CMD ["/workspace/start-differential-testing.sh"] 
+# Default command
+CMD ["/workspace/start.sh"]

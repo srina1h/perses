@@ -384,6 +384,7 @@ class DifferentialTester(
     // Try to extract a meaningful name from the command
     val cmd = action.constructCompileCmd(File("dummy"))
     return when {
+      cmd.contains("eshost") -> "ESHost"
       cmd.contains("v8") -> "V8"
       cmd.contains("hermes") -> "Hermes"
       cmd.contains("graaljs") -> "GraalJS"

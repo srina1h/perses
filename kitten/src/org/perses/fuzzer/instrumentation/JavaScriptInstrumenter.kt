@@ -80,10 +80,8 @@ class JavaScriptInstrumenter(
     // Add probe runtime functions at the beginning
     val runtimeFunctions = generateRuntimeFunctions()
     
-    // Combine original code with probe code, adding "use strict"; at the top
+    // Combine original code with probe code
     return """
-      "use strict";
-      
       $runtimeFunctions
       
       // Original code
