@@ -421,8 +421,9 @@ class DifferentialTester(
     fun isHang(result: DifferentialTestResult.EngineResult): Boolean {
       val stderrLower = result.stderr.lowercase()
       val stdoutLower = result.stdout.lowercase()
-      // GNU/coreutils timeout commonly returns 124; also check textual hints
+      // GNU/coreutils timeout commonly returns 124; SIGKILL from timeout returns 137
       return result.exitCode == 124 ||
+        (result.exitCode == 137 && (stderrLower.contains("timeout") || stderrLower.contains("killed") || stderrLower.contains("signal 9"))) ||
         stderrLower.contains("timeout") || stderrLower.contains("timed out") ||
         stdoutLower.contains("timeout") || stdoutLower.contains("timed out") ||
         stderrLower.contains("execution timeout") || stdoutLower.contains("execution timeout")

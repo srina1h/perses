@@ -71,6 +71,12 @@ abstract class AbstractCompilerCrashDetector : ICompilerCrashDetector {
     require(exitCodeForCrash > 0) {
       "The exit code should be non-zero."
     }
+    
+    // Check if this is a timeout-related exit code
+    if (isTimeoutExitCode(exitCodeForCrash, stderr)) {
+      return ICompilerCrashDetector.AbstractResult.NonCrashResult(javaClass)
+    }
+    
     val rawSignature = detectCrashSignatureFromStderr(stderr)
     checkRawSignaturesAreInStdErr(rawSignature, stderr)
     val isCommonCrashExitCode = CommonCrashExitCodes.isCrashExitCode(exitCodeForCrash)
@@ -83,6 +89,31 @@ abstract class AbstractCompilerCrashDetector : ICompilerCrashDetector {
         rawSignature,
       )
     }
+  }
+  
+  /**
+   * Check if the exit code and stderr indicate a timeout rather than a crash.
+   * This prevents timeout kills (like SIGKILL from timeout command) from being
+   * treated as crashes.
+   */
+  private fun isTimeoutExitCode(exitCode: Int, stderr: List<String>): Boolean {
+    // Exit code 124 is the standard timeout exit code from GNU timeout
+    if (exitCode == 124) {
+      return true
+    }
+    
+    // Exit code 137 (SIGKILL) could be from timeout command with -s 9 flag
+    if (exitCode == 137) {
+      // Check if stderr contains timeout-related messages
+      val stderrText = stderr.joinToString("\n").lowercase()
+      return stderrText.contains("timeout") || 
+             stderrText.contains("timed out") || 
+             stderrText.contains("execution timeout") ||
+             stderrText.contains("killed") ||
+             stderrText.contains("signal 9")
+    }
+    
+    return false
   }
 
   private fun checkRawSignaturesAreInStdErr(rawSignature: List<String>, stderr: List<String>) {

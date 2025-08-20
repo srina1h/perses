@@ -76,6 +76,9 @@ class StandardizedOutputLogger {
     val status = when {
       result.exitCode == 0 -> StandardizedOutput.ExecutionStatus.SUCCESS
       result.exitCode == 124 -> StandardizedOutput.ExecutionStatus.TIMEOUT
+      result.exitCode == 137 && (result.stderr.contains("timeout", ignoreCase = true) || 
+                                 result.stderr.contains("killed", ignoreCase = true) ||
+                                 result.stderr.contains("signal 9", ignoreCase = true)) -> StandardizedOutput.ExecutionStatus.TIMEOUT
       result.stderr.contains("timeout", ignoreCase = true) -> StandardizedOutput.ExecutionStatus.TIMEOUT
       result.stderr.contains("crash", ignoreCase = true) || result.stderr.contains("segmentation fault", ignoreCase = true) -> StandardizedOutput.ExecutionStatus.CRASH
       result.stderr.isNotEmpty() -> StandardizedOutput.ExecutionStatus.ERROR
