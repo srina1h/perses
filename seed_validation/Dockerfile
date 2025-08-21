@@ -86,13 +86,15 @@ WORKDIR /workspace
 # Copy current repo (keeps local modifications)
 COPY . /workspace
 
-# Prepare seeds
-RUN if [ "$SEED_MODE" = "test262" ]; then \
+# Prepare seeds (skip if the scripts are not present in the build context)
+RUN if [ "$SEED_MODE" = "test262" ] && [ -f /workspace/prepare_test262_seeds.sh ]; then \
         echo "Preparing test262 seeds"; \
-        chmod +x prepare_test262_seeds.sh && ./prepare_test262_seeds.sh; \
-    elif [ "$SEED_MODE" = "normal" ]; then \
+        chmod +x /workspace/prepare_test262_seeds.sh && /workspace/prepare_test262_seeds.sh; \
+    elif [ "$SEED_MODE" = "normal" ] && [ -f /workspace/prepare_seeds.sh ]; then \
         echo "Preparing normal regression seeds"; \
-        chmod +x prepare_seeds.sh && ./prepare_seeds.sh; \
+        chmod +x /workspace/prepare_seeds.sh && /workspace/prepare_seeds.sh; \
+    else \
+        echo "Seed prep script not present in context; skipping."; \
     fi
 
 # Build Kitten deploy jar
