@@ -408,6 +408,87 @@ class DifferentialTester(
     throw IllegalArgumentException("No crash detector found for engine: $engineName")
   }
   
+  /**
+   * Parse ESHost output to determine if it represents a true differential finding
+   * or just all engines failing with the same error.
+   * 
+   * @param stdout The stdout from ESHost
+   * @param stderr The stderr from ESHost
+   * @return true if this is a true differential finding, false if all engines failed with same error
+   */
+  private fun parseEshostOutputForDifferentialFinding(stdout: String, stderr: String): Boolean {
+    val output = (stdout + "\n" + stderr).trim()
+    
+    // Split output into lines and look for engine sections
+    val lines = output.split("\n")
+    val engineResults = mutableMapOf<String, String>()
+    var currentEngine: String? = null
+    
+    for (line in lines) {
+      val trimmedLine = line.trim()
+      
+      // Look for engine headers (e.g., "#### GJS", "#### JSC", "#### SM", "#### V8")
+      if (trimmedLine.startsWith("#### ")) {
+        currentEngine = trimmedLine.substring(5).trim() // Remove "#### "
+        engineResults[currentEngine] = ""
+      } else if (currentEngine != null && trimmedLine.isNotEmpty()) {
+        // Accumulate output for current engine
+        engineResults[currentEngine] = engineResults[currentEngine] + "\n" + trimmedLine
+      }
+    }
+    
+    // If we have multiple engines, check if they all failed with the same error
+    if (engineResults.size > 1) {
+      val errorTypes = mutableSetOf<String>()
+      
+      for ((engine, output) in engineResults) {
+        val errorType = extractErrorType(output)
+        if (errorType.isNotEmpty()) {
+          errorTypes.add(errorType)
+        }
+      }
+      
+      // If all engines have the same error type, it's not a differential finding
+      if (errorTypes.size == 1) {
+        logger.atFine().log("All engines failed with same error type: ${errorTypes.first()}")
+        return false
+      }
+      
+      // If engines have different error types, it's a differential finding
+      if (errorTypes.size > 1) {
+        logger.atFine().log("Engines have different error types: $errorTypes")
+        return true
+      }
+    }
+    
+    // If we can't parse the output clearly, assume it's a differential finding
+    // (better to be conservative and log it)
+    logger.atFine().log("Could not clearly parse ESHost output, assuming differential finding")
+    return true
+  }
+  
+  /**
+   * Extract the error type from engine output.
+   */
+  private fun extractErrorType(output: String): String {
+    val lines = output.split("\n")
+    for (line in lines) {
+      val trimmedLine = line.trim()
+      // Look for common JavaScript error types
+      when {
+        trimmedLine.contains("SyntaxError") -> return "SyntaxError"
+        trimmedLine.contains("TypeError") -> return "TypeError"
+        trimmedLine.contains("ReferenceError") -> return "ReferenceError"
+        trimmedLine.contains("RangeError") -> return "RangeError"
+        trimmedLine.contains("URIError") -> return "URIError"
+        trimmedLine.contains("EvalError") -> return "EvalError"
+        trimmedLine.contains("Error:") -> return "Error"
+        trimmedLine.contains("Exception:") -> return "Exception"
+      }
+    }
+    return ""
+  }
+  
   private fun detectDiscrepancies(
     engineResults: Map<String, DifferentialTestResult.EngineResult>
   ): List<DifferentialTestResult.Discrepancy> {
@@ -462,6 +543,37 @@ class DifferentialTester(
       val res = engineResults[eng]!!
       outcomeOf(eng, res)
     }
+    
+    // Special handling for ESHost unified output
+    if (engines.size == 1 && engines.first() == "ESHost") {
+      val eshostResult = engineResults["ESHost"]!!
+      // ESHost exit code 1 indicates potential differential findings between engines
+      if (eshostResult.exitCode == 1) {
+        // Parse ESHost output to determine if this is a true differential finding
+        // or just all engines failing with the same error
+        val isTrueDifferentialFinding = parseEshostOutputForDifferentialFinding(eshostResult.stdout, eshostResult.stderr)
+        
+        if (isTrueDifferentialFinding) {
+          discrepancies.add(
+            DifferentialTestResult.Discrepancy(
+              type = DifferentialTestResult.Discrepancy.DiscrepancyType.SUCCESS_VS_ERROR,
+              description = "ESHost detected discrepancies between JavaScript engines (exit code 1)",
+              engine1 = "ESHost",
+              engine2 = "N/A",
+              value1 = "Differential finding detected",
+              value2 = "N/A",
+            )
+          )
+          return discrepancies
+        } else {
+          // All engines failed with the same error, not a differential finding
+          logger.atFine().log("ESHost exit code 1 but all engines failed with same error - ignoring")
+          return emptyList()
+        }
+      }
+      return emptyList()
+    }
+    
     val allSuccess = allOutcomes.values.all { it.status == Status.SUCCESS }
     if (allSuccess) {
       val normalizedStdouts = engines.map { eng -> normalizeStdout(engineResults[eng]!!.stdout) }.toSet()
@@ -469,9 +581,44 @@ class DifferentialTester(
         return emptyList()
       }
     }
+    
+    // Special handling for single-engine scenarios (non-ESHost)
+    if (engines.size == 1) {
+      val singleEngine = engines.first()
+      val singleResult = engineResults[singleEngine]!!
+      val singleOutcome = allOutcomes[singleEngine]!!
+      
+      // For single engine, log any non-success outcome as a finding
+      if (singleOutcome.status != Status.SUCCESS) {
+        discrepancies.add(
+          DifferentialTestResult.Discrepancy(
+            type = when (singleOutcome.status) {
+              Status.CRASH -> DifferentialTestResult.Discrepancy.DiscrepancyType.CRASH_OR_HANG
+              Status.HANG -> DifferentialTestResult.Discrepancy.DiscrepancyType.CRASH_OR_HANG
+              Status.ERROR -> DifferentialTestResult.Discrepancy.DiscrepancyType.SUCCESS_VS_ERROR
+              else -> DifferentialTestResult.Discrepancy.DiscrepancyType.EXIT_CODE_MISMATCH
+            },
+            description = "Single engine ${singleOutcome.status.name.lowercase()} with exit code ${singleResult.exitCode}",
+            engine1 = singleEngine,
+            engine2 = "N/A",
+            value1 = singleOutcome.status.name,
+            value2 = "N/A",
+          )
+        )
+        return discrepancies
+      }
+      return emptyList()
+    }
+    
+    // For multiple engines, only filter out if ALL engines fail in the same way
     val allFail = allOutcomes.values.all { it.status != Status.SUCCESS }
     if (allFail) {
-      return emptyList()
+      // Check if all engines fail with the same error type
+      val errorTypes = allOutcomes.values.map { it.errorKind ?: "Error" }.toSet()
+      if (errorTypes.size == 1) {
+        return emptyList()
+      }
+      // If different error types, continue to detect discrepancies
     }
 
     // Compare each pair of engines with simplified, high-signal rules

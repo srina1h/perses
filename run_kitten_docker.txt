@@ -6,4 +6,4 @@ sudo docker run -it --init --cpuset-cpus="$(bash getcoreids.sh)" --name kit_1_no
   -v $(pwd)/custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro \
   kit_1_norm
 
-  sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build_arg=SEED_MODE="normal" -t kit_1_norm .
+  sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --no-cache -t kit_1_norm .
