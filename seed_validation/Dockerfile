@@ -81,20 +81,18 @@ RUN set -eux; \
     fi; \
     eshost --list || true
 
+# Copy the current repository into the image
 WORKDIR /workspace
+RUN git clone https://github.com/srina1h/perses.git .
+RUN git checkout diff_eshost
 
-# Copy current repo (keeps local modifications)
-COPY . /workspace
-
-# Prepare seeds (skip if the scripts are not present in the build context)
-RUN if [ "$SEED_MODE" = "test262" ] && [ -f /workspace/prepare_test262_seeds.sh ]; then \
+# Prepare seeds based on SEED_MODE
+RUN if [ "$SEED_MODE" = "test262" ]; then \
         echo "Preparing test262 seeds"; \
-        chmod +x /workspace/prepare_test262_seeds.sh && /workspace/prepare_test262_seeds.sh; \
-    elif [ "$SEED_MODE" = "normal" ] && [ -f /workspace/prepare_seeds.sh ]; then \
+        chmod +x prepare_test262_seeds.sh && ./prepare_test262_seeds.sh; \
+    elif [ "$SEED_MODE" = "normal" ]; then \
         echo "Preparing normal regression seeds"; \
-        chmod +x /workspace/prepare_seeds.sh && /workspace/prepare_seeds.sh; \
-    else \
-        echo "Seed prep script not present in context; skipping."; \
+        chmod +x prepare_seeds.sh && ./prepare_seeds.sh; \
     fi
 
 # Build Kitten deploy jar
