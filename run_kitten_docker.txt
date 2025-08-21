@@ -1,4 +1,8 @@
+REQUIRED DIRS:
+
 mkdir -p results logs custom-seeds
+
+RUNNING:
 
 sudo docker run -it --init --cpuset-cpus="$(bash getcoreids.sh)" --name kit_1_norm \
   -v $(pwd)/results:/workspace/kitten/temp_testing_campaigns \
@@ -6,4 +10,6 @@ sudo docker run -it --init --cpuset-cpus="$(bash getcoreids.sh)" --name kit_1_no
   -v $(pwd)/custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro \
   kit_1_norm
 
-  sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --no-cache -t kit_1_norm .
+BUILDING:
+
+sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --no-cache -t kit_1_norm .

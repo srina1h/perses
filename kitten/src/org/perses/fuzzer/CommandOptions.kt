@@ -171,6 +171,43 @@ class CommandOptions : AbstractCommandOptions() {
     var allowToEnableGuidance = true
 
 
+    @Parameter(
+      names = ["--validate-seeds-only"],
+      description = "Run comprehensive seed validation only and save passing seeds; no fuzzing",
+      arity = 1,
+      order = FlagOrder.GENERAL_CONTROL + 1610,
+    )
+    var validateSeedsOnly = false
+
+    @Parameter(
+      names = ["--skip-seed-validation"],
+      description = "Skip seed validation during initialization (assume seeds are prevalidated)",
+      arity = 1,
+      order = FlagOrder.GENERAL_CONTROL + 1620,
+    )
+    var skipSeedValidation = false
+
+    @Parameter(
+      names = ["--validated-seed-output-dir"],
+      description = "Directory to store validated seeds when running with --validate-seeds-only",
+      order = FlagOrder.GENERAL_CONTROL + 1630,
+    )
+    private var validatedSeedOutputDir: File? = null
+
+    fun getValidatedSeedOutputDir(): File {
+      if (validatedSeedOutputDir == null) {
+        validatedSeedOutputDir = File(
+          "kitten/validated_seeds_" +
+            Preconditions.checkNotNull<String>(testingConfiguration!!.language),
+        )
+      }
+      if (!validatedSeedOutputDir!!.exists()) {
+        Preconditions.checkState(validatedSeedOutputDir!!.mkdirs())
+      }
+      return validatedSeedOutputDir!!
+    }
+
+
     fun getMutantsFolder(): File {
       if (mutantsFolder == null) {
         mutantsFolder = File(
@@ -242,6 +279,10 @@ class CommandOptions : AbstractCommandOptions() {
       Preconditions.checkState(numOfThreads > 0)
       Preconditions.checkState(extensionScript == null == (extensionScriptResultFolder == null))
       Preconditions.checkState(!noInitialSeed || languageModelType !== LanguageModelType.NULL_MODEL)
+      // Ensure validated seed output directory is set up when requested
+      if (validateSeedsOnly) {
+        getValidatedSeedOutputDir()
+      }
     }
   }
 

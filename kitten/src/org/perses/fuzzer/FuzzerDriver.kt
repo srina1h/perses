@@ -70,7 +70,7 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
 class FuzzerDriver(
-  options: CommandOptions,
+  private val options: CommandOptions,
   private val control: AdditionalFuzzerControl,
 ) : AutoCloseable {
 
@@ -112,6 +112,8 @@ class FuzzerDriver(
   private val timeout = options.generalFlags.timeout
   private val fuzzerMode = options.generalFlags.fuzzerMode
   private val noInitialSeed = options.generalFlags.noInitialSeed
+  private val validateSeedsOnly = options.generalFlags.validateSeedsOnly
+  private val skipSeedValidation = options.generalFlags.skipSeedValidation
   private val maxSeedPoolSize = options.generalFlags.maxSeedPoolSize
   private val allowToEnableGuidance = options.generalFlags.allowToEnableGuidance
 
@@ -156,6 +158,11 @@ class FuzzerDriver(
   private val mutationOperatorExecutor: MutationOperatorExecutor
 
   fun run() {
+    // Validation-only mode: perform comprehensive seed validation and save passing seeds, then exit
+    if (validateSeedsOnly) {
+      validateSeedsAndSave()
+      return
+    }
     if (scheduler.fuzzerInstances.getSize() == 0 && !noInitialSeed) {
       logger.atWarning().log("No seeds. Exiting.")
       return
@@ -171,6 +178,55 @@ class FuzzerDriver(
         startFuzzing()
       }
     }
+  }
+
+  private fun validateSeedsAndSave() {
+    val seedFolders = options.testingConfiguration!!.seedFolders
+    val seedFiles = collectSeedFilesRecursively(seedFolders)
+    val outDir: File = options.generalFlags.getValidatedSeedOutputDir()
+
+    logger.ktInfo { "Starting comprehensive seed validation-only run on ${seedFiles.size} seeds" }
+
+    var passed = 0
+    var failed = 0
+    var index = 0
+    val total = seedFiles.size
+    val progressInterval = 200
+    for (seed in seedFiles) {
+      index += 1
+      try {
+        logger.ktFine { "About to validate seed comprehensively ($index/${seedFiles.size}) $seed" }
+        val ok = differentialTester.validateSeedComprehensively(seed)
+        if (ok) {
+          // Copy to output directory; avoid collisions
+          var target: File = File(outDir, seed.name)
+          if (target.exists()) {
+            var counter = 1
+            val base = seed.nameWithoutExtension
+            val ext = seed.extension
+            while (target.exists()) {
+              val newName = if (ext.isEmpty()) "${base}_${counter}" else "${base}_${counter}.${ext}"
+              target = File(outDir, newName)
+              counter += 1
+            }
+          }
+          seed.copyTo(target, overwrite = false)
+          passed += 1
+          logger.ktFine { "Seed passed and saved: ${target.absolutePath}" }
+        } else {
+          failed += 1
+          logger.ktFine { "Seed failed comprehensive validation: $seed" }
+        }
+        if (index % progressInterval == 0) {
+          logger.ktInfo { "Progress: validated $index/$total seeds (passed=$passed, failed=$failed). Output: ${outDir.absolutePath}" }
+        }
+      } catch (t: Throwable) {
+        failed += 1
+        logger.atWarning().withCause(t).log("Validation failed with exception for seed %s", seed)
+      }
+    }
+
+    logger.ktInfo { "Comprehensive seed validation-only summary: ${passed} passed, ${failed} failed. Saved to ${outDir.absolutePath}" }
   }
 
   private fun startCreatingMutants() {
@@ -585,7 +641,10 @@ class FuzzerDriver(
     seedFiles: ImmutableList<File>,
     numberLimitOfSeedFiles: Int,
   ): ArrayList<SparTreeFuzzer> {
-    logger.ktFine { "Starting seed creation with comprehensive validation enabled" }
+    logger.ktFine {
+      if (skipSeedValidation) "Starting seed creation without validation (skip enabled)"
+      else "Starting seed creation with comprehensive validation enabled"
+    }
     val result = ArrayList<SparTreeFuzzer>()
     var failedCounter = 0
     var passedCounter = 0
@@ -600,17 +659,18 @@ class FuzzerDriver(
           logger.ktInfo { "Reached the limit of seed files: $numberLimitOfSeedFiles" }
           break
         }
-        
-        // Always validate that the seed works on all engines with comprehensive checks
-        logger.ktFine { "About to validate seed comprehensively on all engines($index/$totalCount) $seed" }
-        val validationResult = differentialTester.validateSeedComprehensively(seed)
-        logger.ktFine { "Comprehensive validation result for seed $seed: $validationResult" }
-        if (!validationResult) {
-          ++engineValidationFailedCounter
-          logger.ktFine { "Seed failed comprehensive validation($index/$totalCount) $seed" }
-          continue
+        if (!skipSeedValidation) {
+          // Validate that the seed works on all engines with comprehensive checks
+          logger.ktFine { "About to validate seed comprehensively on all engines($index/$totalCount) $seed" }
+          val validationResult = differentialTester.validateSeedComprehensively(seed)
+          logger.ktFine { "Comprehensive validation result for seed $seed: $validationResult" }
+          if (!validationResult) {
+            ++engineValidationFailedCounter
+            logger.ktFine { "Seed failed comprehensive validation($index/$totalCount) $seed" }
+            continue
+          }
+          logger.ktFine { "Seed passed comprehensive validation($index/$totalCount) $seed" }
         }
-        logger.ktFine { "Seed passed comprehensive validation($index/$totalCount) $seed" }
         
         val future = executor.submit<SparTreeFuzzer> {
           logger.ktAt(Level.FINE) { "Parsing($index/$totalCount) $seed" }
@@ -636,10 +696,12 @@ class FuzzerDriver(
     if (failedCounter != 0) {
       logger.atWarning().log("Failed to parse %s seed files in total.", failedCounter)
     }
-    if (engineValidationFailedCounter != 0) {
+    if (!skipSeedValidation && engineValidationFailedCounter != 0) {
       logger.atWarning().log("Failed comprehensive validation for %s seed files in total.", engineValidationFailedCounter)
     }
-    logger.ktFine { "Comprehensive seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
+    if (!skipSeedValidation) {
+      logger.ktFine { "Comprehensive seed validation summary: ${passedCounter} passed, ${engineValidationFailedCounter} failed validation" }
+    }
     if (shuffleSeeds) {
       result.shuffle(random)
     }
@@ -666,7 +728,7 @@ class FuzzerDriver(
     logger.ktInfo {
       "Collected ${seedFiles.size} seed files in folder $seedFolders"
     }
-    val fuzzerInstances = if (!noInitialSeed) {
+    val fuzzerInstances = if (!noInitialSeed && !validateSeedsOnly) {
       SparTreeFuzzerQueue(
         createSparTreeFuzzers(
           seedFiles,
