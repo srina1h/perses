@@ -27,7 +27,8 @@ abstract class AbstractCompilerCrashDetector : ICompilerCrashDetector {
     SIGTRAP(133),
     SIGABRT(134),
     SIGFPE(136),
-    OOM(137),
+    // OOM(137) - Removed because exit code 137 is ambiguous (could be OOM or timeout from timeout -s 9)
+    // Individual crash detectors should handle exit code 137 appropriately
     SIGBUG(138),
     SEGFAULT(139),
     SIGXCPU_1(158),

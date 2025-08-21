@@ -10,5 +10,5 @@ programsUnderTest:
       - flags: ["-u"]
     versionFlags:
       flags: ["--version"]
-    # Use any JS crash detector; eshost non-zero does not imply engine crash
-    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
+    # Use ESHost-specific crash detector that properly handles timeout exit codes
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.ESHostCrashDetector"

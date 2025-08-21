@@ -83,8 +83,11 @@ RUN set -eux; \
     fi; \
     eshost --list || true
 
+ARG CACHE_BUST
+
 # Copy the current repository into the image
 WORKDIR /workspace
+RUN echo "Cloning repository with cache buster: $CACHE_BUST"
 RUN git clone https://github.com/srina1h/perses.git .
 RUN git checkout diff_eshost
 
