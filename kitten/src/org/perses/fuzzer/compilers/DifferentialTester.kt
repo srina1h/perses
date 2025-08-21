@@ -417,10 +417,10 @@ class DifferentialTester(
    * @return true if this is a true differential finding, false if all engines failed with same error
    */
   private fun parseEshostOutputForDifferentialFinding(stdout: String, stderr: String): Boolean {
-    val output = (stdout + "\n" + stderr).trim()
+    val fullOutput = (stdout + "\n" + stderr).trim()
     
     // Split output into lines and look for engine sections
-    val lines = output.split("\n")
+    val lines = fullOutput.split("\n")
     val engineResults = mutableMapOf<String, String>()
     var currentEngine: String? = null
     
@@ -441,8 +441,8 @@ class DifferentialTester(
     if (engineResults.size > 1) {
       val errorTypes = mutableSetOf<String>()
       
-      for ((engine, output) in engineResults) {
-        val errorType = extractErrorType(output)
+      for ((_, engineOutput) in engineResults) {
+        val errorType = extractErrorType(engineOutput)
         if (errorType.isNotEmpty()) {
           errorTypes.add(errorType)
         }
