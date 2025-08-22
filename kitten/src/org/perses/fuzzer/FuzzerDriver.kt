@@ -603,8 +603,10 @@ class FuzzerDriver(
     try {
       val sourceCode = originalFile.readText(Charsets.UTF_8)
       
-      // Create instrumentation config
-      val config = InstrumentationConfig.defaultConfig()
+      // Create instrumentation config with strict mode from command line options
+      val config = InstrumentationConfig.defaultConfig().copy(
+        strictMode = options.generalFlags.instrumentationStrictMode
+      )
       
       // Create instrumenter
       val instrumenter = JavaScriptInstrumenter(config)
@@ -620,7 +622,7 @@ class FuzzerDriver(
       instrumentedFile.writeText(instrumentedCode, Charsets.UTF_8)
       
       logger.ktAt(Level.FINE) { 
-        "Applied instrumentation to ${originalFile.name}, created ${instrumentedFile.name}" 
+        "Applied instrumentation to ${originalFile.name}, created ${instrumentedFile.name} with strict mode: ${config.strictMode}" 
       }
       
       return instrumentedFile

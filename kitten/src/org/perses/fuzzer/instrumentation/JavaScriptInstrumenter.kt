@@ -54,8 +54,13 @@ class JavaScriptInstrumenter(
       val probes = probeGenerator.generateProbes(sparTree)
       
       if (probes.isEmpty()) {
-        logger.atFine().log("No probes generated, returning original code")
-        return sourceCode
+        logger.atFine().log("No probes generated, applying strict mode only if enabled")
+        // Even if no probes are generated, apply strict mode if enabled
+        return if (config.strictMode) {
+          "'use strict';\n\n$sourceCode"
+        } else {
+          sourceCode
+        }
       }
       
       // Apply probes to generate instrumented code
@@ -80,11 +85,14 @@ class JavaScriptInstrumenter(
     // Add probe runtime functions at the beginning
     val runtimeFunctions = generateRuntimeFunctions()
     
+    // Add strict mode directive if enabled
+    val strictModeDirective = if (config.strictMode) "'use strict';\n\n" else ""
+    
     // Combine original code with probe code
     return """
       $runtimeFunctions
       
-      // Original code
+      $strictModeDirective// Original code
       $sourceCode
       
       // Probe code
@@ -354,7 +362,8 @@ class JavaScriptInstrumenter(
     return InstrumentationStats(
       enabled = config.enabled,
       probeTypes = config.probeTypes.getEnabledProbes(),
-      maxProbesPerProgram = config.maxProbesPerProgram
+      maxProbesPerProgram = config.maxProbesPerProgram,
+      strictMode = config.strictMode
     )
   }
   
@@ -364,6 +373,7 @@ class JavaScriptInstrumenter(
   data class InstrumentationStats(
     val enabled: Boolean,
     val probeTypes: Set<InstrumentationConfig.ProbeType>,
-    val maxProbesPerProgram: Int
+    val maxProbesPerProgram: Int,
+    val strictMode: Boolean
   )
 } 

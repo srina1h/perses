@@ -29,6 +29,7 @@ data class InstrumentationConfig(
   val probePrefix: String = "__PROBE_",
   val includeSourceLocation: Boolean = true,
   val maxProbesPerProgram: Int = 1000,
+  val strictMode: Boolean = false,
 ) {
   
   data class ProbeTypes(
@@ -72,7 +73,8 @@ data class InstrumentationConfig(
         outputFormat = OutputFormat.JSON,
         probePrefix = "__PROBE_",
         includeSourceLocation = true,
-        maxProbesPerProgram = 20
+        maxProbesPerProgram = 20,
+        strictMode = false
       )
     }
     
@@ -89,7 +91,8 @@ data class InstrumentationConfig(
         outputFormat = OutputFormat.JSON,
         probePrefix = "__PROBE_",
         includeSourceLocation = false,
-        maxProbesPerProgram = 100
+        maxProbesPerProgram = 100,
+        strictMode = false
       )
     }
   }

@@ -14,7 +14,6 @@ kt_jvm_library(
         "//:flogger",
         "//:guava",
         "//:jackson",
-        "//kitten/src/org/perses/fuzzer/compilers/javascript",
         "//src/org/perses/grammar/javascript:parser_facade",
         "//src/org/perses/program",
         "//src/org/perses/spartree",

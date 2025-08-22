@@ -163,6 +163,14 @@ class CommandOptions : AbstractCommandOptions() {
     var maxSeedPoolSize = Int.MAX_VALUE
 
     @Parameter(
+      names = ["--instrumentation-strict-mode"],
+      description = "enable strict mode in JavaScript instrumentation (adds 'use strict' directive)",
+      arity = 1,
+      order = FlagOrder.GENERAL_CONTROL + 1600,
+    )
+    var instrumentationStrictMode = false
+
+    @Parameter(
       names = ["--allow-enable-guidance"],
       description = "allow to enable guidance, only effective when use n-depth tree model",
       arity = 1,

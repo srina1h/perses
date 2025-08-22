@@ -7,4 +7,13 @@ kt_jvm_binary(
     deps = [
         "//kitten/src/org/perses/fuzzer/instrumentation",
     ],
+)
+
+kt_jvm_binary(
+    name = "test_strict_mode",
+    srcs = ["test_strict_mode.kt"],
+    main_class = "Test_strict_modeKt",
+    deps = [
+        "//kitten/src/org/perses/fuzzer/instrumentation",
+    ],
 ) 
