@@ -451,8 +451,8 @@ class FuzzerDriver(
   }
 
   private fun testWithFuzzer(treeFuzzer: SparTreeFuzzer) {
-    // Periodic memory monitoring and GC suggestion
-    if (successfullyCreatedMutantCounter.get() % 1000 == 0) {
+    // Periodic memory monitoring and cleanup
+    if (successfullyCreatedMutantCounter.get() % 100 == 0) {
       val runtime = Runtime.getRuntime()
       val totalMemory = runtime.totalMemory()
       val freeMemory = runtime.freeMemory()
@@ -460,20 +460,75 @@ class FuzzerDriver(
       val maxMemory = runtime.maxMemory()
       val memoryUsagePercent = (usedMemory * 100) / maxMemory
       
-      logger.atInfo().log("Memory usage: %d%% (%d MB / %d MB)", 
-        memoryUsagePercent, usedMemory / (1024 * 1024), maxMemory / (1024 * 1024))
+      // Log memory usage more frequently (every 100 iterations)
+      if (successfullyCreatedMutantCounter.get() % 1000 == 0) {
+        logger.atInfo().log("Memory usage: %d%% (%d MB / %d MB), Queue size: %d, Model size: %d", 
+          memoryUsagePercent, usedMemory / (1024 * 1024), maxMemory / (1024 * 1024),
+          scheduler.fuzzerInstances.content.size, languageModel.size)
+      }
       
-      // Suggest GC if memory usage is high
-      if (memoryUsagePercent > 80) {
-        logger.atWarning().log("High memory usage detected (%d%%), suggesting garbage collection", memoryUsagePercent)
+      // More aggressive memory management
+      if (memoryUsagePercent > 70) {
+        logger.atWarning().log("High memory usage detected (%d%%), performing cleanup", memoryUsagePercent)
+        
+        // Force GC
         System.gc()
-        // Log memory after GC
+        
+        // Clean up temporary files
+        cleanupTempFiles()
+        
+        // Limit queue size more aggressively
+        if (scheduler.fuzzerInstances.content.size > maxSeedPoolSize * 2) {
+          val toRemove = scheduler.fuzzerInstances.content.size - maxSeedPoolSize
+          logger.atWarning().log("Queue size too large (%d), removing %d oldest entries", 
+            scheduler.fuzzerInstances.content.size, toRemove)
+          repeat(toRemove) {
+            if (scheduler.fuzzerInstances.content.isNotEmpty()) {
+              scheduler.fuzzerInstances.content.removeFirst()
+            }
+          }
+        }
+        
+        // Log memory after cleanup
         val newUsedMemory = runtime.totalMemory() - runtime.freeMemory()
         val newMemoryUsagePercent = (newUsedMemory * 100) / maxMemory
-        logger.atInfo().log("Memory usage after GC: %d%% (%d MB / %d MB)", 
+        logger.atInfo().log("Memory usage after cleanup: %d%% (%d MB / %d MB)", 
           newMemoryUsagePercent, newUsedMemory / (1024 * 1024), maxMemory / (1024 * 1024))
       }
     }
+    
+    // Continue with the actual fuzzing logic
+    continueTestWithFuzzer(treeFuzzer)
+  }
+  
+  /**
+   * Clean up temporary files to free disk space and reduce memory pressure
+   */
+  private fun cleanupTempFiles() {
+    try {
+      // Clean up temporary mutant files older than 1 hour
+      val tempDir = System.getProperty("java.io.tmpdir")
+      val tempPath = java.nio.file.Paths.get(tempDir)
+      val cutoffTime = System.currentTimeMillis() - (60 * 60 * 1000) // 1 hour ago
+      
+      java.nio.file.Files.walk(tempPath)
+        .filter { path ->
+          path.fileName.toString().contains("mutant") && 
+          java.nio.file.Files.getLastModifiedTime(path).toMillis() < cutoffTime
+        }
+        .forEach { path ->
+          try {
+            java.nio.file.Files.deleteIfExists(path)
+          } catch (e: Exception) {
+            // Ignore deletion errors
+          }
+        }
+    } catch (e: Exception) {
+      // Ignore cleanup errors - this is best effort
+    }
+  }
+
+  private fun continueTestWithFuzzer(treeFuzzer: SparTreeFuzzer) {
     val seedFile = treeFuzzer.seedFile
     val seedProgram = treeFuzzer.seedProgram
 

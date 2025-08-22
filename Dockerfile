@@ -116,7 +116,7 @@ RUN echo '#!/bin/bash' > /workspace/start.sh && \
     echo 'THREADS=${THREADS:-$(nproc)}' >> /workspace/start.sh && \
     echo 'JVM_HEAP=${JVM_HEAP:-8}' >> /workspace/start.sh && \
     echo 'echo "Threads: ${THREADS}, JVM heap: ${JVM_HEAP}G"' >> /workspace/start.sh && \
-    echo 'exec java -Xmx${JVM_HEAP}G -Xms1G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \' >> /workspace/start.sh && \
+    echo 'exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \' >> /workspace/start.sh && \
     echo '  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \' >> /workspace/start.sh && \
     echo '  --threads ${THREADS} \' >> /workspace/start.sh && \
     echo '  --verbosity "FINE" \' >> /workspace/start.sh && \

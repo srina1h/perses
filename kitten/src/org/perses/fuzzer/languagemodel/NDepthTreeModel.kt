@@ -73,6 +73,11 @@ class NDepthTreeModel(
     tree: SparTree,
   ): FeatureOfSparTree {
     updatedTimesFromLastFindingOfNewFeature++
+    
+    // Limit database size to prevent memory issues
+    if (size > MAX_DATABASE_SIZE) {
+      pruneDatabase()
+    }
     changeStatusOfGuidance()
     val encodingResult = FeatureOfSparTree()
     tree.realRoot.preOrderVisit {
@@ -211,10 +216,29 @@ class NDepthTreeModel(
     return builder.toString()
   }
 
+  /**
+   * Prune the database to keep memory usage under control
+   */
+  private fun pruneDatabase() {
+    // Remove entries with frequency > 1000 (very common patterns)
+    database.values.forEach { frequencyMap ->
+      val toRemove = mutableListOf<Any>()
+      for (entry in frequencyMap.object2IntEntrySet()) {
+        if (entry.intValue > 1000) {
+          toRemove.add(entry.key)
+        }
+      }
+      toRemove.forEach { key ->
+        frequencyMap.removeInt(key)
+      }
+    }
+  }
+
   companion object {
     const val RARE_THRESHOLD = 0.3
     const val VERY_COMMON_THRESHOLD = 0.05
     const val GUIDANCE_ENABLE_THRESHOLD = 1000
+    const val MAX_DATABASE_SIZE = 100000 // Limit database to 100k entries
     private const val SAMPLE_FRACTION = 3 // sample 1/3 elements
 
     private fun sampleElementsFromList(
