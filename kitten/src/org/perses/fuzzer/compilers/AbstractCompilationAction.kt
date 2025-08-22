@@ -79,9 +79,9 @@ abstract class AbstractCompilationAction(
   @VisibleForTesting
   override fun constructCompileCmd(file: File): String {
     val cmd = StringBuilder()
-    // Use timeout with process group management to ensure all child processes are killed
-    // The -g flag creates a new process group, and -s 9 sends SIGKILL
-    cmd.append("${TIMEOUT_CMD.normalizedCommand} -g -s 9 ")
+    // Use timeout with SIGKILL to ensure processes are forcefully terminated
+    // The -s 9 flag sends SIGKILL, and -k 1 ensures SIGKILL is sent after 1 second if process doesn't terminate
+    cmd.append("${TIMEOUT_CMD.normalizedCommand} -s 9 -k 1 ")
       .append(timeoutSeconds).append(" ")
       .append(compilerCommand.normalizedCommand).append(" ")
     compileFlags.joinTo(cmd, " ")
