@@ -96,8 +96,10 @@ abstract class AbstractCompilerCrashDetector : ICompilerCrashDetector {
    * Check if the exit code and stderr indicate a timeout rather than a crash.
    * This prevents timeout kills (like SIGKILL from timeout command) from being
    * treated as crashes.
+   * 
+   * Subclasses can override this method to provide more specific timeout detection logic.
    */
-  private fun isTimeoutExitCode(exitCode: Int, stderr: List<String>): Boolean {
+  protected open fun isTimeoutExitCode(exitCode: Int, stderr: List<String>): Boolean {
     // Exit code 124 is the standard timeout exit code from GNU timeout
     if (exitCode == 124) {
       return true

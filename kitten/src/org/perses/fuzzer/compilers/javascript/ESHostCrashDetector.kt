@@ -23,35 +23,19 @@ class ESHostCrashDetector : AbstractCompilerCrashDetector() {
      * ESHost is wrapped by timeout command, so exit code 137 (SIGKILL) 
      * should always be treated as timeout, not as OOM crash.
      */
-    override fun detectCrash(stderr: List<String>, exitCodeForCrash: Int): 
-        ICompilerCrashDetector.AbstractResult {
-        require(exitCodeForCrash > 0) {
-            "The exit code should be non-zero."
-        }
-        
-        // For ESHost, treat exit code 137 as timeout (from timeout -s 9 command)
-        if (exitCodeForCrash == 137) {
-            return ICompilerCrashDetector.AbstractResult.NonCrashResult(javaClass)
+    override fun isTimeoutExitCode(exitCode: Int, stderr: List<String>): Boolean {
+        // For ESHost, always treat exit code 137 as timeout (from timeout -s 9 command)
+        if (exitCode == 137) {
+            return true
         }
         
         // Also check for standard timeout exit code 124
-        if (exitCodeForCrash == 124) {
-            return ICompilerCrashDetector.AbstractResult.NonCrashResult(javaClass)
+        if (exitCode == 124) {
+            return true
         }
         
-        // For other exit codes, use the standard crash detection logic
-        val rawSignature = detectCrashSignatureFromStderr(stderr)
-        checkRawSignaturesAreInStdErr(rawSignature, stderr)
-        val isCommonCrashExitCode = CommonCrashExitCodes.isCrashExitCode(exitCodeForCrash)
-        if (rawSignature.isEmpty() && !isCommonCrashExitCode) {
-            return ICompilerCrashDetector.AbstractResult.NonCrashResult(javaClass)
-        } else {
-            return ICompilerCrashDetector.AbstractResult.CrashResult.create(
-                javaClass,
-                exitCodeForCrash,
-                rawSignature,
-            )
-        }
+        // For other exit codes, use the standard timeout detection logic
+        return super.isTimeoutExitCode(exitCode, stderr)
     }
 
     companion object {
