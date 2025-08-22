@@ -247,15 +247,16 @@ class FuzzerDriver(
             }
           } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
+            break
           } catch (e: Throwable) {
             logger.atSevere().withCause(e).log("Exception occurred. %s", e)
             e.printStackTrace()
           }
         }
       }
-      Thread.sleep(TimeUnit.SECONDS.toMillis(30))
-      DaemonThreadPool.waitInfinitelyToShutdown(executor)
     }
+    // Wait for all threads to complete
+    DaemonThreadPool.waitInfinitelyToShutdown(executor)
   }
 
   private fun startFuzzing() {
@@ -310,7 +311,7 @@ class FuzzerDriver(
         coverageCollector.closeForThread()
       }
     }
-    Thread.sleep(TimeUnit.SECONDS.toMillis(30))
+    // Wait for all threads to complete
     DaemonThreadPool.waitInfinitelyToShutdown(executor)
     coverageCollectorExecutor?.let {
       DaemonThreadPool.waitInfinitelyToShutdown(it)
@@ -378,7 +379,7 @@ class FuzzerDriver(
         coverageCollector.closeForThread()
       }
     }
-    Thread.sleep(TimeUnit.SECONDS.toMillis(30))
+    // Wait for all threads to complete
     DaemonThreadPool.waitInfinitelyToShutdown(executor)
     logger.ktInfo { scheduler.model.printDatabase() }
     logger.ktInfo { "Number of initial seeds: ${scheduler.fuzzerInstances.getSize()}" }
@@ -450,6 +451,29 @@ class FuzzerDriver(
   }
 
   private fun testWithFuzzer(treeFuzzer: SparTreeFuzzer) {
+    // Periodic memory monitoring and GC suggestion
+    if (successfullyCreatedMutantCounter.get() % 1000 == 0) {
+      val runtime = Runtime.getRuntime()
+      val totalMemory = runtime.totalMemory()
+      val freeMemory = runtime.freeMemory()
+      val usedMemory = totalMemory - freeMemory
+      val maxMemory = runtime.maxMemory()
+      val memoryUsagePercent = (usedMemory * 100) / maxMemory
+      
+      logger.atInfo().log("Memory usage: %d%% (%d MB / %d MB)", 
+        memoryUsagePercent, usedMemory / (1024 * 1024), maxMemory / (1024 * 1024))
+      
+      // Suggest GC if memory usage is high
+      if (memoryUsagePercent > 80) {
+        logger.atWarning().log("High memory usage detected (%d%%), suggesting garbage collection", memoryUsagePercent)
+        System.gc()
+        // Log memory after GC
+        val newUsedMemory = runtime.totalMemory() - runtime.freeMemory()
+        val newMemoryUsagePercent = (newUsedMemory * 100) / maxMemory
+        logger.atInfo().log("Memory usage after GC: %d%% (%d MB / %d MB)", 
+          newMemoryUsagePercent, newUsedMemory / (1024 * 1024), maxMemory / (1024 * 1024))
+      }
+    }
     val seedFile = treeFuzzer.seedFile
     val seedProgram = treeFuzzer.seedProgram
 

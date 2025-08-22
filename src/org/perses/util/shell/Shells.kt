@@ -162,13 +162,31 @@ class Shells(
             stream.forEach { descendant ->
               if ((descendant.isAlive)) {
                 descendant.destroy() // Try to shut down the process cleanly first.
+                // Give process a moment to shut down gracefully
+                try {
+                  Thread.sleep(100)
+                } catch (e: InterruptedException) {
+                  Thread.currentThread().interrupt()
+                }
                 if (descendant.isAlive) {
                   descendant.destroyForcibly()
+                  // Force wait for process to be destroyed
+                  try {
+                    Thread.sleep(500)
+                  } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                  }
                 }
               }
             }
           }
           process.destroyForcibly()
+          // Wait for main process to be destroyed
+          try {
+            Thread.sleep(1000)
+          } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+          }
           // Set up the stop timeout, so that the stream pumping threads can be stopped. Otherwise,
           // all these pumping threads will be blocked on BufferedOutputStream.read()
           pumpStreamHandler.setStopTimeout(Duration.ofMillis(1))

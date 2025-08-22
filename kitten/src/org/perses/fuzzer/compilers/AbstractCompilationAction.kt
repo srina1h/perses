@@ -79,8 +79,9 @@ abstract class AbstractCompilationAction(
   @VisibleForTesting
   override fun constructCompileCmd(file: File): String {
     val cmd = StringBuilder()
-    // run brew install coreutils if you have timeout command not found issue
-    cmd.append("${TIMEOUT_CMD.normalizedCommand} -s 9 ")
+    // Use timeout with process group management to ensure all child processes are killed
+    // The -g flag creates a new process group, and -s 9 sends SIGKILL
+    cmd.append("${TIMEOUT_CMD.normalizedCommand} -g -s 9 ")
       .append(timeoutSeconds).append(" ")
       .append(compilerCommand.normalizedCommand).append(" ")
     compileFlags.joinTo(cmd, " ")

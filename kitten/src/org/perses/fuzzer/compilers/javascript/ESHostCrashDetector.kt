@@ -24,7 +24,7 @@ class ESHostCrashDetector : AbstractCompilerCrashDetector() {
      * should always be treated as timeout, not as OOM crash.
      */
     override fun isTimeoutExitCode(exitCode: Int, stderr: List<String>): Boolean {
-        // For ESHost, always treat exit code 137 as timeout (from timeout -s 9 command)
+        // For ESHost, always treat exit code 137 as timeout (from timeout -g -s 9 command)
         if (exitCode == 137) {
             return true
         }

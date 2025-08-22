@@ -422,29 +422,42 @@ class DifferentialTester(
     // Split output into lines and look for engine sections
     val lines = fullOutput.split("\n")
     val engineResults = mutableMapOf<String, String>()
-    var currentEngine: String? = null
+    var currentEngines: List<String> = emptyList()
     
     for (line in lines) {
       val trimmedLine = line.trim()
       
-      // Look for engine headers (e.g., "#### GJS", "#### JSC", "#### SM", "#### V8")
+      // Look for engine headers (e.g., "#### GJS", "#### JSC", "#### SM", "#### V8", "#### GJS, SM")
       if (trimmedLine.startsWith("#### ")) {
-        currentEngine = trimmedLine.substring(5).trim() // Remove "#### "
-        engineResults[currentEngine] = ""
-      } else if (currentEngine != null && trimmedLine.isNotEmpty()) {
-        // Accumulate output for current engine
-        engineResults[currentEngine] = engineResults[currentEngine] + "\n" + trimmedLine
+        val engineSection = trimmedLine.substring(5).trim() // Remove "#### "
+        // Handle multiple engines on one line (e.g., "GJS, SM")
+        currentEngines = engineSection.split(",").map { it.trim() }
+        for (engine in currentEngines) {
+          if (engine.isNotEmpty()) {
+            engineResults[engine] = ""
+          }
+        }
+      } else if (currentEngines.isNotEmpty() && trimmedLine.isNotEmpty()) {
+        // Accumulate output for all current engines
+        for (engine in currentEngines) {
+          if (engine.isNotEmpty()) {
+            engineResults[engine] = engineResults[engine] + "\n" + trimmedLine
+          }
+        }
       }
     }
     
     // If we have multiple engines, check if they all failed with the same error
     if (engineResults.size > 1) {
       val errorTypes = mutableSetOf<String>()
+      val engineOutputs = mutableMapOf<String, String>()
       
-      for ((_, engineOutput) in engineResults) {
+      for ((engine, engineOutput) in engineResults) {
         val errorType = extractErrorType(engineOutput)
         if (errorType.isNotEmpty()) {
           errorTypes.add(errorType)
+          engineOutputs[engine] = engineOutput
+          logger.atFine().log("Engine $engine has error type: $errorType")
         }
       }
       
@@ -459,12 +472,41 @@ class DifferentialTester(
         logger.atFine().log("Engines have different error types: $errorTypes")
         return true
       }
+      
+      // If we have engine outputs but couldn't extract error types, 
+      // check if the outputs are actually different
+      if (engineOutputs.size > 1) {
+        val normalizedOutputs = engineOutputs.values.map { normalizeOutput(it) }.toSet()
+        if (normalizedOutputs.size > 1) {
+          logger.atFine().log("Engines have different outputs despite same error type")
+          return true
+        }
+      }
+      
+      // If we have multiple engines but no clear error types, 
+      // check if all outputs are essentially the same (uniform failure)
+      if (engineOutputs.isEmpty() && engineResults.size > 1) {
+        val allOutputs = engineResults.values.map { normalizeOutput(it) }.toSet()
+        if (allOutputs.size == 1) {
+          logger.atFine().log("All engines have identical output - uniform failure")
+          return false
+        }
+      }
     }
     
     // If we can't parse the output clearly, assume it's a differential finding
     // (better to be conservative and log it)
     logger.atFine().log("Could not clearly parse ESHost output, assuming differential finding")
     return true
+  }
+  
+  /**
+   * Normalize output for comparison by removing whitespace and common prefixes
+   */
+  private fun normalizeOutput(output: String): String {
+    return output.trim()
+      .replace(Regex("\\s+"), " ") // Normalize whitespace
+      .lowercase()
   }
   
   /**
@@ -486,6 +528,14 @@ class DifferentialTester(
         trimmedLine.contains("Exception:") -> return "Exception"
       }
     }
+    
+    // If no specific error type found, check if there's any error-like content
+    val fullOutput = output.lowercase()
+    if (fullOutput.contains("error") || fullOutput.contains("exception") || 
+        fullOutput.contains("failed") || fullOutput.contains("invalid")) {
+      return "RuntimeError"
+    }
+    
     return ""
   }
   
