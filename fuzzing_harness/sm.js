@@ -1,2 +1,2 @@
-load("sm_helper.js");
-load("lib.js");
+load("/workspace/fuzzing_harness/sm_helper.js");
+load("/workspace/fuzzing_harness/lib.js");

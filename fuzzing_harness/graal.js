@@ -1,1 +1,1 @@
-load("lib.js");
+load("/workspace/fuzzing_harness/lib.js");
