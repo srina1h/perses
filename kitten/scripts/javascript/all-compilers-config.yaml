@@ -4,11 +4,42 @@ seedFolders:
     fileExtentions: [".js"]
 
 programsUnderTest:
-  # Unified ESHOST runner (exits 0 if all engines agree and expected; 1 otherwise)
-  - command: "eshost"
+  # # Unified ESHOST runner (exits 0 if all engines agree and expected; 1 otherwise)
+  # - command: "eshost"
+  #   flagsToTest:
+  #     - flags: ["-u"]
+  #   versionFlags:
+  #     flags: ["--version"]
+  #   # Use ESHost-specific crash detector that properly handles timeout exit codes
+  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.ESHostCrashDetector"
+  
+  - command: "v8"
     flagsToTest:
-      - flags: ["-u"]
+      - flags: ["--correctness-fuzzer-supressions", "-h", "fuzzing_harness/v8.js"]
+    versionFlags:
+      flags: ["--help"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
+  
+  # SpiderMonkey JavaScript Engine
+  - command: "spidermonkey"
+    flagsToTest:
+      - flags: ["--fuzzing-safe", "-h", "fuzzing_harness/sm.js"]
     versionFlags:
       flags: ["--version"]
-    # Use ESHost-specific crash detector that properly handles timeout exit codes
-    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.ESHostCrashDetector"
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.SpiderMonkeyCrashDetector"
+  
+  # JavaScriptCore (JSC) Engine
+  - command: "jsc"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version", "-h", "fuzzing_harness/jsc.js"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JSCCrashDetector"
+
+  # GraalJS Engine
+  - command: "graaljs"
+    flagsToTest:
+      - flags: ["-h", "fuzzing_harness/graal.js"]
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
