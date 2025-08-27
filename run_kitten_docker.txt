@@ -4,11 +4,11 @@ mkdir -p results logs custom-seeds
 
 RUNNING:
 
-sudo docker run -it --init --cpuset-cpus="$(bash getcoreids.sh)" --name kit_1_norm \
+sudo docker run -it -m 72g --init --cpuset-cpus="$(bash getcoreids.sh)" --name diff_nor_4 \
   -v $(pwd)/results:/workspace/kitten/temp_testing_campaigns \
   -v $(pwd)/logs:/workspace/logs \
   -v $(pwd)/custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro \
-  kit_1_norm
+  diff_nor_4
 
 sudo docker run -it --init --cpuset-cpus="$(bash getcoreids.sh)" --name kitten_seed_validator \
   -v "$(pwd)/validated_seeds:/workspace/validated_seeds" \
@@ -18,9 +18,8 @@ BUILDING:
 
 Fuzzing version:
 
-sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --build-arg=CACHE_BUST=$(date +%s) --no-cache -t kitten_validation_mode .
+sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --build-arg=CACHE_BUST=$(date +%s) --no-cache -t diff_nor_4 .
 
 Seed validation version:
 
 sudo docker buildx build --builder isolated-builder -f seed_validation/Dockerfile --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --build-arg=CACHE_BUST=$(date +%s) --no-cache -t kitten_validation_mode .
-
