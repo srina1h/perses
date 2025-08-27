@@ -15,7 +15,7 @@ programsUnderTest:
   
   - command: "v8"
     flagsToTest:
-      - flags: ["--correctness-fuzzer-supressions", "-h", "fuzzing_harness/v8.js"]
+      - flags: ["fuzzing_harness/v8.js"]
     versionFlags:
       flags: ["--help"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
@@ -23,7 +23,7 @@ programsUnderTest:
   # SpiderMonkey JavaScript Engine
   - command: "spidermonkey"
     flagsToTest:
-      - flags: ["--fuzzing-safe", "-h", "fuzzing_harness/sm.js"]
+      - flags: ["--fuzzing-safe", "fuzzing_harness/sm.js"]
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.SpiderMonkeyCrashDetector"
@@ -31,15 +31,15 @@ programsUnderTest:
   # JavaScriptCore (JSC) Engine
   - command: "jsc"
     flagsToTest:
-      - flags: []
+      - flags: ["fuzzing_harness/jsc.js"]
     versionFlags:
-      flags: ["--version", "-h", "fuzzing_harness/jsc.js"]
+      flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JSCCrashDetector"
 
   # GraalJS Engine
   - command: "graaljs"
     flagsToTest:
-      - flags: ["-h", "fuzzing_harness/graal.js"]
+      - flags: ["fuzzing_harness/graal.js"]
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
