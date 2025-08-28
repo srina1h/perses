@@ -122,7 +122,7 @@ RUN echo '#!/bin/bash' > /workspace/start.sh && \
     echo '  --verbosity "FINE" \' >> /workspace/start.sh && \
     echo '  --timeout 1000000000 \' >> /workspace/start.sh && \
     echo '  --instrumentation-strict-mode false \' >> /workspace/start.sh && \
-    echo '  --skip-seed-validation false \' >> /workspace/start.sh && \
+    echo '  --skip-seed-validation true \' >> /workspace/start.sh && \
     echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start.sh && \
     chmod +x /workspace/start.sh
 
