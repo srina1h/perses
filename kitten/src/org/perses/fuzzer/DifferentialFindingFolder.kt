@@ -367,7 +367,7 @@ class DifferentialFindingFolder private constructor(
         standardizedOutputs.add(standardizedOutput)
       }
       
-      // Save both table and CSV formats
+      // Save both table and CSV formats inside the discrepancy directory
       val tableFile = File(folder, "standardized_output_table.txt")
       val csvFile = File(folder, "standardized_output.csv")
       

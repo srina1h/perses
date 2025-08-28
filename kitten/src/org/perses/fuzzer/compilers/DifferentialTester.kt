@@ -340,15 +340,10 @@ class DifferentialTester(
       discrepancies = discrepancies
     )
     
-    // Generate and save standardized output only if there are discrepancies
+    // Skip generating CSV and TXT files in the root results directory
+    // (CSV/TXT files will still be created inside individual discrepancy directories)
     if (outputDirectory != null && discrepancies.isNotEmpty()) {
-      val outputFile = File(outputDirectory, "standardized_output_${testId}.txt")
-      val csvFile = File(outputDirectory, "standardized_output_${testId}.csv")
-      
-      outputLogger.saveToFile(standardizedOutputs, outputFile)
-      csvFile.writeText(outputLogger.formatAsCSV(standardizedOutputs))
-      
-      logger.atInfo().log("Standardized output saved to: %s and %s", outputFile.absolutePath, csvFile.absolutePath)
+      logger.atInfo().log("Skipping CSV/TXT file generation in root results directory")
     }
     
     // Create comparison map for quick discrepancy detection
@@ -660,15 +655,11 @@ class DifferentialTester(
       return emptyList()
     }
     
-    // For multiple engines, only filter out if ALL engines fail in the same way
+    // For multiple engines, ignore cases where ALL engines fail (no meaningful discrepancy)
     val allFail = allOutcomes.values.all { it.status != Status.SUCCESS }
     if (allFail) {
-      // Check if all engines fail with the same error type
-      val errorTypes = allOutcomes.values.map { it.errorKind ?: "Error" }.toSet()
-      if (errorTypes.size == 1) {
-        return emptyList()
-      }
-      // If different error types, continue to detect discrepancies
+      logger.atFine().log("All engines failed - ignoring uniform failure case")
+      return emptyList()
     }
 
     // Compare each pair of engines with simplified, high-signal rules

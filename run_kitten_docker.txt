@@ -4,7 +4,7 @@ mkdir -p results logs custom-seeds
 
 RUNNING:
 
-sudo docker run -it -m 32g --init --cpuset-cpus="$(bash getcoreids.sh)" --name diff_nor \
+sudo docker run -it -m 32g --init --cpuset-cpus="$(bash getcoreids.sh)" --name diff_nor_2 \
   -v $(pwd)/results:/workspace/kitten/temp_testing_campaigns \
   -v $(pwd)/logs:/workspace/logs \
   -v $(pwd)/custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro \
@@ -18,7 +18,7 @@ BUILDING:
 
 Fuzzing version:
 
-sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --build-arg=CACHE_BUST=$(date +%s) --no-cache -t diff_nor_4 .
+sudo docker buildx build --builder isolated-builder --cpuset-cpus="$(bash getcoreids.sh)" --load --build-arg=SEED_MODE="normal" --build-arg=CACHE_BUST=$(date +%s) --no-cache -t diff_nor .
 
 Seed validation version:
 
