@@ -97,7 +97,7 @@ RUN if [ "$SEED_MODE" = "test262" ]; then \
         chmod +x prepare_test262_seeds.sh && ./prepare_test262_seeds.sh; \
     elif [ "$SEED_MODE" = "normal" ]; then \
         echo "Preparing normal regression seeds"; \
-        chmod +x prepare_seeds.sh && ./prepare_validated_seeds.sh; \
+        chmod +x prepare_seeds.sh && ./prepare_seeds.sh; \
     fi
 
 # Create necessary directories for differential testing with instrumentation
