@@ -54,11 +54,18 @@ clone_sparse "$DIE_REPO_URL" "DIE-corpus" "$TEMP_DIR/DIE-corpus" "ChakraCore" "j
 # Clone v8 repository with specific folder
 clone_sparse "$V8_REPO_URL" "v8" "$TEMP_DIR/v8" "test/mjsunit"
 
-# Clone Firefox repository with specific folders
-clone_sparse "$FIREFOX_REPO_URL" "Firefox" "$TEMP_DIR/firefox" "js/src/tests" "js/src/jit-test"
+# Clone Firefox repository with specific folders (restricted)
+clone_sparse "$FIREFOX_REPO_URL" "Firefox" "$TEMP_DIR/firefox" "js/src/jit-test" "js/src/tests/non262"
 
-# Clone WebKit repository with specific folder
-clone_sparse "$WEBKIT_REPO_URL" "WebKit" "$TEMP_DIR/WebKit" "JSTests"
+# Clone WebKit repository with specific folders (restricted)
+clone_sparse "$WEBKIT_REPO_URL" "WebKit" "$TEMP_DIR/WebKit" \
+    "JSTests/es6" \
+    "JSTests/exceptionFuzz" \
+    "JSTests/executableAllocationFuzz" \
+    "JSTests/microbenchmarks" \
+    "JSTests/perf" \
+    "JSTests/slowMicrobenchmarks" \
+    "JSTests/stress"
 
 # Check if cloning was successful
 if [ ! -d "$TEMP_DIR/DIE-corpus" ] || [ ! -d "$TEMP_DIR/v8" ] || [ ! -d "$TEMP_DIR/firefox" ] || [ ! -d "$TEMP_DIR/WebKit" ]; then
@@ -74,8 +81,9 @@ copy_js_files() {
     if [ -d "$source_dir" ]; then
         echo "Processing $source_dir..."
         
-        # Find all .js files recursively and copy them directly to seeds directory
-        find "$source_dir" -name "*.js" -type f | while read -r js_file; do
+        # Count and copy .js files; avoid subshell so the counter persists
+        local copied_count=0
+        while IFS= read -r js_file; do
             # Get just the filename without path
             filename=$(basename "$js_file")
             
@@ -92,42 +100,93 @@ copy_js_files() {
             
             # Copy the file directly to seeds directory
             cp "$js_file" "$target_dir/$final_filename"
-            echo "  Copied: $filename -> $final_filename"
-        done
+            # echo "  Copied: $filename -> $final_filename"
+            copied_count=$((copied_count + 1))
+        done < <(find "$source_dir" -name "*.js" -type f)
+
+        echo "Copied $copied_count JavaScript files from $source_dir."
+        # Expose the count to callers for aggregation
+        LAST_COPIED_COUNT=$copied_count
     else
         echo "Warning: Directory $source_dir does not exist"
+        LAST_COPIED_COUNT=0
     fi
 }
+
+# Per-repository aggregations
+die_total=0
+v8_total=0
+firefox_total=0
+webkit_total=0
 
 # Process DIE-corpus folders
 echo "Extracting JavaScript files from DIE-corpus ChakraCore folder..."
 copy_js_files "$TEMP_DIR/DIE-corpus/ChakraCore" "$SEEDS_DIR"
+die_total=$((die_total + LAST_COPIED_COUNT))
 
 echo "Extracting JavaScript files from DIE-corpus js-vuln-db folder..."
 copy_js_files "$TEMP_DIR/DIE-corpus/js-vuln-db" "$SEEDS_DIR"
+die_total=$((die_total + LAST_COPIED_COUNT))
 
 echo "Extracting JavaScript files from DIE-corpus jit folder..."
 copy_js_files "$TEMP_DIR/DIE-corpus/jit" "$SEEDS_DIR"
+die_total=$((die_total + LAST_COPIED_COUNT))
 
 # Process v8 repository - mjsunit folder
 echo "Extracting JavaScript files from v8/test/mjsunit folder..."
 copy_js_files "$TEMP_DIR/v8/test/mjsunit" "$SEEDS_DIR"
+v8_total=$((v8_total + LAST_COPIED_COUNT))
 
-# Process Firefox repository - tests and jit-test folders
-echo "Extracting JavaScript files from firefox/js/src/tests folder..."
-copy_js_files "$TEMP_DIR/firefox/js/src/tests" "$SEEDS_DIR"
-
+# Process Firefox repository - jit-test and tests/non262 folders
 echo "Extracting JavaScript files from firefox/js/src/jit-test folder..."
 copy_js_files "$TEMP_DIR/firefox/js/src/jit-test" "$SEEDS_DIR"
+firefox_total=$((firefox_total + LAST_COPIED_COUNT))
 
-# Process WebKit repository - JSTests folder
-echo "Extracting JavaScript files from WebKit/JSTests folder..."
-copy_js_files "$TEMP_DIR/WebKit/JSTests" "$SEEDS_DIR"
+echo "Extracting JavaScript files from firefox/js/src/tests/non262 folder..."
+copy_js_files "$TEMP_DIR/firefox/js/src/tests/non262" "$SEEDS_DIR"
+firefox_total=$((firefox_total + LAST_COPIED_COUNT))
+
+# Process WebKit repository - selected JSTests subfolders
+echo "Extracting JavaScript files from WebKit/JSTests/es6 folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/es6" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
+
+echo "Extracting JavaScript files from WebKit/JSTests/exceptionFuzz folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/exceptionFuzz" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
+
+echo "Extracting JavaScript files from WebKit/JSTests/executableAllocationFuzz folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/executableAllocationFuzz" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
+
+echo "Extracting JavaScript files from WebKit/JSTests/microbenchmarks folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/microbenchmarks" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
+
+echo "Extracting JavaScript files from WebKit/JSTests/perf folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/perf" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
+
+echo "Extracting JavaScript files from WebKit/JSTests/slowMicrobenchmarks folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/slowMicrobenchmarks" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
+
+echo "Extracting JavaScript files from WebKit/JSTests/stress folder..."
+copy_js_files "$TEMP_DIR/WebKit/JSTests/stress" "$SEEDS_DIR"
+webkit_total=$((webkit_total + LAST_COPIED_COUNT))
 
 
-# Count the total number of JavaScript files copied
+# Per-repository breakdown
+echo ""
+echo "Per-repository totals:"
+echo "  - DIE-corpus total: $die_total"
+echo "  - v8 total: $v8_total"
+echo "  - Firefox total: $firefox_total"
+echo "  - WebKit total: $webkit_total"
+
+# Count the grand total number of JavaScript files copied
 total_files=$(find "$SEEDS_DIR" -name "*.js" -type f | wc -l)
-echo "Total JavaScript files extracted: $total_files"
+echo "Grand total JavaScript files extracted: $total_files"
 
 # Clean up temporary directory
 echo "Cleaning up temporary directory..."
@@ -139,5 +198,5 @@ echo ""
 echo "Sources included:"
 echo "  - DIE-corpus: ChakraCore, js-vuln-db, jit folders"
 echo "  - v8: test/mjsunit folder"
-echo "  - Firefox: js/src/tests and js/src/jit-test folders"
-echo "  - WebKit: JSTests folder"
+echo "  - Firefox: js/src/jit-test and js/src/tests/non262 folders"
+echo "  - WebKit: JSTests subfolders: es6, exceptionFuzz, executableAllocationFuzz, microbenchmarks, perf, slowMicrobenchmarks, stress"
