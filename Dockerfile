@@ -120,9 +120,9 @@ RUN echo '#!/bin/bash' > /workspace/start.sh && \
     echo 'echo "Threads: ${THREADS}, JVM heap: ${JVM_HEAP}G"' >> /workspace/start.sh && \
     echo '# Guidance flags baked at build time' >> /workspace/start.sh && \
     echo 'GUIDANCE_FLAGS="'$(if [ "$GUIDANCE" = "ngram" ]; then \
-      echo "--generator guided --language-model N_GRAM_MODEL --enable-replace-with-generated-node true"; \
+      echo "--generator GUIDED_GENERATOR --language-model N_GRAM_MODEL --enable-replace-with-generated-node true"; \
     elif [ "$GUIDANCE" = "tree" ]; then \
-      echo "--generator guided --language-model N_DEPTH_TREE_MODEL --allow-enable-guidance true --enable-replace-with-generated-node true"; \
+      echo "--generator GUIDED_GENERATOR --language-model N_DEPTH_TREE_MODEL --allow-enable-guidance true --enable-replace-with-generated-node true"; \
     else \
       echo ""; \
     fi)'"' >> /workspace/start.sh && \
