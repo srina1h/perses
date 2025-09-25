@@ -14,7 +14,7 @@ from reduce import DifferentialFindingsAnalyzer
 
 def main():
     # Initialize analyzer
-    analyzer = DifferentialFindingsAnalyzer('8_29/differential_finding_folder_javascript')
+    analyzer = DifferentialFindingsAnalyzer('../results_9_21/differential_finding_folder_javascript')
     
     # Load data
     print("Loading data...")
@@ -28,7 +28,7 @@ def main():
     print("\n📁 CREATING FOLDER STRUCTURE")
     print("=" * 50)
     
-    output_dir = analyzer.create_folder_structure("organized_findings")
+    output_dir = analyzer.create_folder_structure("../organized_9_21")
     
     if output_dir:
         print(f"\n✅ Organization complete!")

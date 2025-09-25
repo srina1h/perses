@@ -3,6 +3,8 @@ FROM ubuntu:22.04
 
 # Set build argument for seed mode
 ARG SEED_MODE=normal
+# Guidance mode for fuzzing: no | ngram | tree
+ARG GUIDANCE=no
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -116,6 +118,14 @@ RUN echo '#!/bin/bash' > /workspace/start.sh && \
     echo 'THREADS=${THREADS:-$(nproc)}' >> /workspace/start.sh && \
     echo 'JVM_HEAP=${JVM_HEAP:-8}' >> /workspace/start.sh && \
     echo 'echo "Threads: ${THREADS}, JVM heap: ${JVM_HEAP}G"' >> /workspace/start.sh && \
+    echo '# Guidance flags baked at build time' >> /workspace/start.sh && \
+    echo 'GUIDANCE_FLAGS="'$(if [ "$GUIDANCE" = "ngram" ]; then \
+      echo "--generator guided --language-model N_GRAM_MODEL --enable-replace-with-generated-node true"; \
+    elif [ "$GUIDANCE" = "tree" ]; then \
+      echo "--generator guided --language-model N_DEPTH_TREE_MODEL --allow-enable-guidance true --enable-replace-with-generated-node true"; \
+    else \
+      echo ""; \
+    fi)'"' >> /workspace/start.sh && \
     echo 'exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+UseStringDeduplication -XX:+OptimizeStringConcat -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \' >> /workspace/start.sh && \
     echo '  --testing-config "kitten/scripts/javascript/all-compilers-config.yaml" \' >> /workspace/start.sh && \
     echo '  --threads ${THREADS} \' >> /workspace/start.sh && \
@@ -123,7 +133,8 @@ RUN echo '#!/bin/bash' > /workspace/start.sh && \
     echo '  --timeout 1000000000 \' >> /workspace/start.sh && \
     echo '  --instrumentation-strict-mode false \' >> /workspace/start.sh && \
     echo '  --skip-seed-validation false \' >> /workspace/start.sh && \
-    echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript"' >> /workspace/start.sh && \
+    echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript" \' >> /workspace/start.sh && \
+    echo '  ${GUIDANCE_FLAGS}' >> /workspace/start.sh && \
     chmod +x /workspace/start.sh
 
 # Default command

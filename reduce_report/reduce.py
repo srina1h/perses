@@ -463,7 +463,9 @@ class DifferentialFindingsAnalyzer:
                     # Save stdout and stderr for each engine
                     for _, row in test_data.iterrows():
                         engine = row['engine_name']
-                        engine_dir = case_dir / f"{engine.lower()}"
+                        # Sanitize engine name for filesystem
+                        safe_engine_name = "".join(c for c in engine.lower() if c.isalnum() or c in ('-', '_'))
+                        engine_dir = case_dir / safe_engine_name
                         engine_dir.mkdir(exist_ok=True)
                         
                         # Save stdout
@@ -487,7 +489,7 @@ class DifferentialFindingsAnalyzer:
                                     f.write(f"Crash signature: {row['crash_signature']}\n")
                     
                     # Copy original finding folder contents
-                    original_finding_folder = Path("8_29/differential_finding_folder_javascript") / case['finding_folder']
+                    original_finding_folder = Path("../results_9_21/differential_finding_folder_javascript") / case['finding_folder']
                     if original_finding_folder.exists():
                         finding_data_dir = case_dir / "finding_data"
                         finding_data_dir.mkdir(exist_ok=True)
