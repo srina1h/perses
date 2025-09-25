@@ -4,7 +4,7 @@ mkdir -p results logs custom-seeds
 
 RUNNING:
 
-sudo docker run -it -m 70g --init --cpuset-cpus="$(bash getcoreids.sh)" --name ndepth_guided_1 \
+sudo docker run -it -m 70g --init --cpuset-cpus="$(bash getcoreids.sh)" --name ndepth_guided_2 \
   -v $(pwd)/results:/workspace/kitten/temp_testing_campaigns \
   -v $(pwd)/logs:/workspace/logs \
   -v $(pwd)/custom-seeds:/workspace/kitten/scripts/javascript/seeds:ro \
