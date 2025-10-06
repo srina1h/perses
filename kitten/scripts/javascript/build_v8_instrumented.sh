@@ -37,6 +37,7 @@ gclient sync
 # Generate allowlist if not exists
 if [ ! -f "${ALLOWLIST_FILE}" ]; then
   echo "[build_v8_instrumented] Generating allowlist..."
+  chmod +x "${WORKDIR}/kitten/scripts/javascript/gen_allowlist_from_git.sh"
   GEN_REPO="${V8_DIR}" GEN_SINCE_MONTHS=6 \
     "${WORKDIR}/kitten/scripts/javascript/gen_allowlist_from_git.sh" > "${ALLOWLIST_FILE}"
 fi
