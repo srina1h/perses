@@ -10,7 +10,7 @@ import re
 from pathlib import Path
 
 def add_marker_to_file(filepath, v8_root):
-    """Add MarkAllowlistTouched() call to the first function in a C++ file."""
+    """Add MarkAllowlistTouched() call to the first non-constexpr function in a C++ file."""
     
     try:
         with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
@@ -24,31 +24,41 @@ def add_marker_to_file(filepath, v8_root):
         print(f"[SKIP] Already patched: {filepath}", file=sys.stderr)
         return False
     
-    # Find first function body (after opening brace of function)
-    # Look for pattern: function_name(...) { or function_name(...)\n{
-    pattern = r'(\n[^\n]*\([^)]*\)\s*(?:const|override|final|noexcept)*\s*\{)'
-    match = re.search(pattern, content)
+    # Find first NON-CONSTEXPR function body
+    # Skip constexpr functions as they can't call non-constexpr code
+    # Look for function that doesn't have constexpr before it
+    lines = content.split('\n')
     
-    if not match:
-        print(f"[SKIP] No function found: {filepath}", file=sys.stderr)
-        return False
+    for i in range(len(lines)):
+        line = lines[i]
+        # Check if this line looks like a function definition with opening brace
+        if '(' in line and '{' in line:
+            # Look back up to 3 lines to check for constexpr
+            is_constexpr = False
+            for j in range(max(0, i-3), i+1):
+                if 'constexpr' in lines[j]:
+                    is_constexpr = True
+                    break
+            
+            if not is_constexpr and not line.strip().startswith('//'):
+                # Found a non-constexpr function with opening brace
+                # Insert marker after the opening brace
+                brace_pos = line.index('{')
+                lines[i] = line[:brace_pos+1] + "\n  v8::internal::MarkAllowlistTouched(); // ALLOWLIST_INSTRUMENTED" + line[brace_pos+1:]
+                
+                new_content = '\n'.join(lines)
+                
+                try:
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(new_content)
+                    print(f"[PATCHED] {filepath}", file=sys.stderr)
+                    return True
+                except Exception as e:
+                    print(f"[ERROR] Cannot write {filepath}: {e}", file=sys.stderr)
+                    return False
     
-    # Insert marker after the opening brace
-    insert_pos = match.end()
-    
-    marker_code = "\n  v8::internal::MarkAllowlistTouched(); // ALLOWLIST_INSTRUMENTED\n"
-    
-    new_content = content[:insert_pos] + marker_code + content[insert_pos:]
-    
-    # Write back
-    try:
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(new_content)
-        print(f"[PATCHED] {filepath}", file=sys.stderr)
-        return True
-    except Exception as e:
-        print(f"[ERROR] Cannot write {filepath}: {e}", file=sys.stderr)
-        return False
+    print(f"[SKIP] No suitable function found: {filepath}", file=sys.stderr)
+    return False
 
 
 def patch_d8_shell(v8_root):
