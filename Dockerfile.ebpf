@@ -34,7 +34,7 @@ WORKDIR /workspace
 ARG CACHE_BUST
 RUN echo "Cloning perses (cache bust: ${CACHE_BUST})"
 RUN git clone https://github.com/srina1h/perses.git . \
-    && git checkout recent_fuzzing
+    && git checkout ebpf_recent
 
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
