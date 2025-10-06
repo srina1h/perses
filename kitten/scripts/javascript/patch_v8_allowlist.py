@@ -10,7 +10,7 @@ import re
 from pathlib import Path
 
 def add_marker_to_file(filepath, v8_root):
-    """Add MarkAllowlistTouched() call to the first non-constexpr function in a C++ file."""
+    """Add MarkAllowlistTouched() call to the first non-constexpr, non-inline function in a C++ file."""
     
     try:
         with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
@@ -24,38 +24,40 @@ def add_marker_to_file(filepath, v8_root):
         print(f"[SKIP] Already patched: {filepath}", file=sys.stderr)
         return False
     
-    # Find first NON-CONSTEXPR function body
-    # Skip constexpr functions as they can't call non-constexpr code
-    # Look for function that doesn't have constexpr before it
-    lines = content.split('\n')
+    # Use regex to find function definitions more carefully
+    # Match: return_type function_name(...) { on the same line, not in a comment
+    # Skip constexpr, inline, and commented functions
+    pattern = r'\n([^/\n]*?)\s+(\w+)\s*\([^)]*\)\s*\{([^}]*)'
     
-    for i in range(len(lines)):
-        line = lines[i]
-        # Check if this line looks like a function definition with opening brace
-        if '(' in line and '{' in line:
-            # Look back up to 3 lines to check for constexpr
-            is_constexpr = False
-            for j in range(max(0, i-3), i+1):
-                if 'constexpr' in lines[j]:
-                    is_constexpr = True
-                    break
-            
-            if not is_constexpr and not line.strip().startswith('//'):
-                # Found a non-constexpr function with opening brace
-                # Insert marker after the opening brace
-                brace_pos = line.index('{')
-                lines[i] = line[:brace_pos+1] + "\n  v8::internal::MarkAllowlistTouched(); // ALLOWLIST_INSTRUMENTED" + line[brace_pos+1:]
-                
-                new_content = '\n'.join(lines)
-                
-                try:
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        f.write(new_content)
-                    print(f"[PATCHED] {filepath}", file=sys.stderr)
-                    return True
-                except Exception as e:
-                    print(f"[ERROR] Cannot write {filepath}: {e}", file=sys.stderr)
-                    return False
+    for match in re.finditer(pattern, content):
+        full_match = match.group(0)
+        prefix = match.group(1)
+        
+        # Skip if it's a comment
+        if '//' in prefix or '/*' in prefix:
+            continue
+        
+        # Skip constexpr and inline functions
+        if 'constexpr' in prefix or 'inline' in prefix:
+            continue
+        
+        # Skip if doesn't look like a function (e.g., namespace, struct, class)
+        if any(kw in prefix for kw in ['namespace', 'struct', 'class', 'enum']):
+            continue
+        
+        # Found a good function - insert marker
+        brace_pos = full_match.index('{')
+        new_match = full_match[:brace_pos+1] + "\n  v8::internal::MarkAllowlistTouched(); // ALLOWLIST_INSTRUMENTED" + full_match[brace_pos+1:]
+        new_content = content[:match.start()] + new_match + content[match.end():]
+        
+        try:
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"[PATCHED] {filepath}", file=sys.stderr)
+            return True
+        except Exception as e:
+            print(f"[ERROR] Cannot write {filepath}: {e}", file=sys.stderr)
+            return False
     
     print(f"[SKIP] No suitable function found: {filepath}", file=sys.stderr)
     return False

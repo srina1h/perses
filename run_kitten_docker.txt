@@ -1,7 +1,7 @@
 # Build and run commands for kitten fuzzing with manual V8 instrumentation
 
 # Build the instrumented V8 Docker image:
-sudo docker buildx build --builder isolated-builder --load -f Dockerfile.instrumented --build-arg CACHE_BUST=$(date +%s) --build-arg V8_BUILD_VERSION=4 -t kitten_v8_instrumented .
+sudo docker buildx build --builder isolated-builder --load -f Dockerfile.instrumented --build-arg CACHE_BUST=$(date +%s) --build-arg V8_BUILD_VERSION=5 -t kitten_v8_instrumented .
 
 # Run the container:
 sudo docker run --privileged -v $(pwd)/results:/workspace/kitten/findings_v8 kitten_v8_instrumented
