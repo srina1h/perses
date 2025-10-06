@@ -408,15 +408,15 @@ class FuzzerDriver(
           val mutationResult =
             mutationOperatorExecutor.mutateWithTreeLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          val increased = runActionsAndCheckAflCoverage(mutantFile, seedFile, seedProgram)
-          if (!options.generalFlags.aflGuidanceStrict || increased) {
+          val increased = runActionsAndCheckTouch(mutantFile, seedFile, seedProgram)
+          if (!options.generalFlags.touchGuidanceStrict || increased) {
             scheduler.update(mutationResult.mutatedSparTree!!, mutantFile)
           }
         } else {
           val mutationResult =
             mutationOperatorExecutor.mutateWithTokenLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          runActionsAndCheckAflCoverage(mutantFile, seedFile, seedProgram)
+          runActionsAndCheckTouch(mutantFile, seedFile, seedProgram)
         }
         successfullyCreatedMutantCounter.incrementAndGet()
         logger.ktAt(Level.FINE) { "running extension on the mutant $mutantFile" }
@@ -425,7 +425,7 @@ class FuzzerDriver(
     }
   }
 
-  private fun runActionsAndCheckAflCoverage(
+  private fun runActionsAndCheckTouch(
     mutantFile: File,
     seedFile: File,
     seedProgram: TokenizedProgram,
@@ -433,10 +433,32 @@ class FuzzerDriver(
     var increased = false
     for (facade in facades) {
       for (action in facade.compilationActions) {
-        val beforeHit = (coverageCollector as? org.perses.fuzzer.coveragecollector.AFLCoverageCollector)?.getSharedMemoryIdWithThreadId()?.getHitCount() ?: 0
-        testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
-        val afterHit = (coverageCollector as? org.perses.fuzzer.coveragecollector.AFLCoverageCollector)?.getSharedMemoryIdWithThreadId()?.getHitCount() ?: beforeHit
-        if (afterHit > beforeHit) {
+        val result = coverageCollector.executeActionWithCoverageCollection(
+          action,
+          mutantFile,
+          Thread.currentThread().id,
+        )
+        logger.ktAt(Level.FINE) { "test cmd: ${result.cmd}" }
+        logger.ktAt(Level.FINE) { "stderr: ${result.cmdOutput.stderr.combinedLines}" }
+
+        // Crash detection as usual
+        val crashDetectorResult = facade.crashDetector.detectCrash(result.cmdOutput)
+        if (crashDetectorResult.isCrashDetected()) {
+          logger.ktAt(Level.FINE) { "A crash has been found with the seed file $seedFile" }
+          CrashInstanceFolder.create(
+            findingFolder,
+            seedProgram,
+            mutantFile,
+            result,
+            action,
+            crashDetectorResult.asCrash(),
+          )
+        }
+
+        // Touch gating via EBPF_HIT marker
+        val stderr = result.cmdOutput.stderr.combinedLines
+        val stdout = result.cmdOutput.stdout.combinedLines
+        if ((stderr.contains("EBPF_HIT")) || (stdout.contains("EBPF_HIT"))) {
           increased = true
         }
       }

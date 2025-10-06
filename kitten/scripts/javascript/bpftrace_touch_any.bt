@@ -1,0 +1,17 @@
+/* Attach uprobes to a set of function names on a PID and print a single HIT line once. */
+
+BEGIN {
+  @fired = 0;
+}
+
+/* Placeholder: functions list is populated by -c or env substitution */
+
+usdt:/*dummy*/
+
+END {
+  if (@fired > 0) {
+    printf("EBPF_HIT\n");
+  }
+}
+
+

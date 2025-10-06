@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Generate an AFL++ allowlist from recently modified files in a git repo.
+# Generate an allowlist from recently modified files in a git repo.
 # Default behavior: last 6 months, commit messages containing fix AND bug (case-insensitive), only under src/.
 # Usage:
 #   GEN_REPO=/path/to/v8 GEN_SINCE_MONTHS=6 ./gen_allowlist_from_git.sh > allowlist.txt
