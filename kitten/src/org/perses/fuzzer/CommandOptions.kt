@@ -176,6 +176,14 @@ class CommandOptions : AbstractCommandOptions() {
       order = FlagOrder.GENERAL_CONTROL + 1650,
     )
     var touchGuidanceStrict = true
+
+    @Parameter(
+      names = ["--filter-seeds-by-touch"],
+      description = "filter initial seeds to only those that touch allowlisted code",
+      arity = 1,
+      order = FlagOrder.GENERAL_CONTROL + 1660,
+    )
+    var filterSeedsByTouch = false
     fun getMutantsFolder(): File {
       if (mutantsFolder == null) {
         mutantsFolder = File(

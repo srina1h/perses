@@ -466,6 +466,68 @@ class FuzzerDriver(
     return increased
   }
 
+  private fun checkSeedTouchesAllowlist(fuzzer: SparTreeFuzzer): Boolean {
+    val seedFile = fuzzer.seedFile
+    for (facade in facades) {
+      for (action in facade.compilationActions) {
+        val result = coverageCollector.executeActionWithCoverageCollection(
+          action,
+          seedFile,
+          Thread.currentThread().id,
+        )
+        val stderr = result.cmdOutput.stderr.combinedLines
+        val stdout = result.cmdOutput.stdout.combinedLines
+        if ((stderr.contains("EBPF_HIT")) || (stdout.contains("EBPF_HIT"))) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  private fun countAllowlistFiles(): Int {
+    val allowlistPath = System.getenv("ALLOWLIST_FILE") ?: "/workspace/allowlist.txt"
+    val allowlistFile = File(allowlistPath)
+    if (!allowlistFile.exists() || !allowlistFile.isFile) {
+      return 0
+    }
+    return allowlistFile.readLines().filter { it.isNotBlank() }.size
+  }
+
+  private fun writeValidationReport(
+    initialSeeds: Int,
+    retainedSeeds: Int,
+    validationTimeSeconds: Double,
+  ) {
+    val reportDir = File(findingFolder.folder, "validation_report")
+    if (!reportDir.exists()) {
+      reportDir.mkdirs()
+    }
+    val reportFile = File(reportDir, "validation_report.txt")
+    val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
+    val allowlistCount = countAllowlistFiles()
+    
+    val report = buildString {
+      appendLine("=" + "=".repeat(60))
+      appendLine("SEED VALIDATION REPORT")
+      appendLine("Generated: $timestamp")
+      appendLine("=" + "=".repeat(60))
+      appendLine()
+      appendLine("Number of files in allowlist: $allowlistCount")
+      appendLine("Number of initial seeds: $initialSeeds")
+      appendLine("Number of seeds retained after validation: $retainedSeeds")
+      appendLine("Time taken for validation: %.2f seconds".format(validationTimeSeconds))
+      appendLine()
+      if (initialSeeds > 0) {
+        val retentionRate = (retainedSeeds.toDouble() / initialSeeds) * 100
+        appendLine("Seed retention rate: %.2f%%".format(retentionRate))
+      }
+      appendLine("=" + "=".repeat(60))
+    }
+    reportFile.writeText(report)
+    logger.ktInfo { "Validation report written to: ${reportFile.absolutePath}" }
+  }
+
   @VisibleForTesting
   fun testActionOnMutant(
     action: ICompilationAction,
@@ -568,7 +630,7 @@ class FuzzerDriver(
     logger.ktInfo {
       "Collected ${seedFiles.size} seed files in folder $seedFolders"
     }
-    val fuzzerInstances = if (!noInitialSeed) {
+    var fuzzerInstances = if (!noInitialSeed) {
       SparTreeFuzzerQueue(
         createSparTreeFuzzers(
           seedFiles,
@@ -577,6 +639,34 @@ class FuzzerDriver(
       )
     } else {
       SparTreeFuzzerQueue(emptyList())
+    }
+
+    // Filter seeds by touch if enabled
+    if (options.generalFlags.filterSeedsByTouch && fuzzerInstances.getSize() > 0) {
+      logger.ktInfo { "Filtering seeds by allowlist touch..." }
+      val validationStartTime = System.currentTimeMillis()
+      val initialSeedCount = fuzzerInstances.getSize()
+      val touchedSeeds = ArrayList<SparTreeFuzzer>()
+      for (fuzzer in fuzzerInstances.content) {
+        val touched = checkSeedTouchesAllowlist(fuzzer)
+        if (touched) {
+          touchedSeeds.add(fuzzer)
+        }
+      }
+      val validationEndTime = System.currentTimeMillis()
+      val validationTimeSeconds = (validationEndTime - validationStartTime) / 1000.0
+      
+      logger.ktInfo { 
+        "Filtered seeds: ${touchedSeeds.size} / ${fuzzerInstances.getSize()} touched allowlisted code"
+      }
+      fuzzerInstances = SparTreeFuzzerQueue(touchedSeeds)
+      
+      // Generate validation report
+      writeValidationReport(
+        initialSeedCount,
+        touchedSeeds.size,
+        validationTimeSeconds,
+      )
     }
     if (generator != null) {
       for (fuzzerInstance in fuzzerInstances.content) {

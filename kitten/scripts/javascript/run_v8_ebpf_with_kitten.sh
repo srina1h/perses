@@ -42,7 +42,12 @@ programsUnderTest:
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.V8CrashDetector"
 EOF
 
-if ! find "${SEEDS_DIR}" -type f -name '*.js' | head -1 >/dev/null 2>&1; then
+# Copy prepared seeds from workspace if available, otherwise create a minimal seed
+if [ -d "/workspace/seeds" ] && find "/workspace/seeds" -type f -name '*.js' | head -1 >/dev/null 2>&1; then
+  echo "[runner] Copying prepared seeds from /workspace/seeds"
+  cp -r /workspace/seeds/* "${SEEDS_DIR}/" || true
+elif ! find "${SEEDS_DIR}" -type f -name '*.js' | head -1 >/dev/null 2>&1; then
+  echo "[runner] No seeds found, creating minimal seed"
   echo 'print("hello");' >"${SEEDS_DIR}/seed.js"
 fi
 
@@ -61,6 +66,7 @@ exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC -jar "${WORKDIR}/bazel-bin/kitten
   --generator GUIDED_GENERATOR \
   --enable-replace-with-generated-node \
   --coverage-interval 15 \
-  --afl-guidance-strict true
+  --touch-guidance-strict true \
+  --filter-seeds-by-touch true
 
 

@@ -47,6 +47,9 @@ COPY kitten/scripts/javascript/d8_with_bpf.sh /root/bin/d8_with_bpf.sh
 COPY kitten/scripts/javascript/run_v8_ebpf_with_kitten.sh /root/bin/run_v8_ebpf_with_kitten.sh
 RUN chmod +x /root/bin/*.sh
 
+# Prepare seeds for fuzzing (trim to 100 for testing; remove SEED_LIMIT for full corpus)
+RUN chmod +x /workspace/prepare_seeds.sh && SEED_LIMIT=100 /workspace/prepare_seeds.sh
+
 # Build V8 normally, generate allowlist and uprobe list
 ARG THREADS=8
 ENV THREADS=${THREADS}
