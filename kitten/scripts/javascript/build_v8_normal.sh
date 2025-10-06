@@ -27,7 +27,8 @@ cd "${V8_DIR}"
 echo "[build_v8_normal] Running gclient sync..."
 gclient sync
 
-python3 tools/dev/v8gen.py rel --no-goma
+echo "[build_v8_normal] Generating build configuration..."
+python3 tools/dev/v8gen.py gen "${OUT_DIR##*/}"
 
 GN_ARGS=(
   "is_official_build=false"
