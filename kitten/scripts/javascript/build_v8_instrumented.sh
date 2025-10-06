@@ -34,6 +34,12 @@ cd "${V8_DIR}"
 echo "[build_v8_instrumented] Running gclient sync..."
 gclient sync
 
+# Clean any previous build artifacts to ensure fresh build with new patches
+if [ -d "${OUT_DIR}" ]; then
+  echo "[build_v8_instrumented] Cleaning previous build..."
+  rm -rf "${OUT_DIR}"
+fi
+
 # Generate allowlist if not exists
 if [ ! -f "${ALLOWLIST_FILE}" ]; then
   echo "[build_v8_instrumented] Generating allowlist..."
