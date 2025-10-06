@@ -64,7 +64,7 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
 class FuzzerDriver(
-  options: CommandOptions,
+  private val options: CommandOptions,
   private val control: AdditionalFuzzerControl,
 ) : AutoCloseable {
 
