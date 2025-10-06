@@ -93,10 +93,11 @@ def patch_d8_shell(v8_root):
 
 
 def create_allowlist_header(v8_root):
-    """Create the allowlist tracking header file."""
+    """Create the allowlist tracking header file with inline implementation."""
     
     header_path = v8_root / 'src' / 'init' / 'allowlist-tracker.h'
     
+    # Use inline variable (C++17) to avoid needing a separate .cc file
     header_content = """// Auto-generated allowlist tracker
 #ifndef V8_INIT_ALLOWLIST_TRACKER_H_
 #define V8_INIT_ALLOWLIST_TRACKER_H_
@@ -105,7 +106,8 @@ namespace v8 {
 namespace internal {
 
 // Thread-local flag to track if any allowlisted code was executed
-extern thread_local bool g_touched_allowlist;
+// Using inline to avoid needing separate compilation unit
+inline thread_local bool g_touched_allowlist = false;
 
 // Mark that allowlisted code has been touched
 inline void MarkAllowlistTouched() {
@@ -122,25 +124,6 @@ inline void MarkAllowlistTouched() {
         f.write(header_content)
     
     print(f"[CREATED] {header_path}", file=sys.stderr)
-    
-    # Also create the .cc file to define the variable
-    cc_path = v8_root / 'src' / 'init' / 'allowlist-tracker.cc'
-    cc_content = """// Auto-generated allowlist tracker implementation
-#include "src/init/allowlist-tracker.h"
-
-namespace v8 {
-namespace internal {
-
-thread_local bool g_touched_allowlist = false;
-
-}  // namespace internal
-}  // namespace v8
-"""
-    
-    with open(cc_path, 'w', encoding='utf-8') as f:
-        f.write(cc_content)
-    
-    print(f"[CREATED] {cc_path}", file=sys.stderr)
     return True
 
 
