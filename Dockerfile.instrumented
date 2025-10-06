@@ -3,15 +3,21 @@ FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
-# Core deps + Java + Bazel + Python
+# Core deps + Java + Bazel + Python + newer clang
 RUN apt-get update && apt-get install -y \
     git curl wget unzip ca-certificates gnupg \
     build-essential python3 python3-pip \
     openjdk-11-jdk \
     ninja-build pkg-config \
-    clang lld cmake \
+    lsb-release software-properties-common \
     zlib1g-dev libtinfo5 \
     sudo \
+    && wget https://apt.llvm.org/llvm.sh \
+    && chmod +x llvm.sh \
+    && ./llvm.sh 18 \
+    && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 \
+    && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100 \
+    && rm llvm.sh \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Bazel

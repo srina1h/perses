@@ -58,6 +58,12 @@ symbol_level = 1
 is_component_build = false
 v8_static_library = true
 use_custom_libcxx = false
+use_sysroot = false
+is_clang = true
+treat_warnings_as_errors = false
+v8_enable_backtrace = false
+v8_enable_disassembler = true
+v8_enable_object_print = true
 EOF
 
 echo "[build_v8_instrumented] Generating build files..."
