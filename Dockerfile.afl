@@ -1,0 +1,71 @@
+# Ubuntu base
+FROM ubuntu:22.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Core deps + Java + Bazel + build tools
+RUN apt-get update && apt-get install -y \
+    git curl wget unzip ca-certificates gnupg \
+    build-essential python3 python3-pip \
+    openjdk-11-jdk \
+    ninja-build pkg-config \
+    clang lld cmake \
+    zlib1g-dev libtinfo5 \
+    sudo \
+    && apt-get install -y afl++ \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Bazel
+RUN ARCH=$(uname -m) \
+    && if [ "$ARCH" = "x86_64" ]; then \
+        curl -fsSL https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-x86_64 -o /usr/local/bin/bazel; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        curl -fsSL https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-arm64 -o /usr/local/bin/bazel; \
+    else \
+        echo "Unsupported arch" && exit 1; \
+    fi \
+    && chmod +x /usr/local/bin/bazel \
+    && bazel --version
+
+# Git identity for Bazel workspace status
+RUN git config --global user.name "Docker Build" \
+    && git config --global user.email "docker@build.local"
+
+# Workspace
+WORKDIR /workspace
+
+# Clone repository
+ARG CACHE_BUST
+RUN echo "Cloning perses (cache bust: ${CACHE_BUST})"
+RUN git clone https://github.com/srina1h/perses.git . \
+    && git checkout recent_fuzzing
+
+# Build kitten
+RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
+
+# Copy helper scripts into PATH
+ENV PATH=/root/bin:$PATH
+RUN mkdir -p /root/bin
+COPY kitten/scripts/javascript/build_v8_afl.sh /root/bin/build_v8_afl.sh
+COPY kitten/scripts/javascript/gen_allowlist_from_git.sh /root/bin/gen_allowlist_from_git.sh
+COPY kitten/scripts/javascript/run_v8_afl_with_kitten.sh /root/bin/run_v8_afl_with_kitten.sh
+RUN chmod +x /root/bin/*.sh
+
+# Build V8 with AFL++ using our script; then dynamically generate allowlist and rebuild constrained
+ARG THREADS=8
+ENV THREADS=${THREADS}
+# First run may fetch depot_tools/v8; ignore failures to allow layered retry
+RUN WORKDIR=/workspace THREADS=${THREADS} /root/bin/build_v8_afl.sh || true
+# Generate allowlist from recent changes and rebuild with AFL_LLVM_ALLOWLIST
+RUN GEN_REPO=/workspace/v8 GEN_SINCE_MONTHS=6 /root/bin/gen_allowlist_from_git.sh > /workspace/allowlist.txt \
+    && WORKDIR=/workspace THREADS=${THREADS} AFL_LLVM_ALLOWLIST=/workspace/allowlist.txt /root/bin/build_v8_afl.sh || true
+ENV ALLOWLIST_FILE=/workspace/allowlist.txt
+
+# Default runtime environment
+ENV JVM_HEAP=8
+
+# Start command runs kitten against AFL-instrumented d8
+CMD ["/root/bin/run_v8_afl_with_kitten.sh"]
+
+

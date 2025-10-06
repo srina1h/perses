@@ -408,27 +408,40 @@ class FuzzerDriver(
           val mutationResult =
             mutationOperatorExecutor.mutateWithTreeLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          for (facade in facades) {
-            for (action in facade.compilationActions) {
-              testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
-            }
+          val increased = runActionsAndCheckAflCoverage(mutantFile, seedFile, seedProgram)
+          if (!options.generalFlags.aflGuidanceStrict || increased) {
+            scheduler.update(mutationResult.mutatedSparTree!!, mutantFile)
           }
-          scheduler.update(mutationResult.mutatedSparTree!!, mutantFile)
         } else {
           val mutationResult =
             mutationOperatorExecutor.mutateWithTokenLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          for (facade in facades) {
-            for (action in facade.compilationActions) {
-              testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
-            }
-          }
+          runActionsAndCheckAflCoverage(mutantFile, seedFile, seedProgram)
         }
         successfullyCreatedMutantCounter.incrementAndGet()
         logger.ktAt(Level.FINE) { "running extension on the mutant $mutantFile" }
         extension.run(mutantFile.toPath())
       }
     }
+  }
+
+  private fun runActionsAndCheckAflCoverage(
+    mutantFile: File,
+    seedFile: File,
+    seedProgram: TokenizedProgram,
+  ): Boolean {
+    var increased = false
+    for (facade in facades) {
+      for (action in facade.compilationActions) {
+        val beforeHit = (coverageCollector as? org.perses.fuzzer.coveragecollector.AFLCoverageCollector)?.getSharedMemoryIdWithThreadId()?.getHitCount() ?: 0
+        testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
+        val afterHit = (coverageCollector as? org.perses.fuzzer.coveragecollector.AFLCoverageCollector)?.getSharedMemoryIdWithThreadId()?.getHitCount() ?: beforeHit
+        if (afterHit > beforeHit) {
+          increased = true
+        }
+      }
+    }
+    return increased
   }
 
   @VisibleForTesting

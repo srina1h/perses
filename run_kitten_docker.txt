@@ -1,0 +1,17 @@
+V8 AFL CRASH-DETECTION (BUILD & RUN)
+
+Build (AFL/V8, allowlist auto-generated at build):
+
+sudo docker buildx build --builder isolated-builder --load \
+  -f Dockerfile.afl \
+  --build-arg CACHE_BUST=$(date +%s) \
+  -t kitten_v8_afl .
+
+Run (maps results, logs, and optional custom seeds):
+
+sudo docker run -it --init --name kitten_v8_afl_run -m 70g \
+  -e THREADS=$(nproc) -e JVM_HEAP=16 \
+  -v "$(pwd)/results:/workspace/kitten/findings_v8" \
+  -v "$(pwd)/logs:/workspace/logs" \
+  -v "$(pwd)/custom-seeds:/workspace/kitten_runtime/seeds:ro" \
+  kitten_v8_afl

@@ -169,6 +169,13 @@ class CommandOptions : AbstractCommandOptions() {
       order = FlagOrder.GENERAL_CONTROL + 1600,
     )
     var allowToEnableGuidance = true
+    @Parameter(
+      names = ["--afl-guidance-strict"],
+      description = "only accept mutants that increase AFL coverage",
+      arity = 1,
+      order = FlagOrder.GENERAL_CONTROL + 1650,
+    )
+    var aflGuidanceStrict = true
     fun getMutantsFolder(): File {
       if (mutantsFolder == null) {
         mutantsFolder = File(
