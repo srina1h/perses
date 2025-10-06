@@ -27,23 +27,21 @@ cd "${V8_DIR}"
 echo "[build_v8_normal] Running gclient sync..."
 gclient sync
 
-echo "[build_v8_normal] Generating build configuration..."
-python3 tools/dev/v8gen.py gen "${OUT_DIR##*/}"
-
-GN_ARGS=(
-  "is_official_build=false"
-  "is_debug=false"
-  "symbol_level=1"
-  "use_custom_libcxx=false"
-  "v8_monolithic=true"
-  "v8_static_library=true"
-  "is_clang=true"
-  "use_sysroot=false"
-)
+echo "[build_v8_normal] Creating build directory and configuration..."
 mkdir -p "${OUT_DIR}"
-{
-  for a in "${GN_ARGS[@]}"; do echo "$a"; done
-} >"${OUT_DIR}/args.gn"
+
+# Write args.gn directly - skip v8gen.py
+cat >"${OUT_DIR}/args.gn" <<EOF
+is_debug = false
+target_cpu = "x64"
+v8_enable_backtrace = true
+v8_enable_disassembler = true
+v8_enable_object_print = true
+v8_enable_verify_heap = true
+symbol_level = 1
+is_component_build = false
+v8_static_library = true
+EOF
 
 echo "[build_v8_normal] Generating build files with gn..."
 gn gen "${OUT_DIR}"
