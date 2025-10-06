@@ -499,11 +499,11 @@ class FuzzerDriver(
     retainedSeeds: Int,
     validationTimeSeconds: Double,
   ) {
-    val reportDir = File(findingFolder.folder, "validation_report")
+    val reportDir = File(findingFolder.root, "validation_report")
     if (!reportDir.exists()) {
       reportDir.mkdirs()
     }
-    val reportFile = File(reportDir, "validation_report.txt")
+    val reportFile = File(reportDir.absolutePath, "validation_report.txt")
     val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
     val allowlistCount = countAllowlistFiles()
     
