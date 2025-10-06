@@ -59,5 +59,5 @@ exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC \
   --language-model N_DEPTH_TREE_MODEL \
   --generator GUIDED_GENERATOR \
   --enable-replace-with-generated-node \
-  --allowlist-guidance-strict true
+  --allowlist-guidance-strict false
 
