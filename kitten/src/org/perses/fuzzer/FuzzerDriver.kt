@@ -408,15 +408,15 @@ class FuzzerDriver(
           val mutationResult =
             mutationOperatorExecutor.mutateWithTreeLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          val increased = runActionsAndCheckAflCoverage(mutantFile, seedFile, seedProgram)
-          if (!options.generalFlags.aflGuidanceStrict || increased) {
+          val increased = runActionsAndCheckAllowlistTouch(mutantFile, seedFile, seedProgram)
+          if (!options.generalFlags.allowlistGuidanceStrict || increased) {
             scheduler.update(mutationResult.mutatedSparTree!!, mutantFile)
           }
         } else {
           val mutationResult =
             mutationOperatorExecutor.mutateWithTokenLevelMutation(treeFuzzer) ?: return@use
           mutantFile.writeText(mutationResult.mutatedSource)
-          runActionsAndCheckAflCoverage(mutantFile, seedFile, seedProgram)
+          runActionsAndCheckAllowlistTouch(mutantFile, seedFile, seedProgram)
         }
         successfullyCreatedMutantCounter.incrementAndGet()
         logger.ktAt(Level.FINE) { "running extension on the mutant $mutantFile" }
@@ -425,23 +425,53 @@ class FuzzerDriver(
     }
   }
 
-  private fun runActionsAndCheckAflCoverage(
+  /**
+   * Runs compilation actions on a mutant and checks if it touches allowlisted code.
+   * Uses manual instrumentation markers (ALLOWLIST_HIT) for guidance.
+   * Also detects crashes during execution.
+   */
+  private fun runActionsAndCheckAllowlistTouch(
     mutantFile: File,
     seedFile: File,
     seedProgram: TokenizedProgram,
   ): Boolean {
-    var increased = false
+    var touchedAllowlist = false
     for (facade in facades) {
       for (action in facade.compilationActions) {
-        val beforeHit = (coverageCollector as? org.perses.fuzzer.coveragecollector.AFLCoverageCollector)?.getSharedMemoryIdWithThreadId()?.getHitCount() ?: 0
-        testActionOnMutant(action, mutantFile, seedFile, seedProgram, facade.crashDetector)
-        val afterHit = (coverageCollector as? org.perses.fuzzer.coveragecollector.AFLCoverageCollector)?.getSharedMemoryIdWithThreadId()?.getHitCount() ?: beforeHit
-        if (afterHit > beforeHit) {
-          increased = true
+        // Execute the action (no coverage collection needed)
+        val result = coverageCollector.executeActionWithCoverageCollection(
+          action,
+          mutantFile,
+          Thread.currentThread().id,
+        )
+        
+        // Check for manual instrumentation marker (ALLOWLIST_HIT)
+        val stderr = result.cmdOutput.stderr.combinedLines
+        val stdout = result.cmdOutput.stdout.combinedLines
+        if (stderr.contains("ALLOWLIST_HIT") || stdout.contains("ALLOWLIST_HIT")) {
+          touchedAllowlist = true
+        }
+        
+        // Check for crashes
+        logger.ktAt(Level.FINE) { "test cmd: ${result.cmd}" }
+        logger.ktAt(Level.FINE) { "stderr: $stderr" }
+        val crashDetectorResult = facade.crashDetector.detectCrash(result.cmdOutput)
+        if (crashDetectorResult.isCrashDetected()) {
+          logger.ktAt(Level.FINE) {
+            "A crash has been found with the seed file $seedFile"
+          }
+          CrashInstanceFolder.create(
+            findingFolder,
+            seedProgram,
+            mutantFile,
+            result,
+            action,
+            crashDetectorResult.asCrash(),
+          )
         }
       }
     }
-    return increased
+    return touchedAllowlist
   }
 
   @VisibleForTesting

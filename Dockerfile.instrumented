@@ -1,0 +1,62 @@
+FROM ubuntu:22.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Core deps + Java + Bazel + Python
+RUN apt-get update && apt-get install -y \
+    git curl wget unzip ca-certificates gnupg \
+    build-essential python3 python3-pip \
+    openjdk-11-jdk \
+    ninja-build pkg-config \
+    clang lld cmake \
+    zlib1g-dev libtinfo5 \
+    sudo \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Bazel
+RUN ARCH=$(uname -m) \
+    && if [ "$ARCH" = "x86_64" ]; then \
+        curl -fsSL https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-x86_64 -o /usr/local/bin/bazel; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        curl -fsSL https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-arm64 -o /usr/local/bin/bazel; \
+    else \
+        echo "Unsupported arch" && exit 1; \
+    fi \
+    && chmod +x /usr/local/bin/bazel \
+    && bazel --version
+
+# Git identity
+RUN git config --global user.name "Docker Build" \
+    && git config --global user.email "docker@build.local"
+
+WORKDIR /workspace
+
+# Copy local repository (to pick up all local changes)
+ARG CACHE_BUST
+RUN echo "Copying perses workspace (cache bust: ${CACHE_BUST})"
+COPY . .
+
+# Build kitten
+RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
+
+# Prepare seeds (trim to 100 for testing)
+RUN chmod +x /workspace/prepare_seeds.sh && SEED_LIMIT=100 /workspace/prepare_seeds.sh
+
+# Copy scripts to PATH
+ENV PATH=/root/bin:$PATH
+RUN mkdir -p /root/bin \
+    && cp kitten/scripts/javascript/build_v8_instrumented.sh /root/bin/ \
+    && cp kitten/scripts/javascript/gen_allowlist_from_git.sh /root/bin/ \
+    && cp kitten/scripts/javascript/patch_v8_allowlist.py /root/bin/ \
+    && cp kitten/scripts/javascript/run_v8_instrumented_with_kitten.sh /root/bin/ \
+    && chmod +x /root/bin/*.sh /root/bin/*.py
+
+# Build V8 with manual instrumentation (use all cores)
+RUN WORKDIR=/workspace THREADS=$(($(nproc) * 2)) /root/bin/build_v8_instrumented.sh
+
+ENV JVM_HEAP=8
+ENV D8_BIN=/workspace/v8/out/instrumented/d8
+
+CMD ["/root/bin/run_v8_instrumented_with_kitten.sh"]
+
