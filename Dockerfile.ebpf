@@ -53,9 +53,9 @@ RUN chmod +x /workspace/prepare_seeds.sh && SEED_LIMIT=100 /workspace/prepare_se
 # Build V8 normally, generate allowlist and uprobe list
 ARG THREADS=8
 ENV THREADS=${THREADS}
-RUN WORKDIR=/workspace THREADS=${THREADS} /root/bin/build_v8_normal.sh || true
-RUN GEN_REPO=/workspace/v8 GEN_SINCE_MONTHS=6 /root/bin/gen_allowlist_from_git.sh > /workspace/allowlist.txt || true
-RUN D8_BIN=/workspace/v8/out/rel/d8 ALLOWLIST=/workspace/allowlist.txt /root/bin/gen_uprobe_functions.sh > /workspace/uprobe_functions.txt || true
+RUN WORKDIR=/workspace THREADS=${THREADS} /root/bin/build_v8_normal.sh
+RUN GEN_REPO=/workspace/v8 GEN_SINCE_MONTHS=6 /root/bin/gen_allowlist_from_git.sh > /workspace/allowlist.txt
+RUN D8_BIN=/workspace/v8/out/rel/d8 ALLOWLIST=/workspace/allowlist.txt /root/bin/gen_uprobe_functions.sh > /workspace/uprobe_functions.txt
 
 ENV JVM_HEAP=8
 ENV D8_BIN=/workspace/v8/out/rel/d8

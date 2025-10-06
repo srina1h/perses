@@ -14,14 +14,17 @@ mkdir -p "${WORKDIR}"
 cd "${WORKDIR}"
 
 if [ ! -d "${DEPOT_TOOLS_DIR}" ]; then
+  echo "[build_v8_normal] Cloning depot_tools..."
   git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git "${DEPOT_TOOLS_DIR}"
 fi
 export PATH="${DEPOT_TOOLS_DIR}:${PATH}"
 
 if [ ! -d "${V8_DIR}" ]; then
+  echo "[build_v8_normal] Fetching V8..."
   fetch v8
 fi
 cd "${V8_DIR}"
+echo "[build_v8_normal] Running gclient sync..."
 gclient sync
 
 python3 tools/dev/v8gen.py rel --no-goma
@@ -41,7 +44,9 @@ mkdir -p "${OUT_DIR}"
   for a in "${GN_ARGS[@]}"; do echo "$a"; done
 } >"${OUT_DIR}/args.gn"
 
+echo "[build_v8_normal] Generating build files with gn..."
 gn gen "${OUT_DIR}"
+echo "[build_v8_normal] Building d8 with ninja (${THREADS} threads)..."
 "${DEPOT_TOOLS_DIR}/ninja" -C "${OUT_DIR}" -j "${THREADS}" d8
 
 if [ -x "${OUT_DIR}/d8" ]; then
