@@ -44,6 +44,9 @@ RUN git clone https://github.com/srina1h/perses.git . \
 # Build kitten
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
+# Prepare seeds for fuzzing (trim to 100 for testing)
+RUN chmod +x /workspace/prepare_seeds.sh && SEED_LIMIT=100 /workspace/prepare_seeds.sh
+
 # Copy helper scripts into PATH
 ENV PATH=/root/bin:$PATH
 RUN mkdir -p /root/bin
@@ -52,14 +55,11 @@ COPY kitten/scripts/javascript/gen_allowlist_from_git.sh /root/bin/gen_allowlist
 COPY kitten/scripts/javascript/run_v8_afl_with_kitten.sh /root/bin/run_v8_afl_with_kitten.sh
 RUN chmod +x /root/bin/*.sh
 
-# Build V8 with AFL++ using our script; then dynamically generate allowlist and rebuild constrained
-ARG THREADS=8
-ENV THREADS=${THREADS}
-# First run may fetch depot_tools/v8; ignore failures to allow layered retry
-RUN WORKDIR=/workspace THREADS=${THREADS} /root/bin/build_v8_afl.sh || true
-# Generate allowlist from recent changes and rebuild with AFL_LLVM_ALLOWLIST
-RUN GEN_REPO=/workspace/v8 GEN_SINCE_MONTHS=6 /root/bin/gen_allowlist_from_git.sh > /workspace/allowlist.txt \
-    && WORKDIR=/workspace THREADS=${THREADS} AFL_LLVM_ALLOWLIST=/workspace/allowlist.txt /root/bin/build_v8_afl.sh || true
+# Build V8 with AFL++ (use all cores)
+RUN WORKDIR=/workspace THREADS=$(($(nproc) * 2)) /root/bin/build_v8_afl.sh
+# Generate allowlist and rebuild with AFL_LLVM_ALLOWLIST for focused instrumentation
+RUN GEN_REPO=/workspace/v8 GEN_SINCE_MONTHS=6 /root/bin/gen_allowlist_from_git.sh > /workspace/allowlist.txt
+RUN WORKDIR=/workspace THREADS=$(($(nproc) * 2)) AFL_LLVM_ALLOWLIST=/workspace/allowlist.txt /root/bin/build_v8_afl.sh
 ENV ALLOWLIST_FILE=/workspace/allowlist.txt
 
 # Default runtime environment

@@ -34,47 +34,46 @@ if [ ! -d "${V8_DIR}" ]; then
 fi
 
 cd "${V8_DIR}"
+echo "[build_v8_afl] Running gclient sync..."
 gclient sync
 
-# Note: Building V8 with external compilers requires a custom toolchain.
-# We configure GN to use system clang and override CC/CXX to AFL wrappers via env for ninja.
-# This setup may break across V8 versions; treat as best-effort prototype.
-
-python3 tools/dev/v8gen.py afl --no-goma
-
-GN_ARGS=(
-  "is_official_build=false"
-  "is_debug=false"
-  "symbol_level=1"
-  "use_custom_libcxx=false"
-  "v8_monolithic=true"
-  "v8_static_library=true"
-  "is_clang=true"
-  "use_sysroot=false"
-)
-
-echo "[build_v8_afl] Writing GN args to ${OUT_DIR}/args.gn"
+echo "[build_v8_afl] Creating AFL build configuration..."
 mkdir -p "${OUT_DIR}"
-{
-  for a in "${GN_ARGS[@]}"; do echo "$a"; done
-} >"${OUT_DIR}/args.gn"
 
-# Export AFL allowlist if provided: one path per line, absolute or repo-relative
-if [ -n "${AFL_LLVM_ALLOWLIST:-}" ]; then
-  echo "[build_v8_afl] Using AFL_LLVM_ALLOWLIST=${AFL_LLVM_ALLOWLIST}"
-fi
+# Get AFL compiler paths
+AFL_CLANG=$(which afl-clang-fast)
+AFL_CLANGXX=$(which afl-clang-fast++)
 
-export CC=afl-clang-fast
-export CXX=afl-clang-fast++
+# Export AFL environment before build
 export AFL_USE_ASAN=0
 export AFL_DONT_OPTIMIZE=1
-export AFL_LLVM_ALLOWLIST="${AFL_LLVM_ALLOWLIST:-}"
+if [ -n "${AFL_LLVM_ALLOWLIST:-}" ] && [ -f "${AFL_LLVM_ALLOWLIST}" ]; then
+  echo "[build_v8_afl] Using AFL_LLVM_ALLOWLIST=${AFL_LLVM_ALLOWLIST}"
+  export AFL_LLVM_ALLOWLIST="${AFL_LLVM_ALLOWLIST}"
+fi
 
-echo "[build_v8_afl] Generating build files (gn gen)"
+# Write GN args - force V8 to use AFL compilers
+cat >"${OUT_DIR}/args.gn" <<EOF
+is_debug = false
+target_cpu = "x64"
+is_clang = true
+use_sysroot = false
+symbol_level = 1
+v8_static_library = true
+
+# Force use of AFL compilers
+clang_base_path = "$(dirname $(dirname ${AFL_CLANG}))"
+clang_use_chrome_plugins = false
+use_custom_libcxx = false
+EOF
+
+echo "[build_v8_afl] Generating build files with gn..."
 gn gen "${OUT_DIR}"
 
-echo "[build_v8_afl] Building d8 with ninja"
-"${DEPOT_TOOLS_DIR}/ninja" -C "${OUT_DIR}" -j "${THREADS}" d8
+echo "[build_v8_afl] Building d8 with AFL instrumentation (${THREADS} threads)..."
+# Override CC/CXX for ninja
+CC="${AFL_CLANG}" CXX="${AFL_CLANGXX}" \
+  "${DEPOT_TOOLS_DIR}/ninja" -C "${OUT_DIR}" -j "${THREADS}" d8
 
 if [ -x "${OUT_DIR}/d8" ]; then
   echo "[build_v8_afl] Build completed: ${OUT_DIR}/d8"
