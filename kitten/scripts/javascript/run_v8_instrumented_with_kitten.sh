@@ -46,17 +46,15 @@ elif ! find "${SEEDS_DIR}" -type f -name '*.js' | head -1 >/dev/null 2>&1; then
   echo 'print("hello");' >"${SEEDS_DIR}/seed.js"
 fi
 
-# Run kitten
+# Run kitten (using only standard flags)
 exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC \
   -jar "${WORKDIR}/bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar" \
   --testing-config "${KIT_CFG_FILE}" \
   --threads "${THREADS}" \
   --verbosity "FINE" \
   --timeout 0 \
-  --skip-seed-validation false \
   --finding-folder "${WORKDIR}/kitten/findings_v8" \
   --language-model N_DEPTH_TREE_MODEL \
   --generator GUIDED_GENERATOR \
-  --enable-replace-with-generated-node \
-  --allowlist-guidance-strict false
+  --enable-replace-with-generated-node
 
