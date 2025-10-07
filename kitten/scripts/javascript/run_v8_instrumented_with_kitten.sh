@@ -53,7 +53,6 @@ exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC \
   --threads "${THREADS}" \
   --verbosity "FINE" \
   --timeout 0 \
-  --instrumentation-strict-mode false \
   --skip-seed-validation false \
   --finding-folder "${WORKDIR}/kitten/findings_v8" \
   --language-model N_DEPTH_TREE_MODEL \
