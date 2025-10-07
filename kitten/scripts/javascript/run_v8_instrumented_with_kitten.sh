@@ -38,13 +38,27 @@ programsUnderTest:
 EOF
 
 # Copy prepared seeds
-if [ -d "/workspace/seeds" ] && find "/workspace/seeds" -type f -name '*.js' | head -1 >/dev/null 2>&1; then
-  echo "[runner] Copying prepared seeds..."
-  cp -r /workspace/seeds/* "${SEEDS_DIR}/" || true
-elif ! find "${SEEDS_DIR}" -type f -name '*.js' | head -1 >/dev/null 2>&1; then
-  echo "[runner] Creating minimal seed..."
+echo "[runner] Checking for seeds in /workspace/seeds..."
+if [ -d "/workspace/seeds" ]; then
+  seed_count=$(find "/workspace/seeds" -type f -name '*.js' 2>/dev/null | wc -l)
+  echo "[runner] Found ${seed_count} .js files in /workspace/seeds"
+  
+  if [ "$seed_count" -gt 0 ]; then
+    echo "[runner] Copying prepared seeds to ${SEEDS_DIR}..."
+    cp -r /workspace/seeds/* "${SEEDS_DIR}/" || true
+    copied_count=$(find "${SEEDS_DIR}" -type f -name '*.js' 2>/dev/null | wc -l)
+    echo "[runner] Copied ${copied_count} seed files"
+  else
+    echo "[runner] No .js files found in /workspace/seeds, creating minimal seed..."
+    echo 'print("hello");' >"${SEEDS_DIR}/seed.js"
+  fi
+else
+  echo "[runner] /workspace/seeds directory not found, creating minimal seed..."
   echo 'print("hello");' >"${SEEDS_DIR}/seed.js"
 fi
+
+final_seed_count=$(find "${SEEDS_DIR}" -type f -name '*.js' 2>/dev/null | wc -l)
+echo "[runner] Final seed count in ${SEEDS_DIR}: ${final_seed_count}"
 
 # Run kitten (using only standard flags)
 exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC \

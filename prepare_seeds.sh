@@ -80,6 +80,28 @@ copy_js_files "$TEMP_DIR/jsc" "$SEEDS_DIR"
 total_files=$(find "$SEEDS_DIR" -name "*.js" -type f | wc -l)
 echo "Total JavaScript files extracted: $total_files"
 
+# Apply seed limit if specified
+if [ -n "$SEED_LIMIT" ] && [ "$SEED_LIMIT" -gt 0 ] && [ "$total_files" -gt "$SEED_LIMIT" ]; then
+    echo "Trimming seeds to $SEED_LIMIT random files..."
+    # Create a temporary directory for the trimmed seeds
+    temp_trim_dir="${SEEDS_DIR}_trimmed"
+    mkdir -p "$temp_trim_dir"
+    
+    # Randomly select SEED_LIMIT files and move them to temp dir
+    find "$SEEDS_DIR" -name "*.js" -type f | shuf | head -n "$SEED_LIMIT" | while read -r file; do
+        mv "$file" "$temp_trim_dir/"
+    done
+    
+    # Remove remaining files and replace seeds dir with trimmed version
+    rm -rf "$SEEDS_DIR"
+    mv "$temp_trim_dir" "$SEEDS_DIR"
+    
+    final_count=$(find "$SEEDS_DIR" -name "*.js" -type f | wc -l)
+    echo "Seeds trimmed to: $final_count files"
+else
+    echo "No trimming applied (SEED_LIMIT=$SEED_LIMIT)"
+fi
+
 # Clean up temporary directory
 echo "Cleaning up temporary directory..."
 rm -rf "$TEMP_DIR"
