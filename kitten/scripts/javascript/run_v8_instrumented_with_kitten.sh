@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Run kitten with manually instrumented V8 for allowlist-based guidance
+# Run kitten with V8 for crash detection
 
 WORKDIR="${WORKDIR:-/workspace}"
 V8_DIR="${WORKDIR}/v8"
 D8_BIN="${D8_BIN:-${V8_DIR}/out/instrumented/d8}"
 THREADS="${THREADS:-$(nproc 2>/dev/null || sysctl -n hw.ncpu)}"
 JVM_HEAP="${JVM_HEAP:-8}"
+
+# Disable core dumps to save disk space
+ulimit -c 0
+echo "[runner] Core dumps disabled (ulimit -c 0)"
 
 if [ ! -x "${D8_BIN}" ]; then
   echo "[runner] ERROR: d8 not found at ${D8_BIN}" >&2
@@ -59,6 +63,47 @@ fi
 
 final_seed_count=$(find "${SEEDS_DIR}" -type f -name '*.js' 2>/dev/null | wc -l)
 echo "[runner] Final seed count in ${SEEDS_DIR}: ${final_seed_count}"
+
+# Create startup report in findings folder
+FINDINGS_DIR="${WORKDIR}/kitten/findings_v8"
+mkdir -p "${FINDINGS_DIR}"
+REPORT_FILE="${FINDINGS_DIR}/fuzzing_startup_report.txt"
+
+cat >"${REPORT_FILE}" <<REPORT_EOF
+================================================================================
+V8 Fuzzing Session Report
+================================================================================
+Started: $(date)
+Hostname: $(hostname)
+================================================================================
+
+CONFIGURATION:
+- D8 Binary: ${D8_BIN}
+- D8 Version: $(${D8_BIN} --version 2>&1 | head -1 || echo "unknown")
+- Fuzzing Threads: ${THREADS}
+- JVM Heap: ${JVM_HEAP}G
+- Core Dumps: Disabled (ulimit -c 0)
+
+SEEDS:
+- Initial Seeds Found: ${final_seed_count}
+- Seeds Location: ${SEEDS_DIR}
+
+CRASH DETECTION:
+- Detector: V8CrashDetector
+- Detects: FATAL errors, Check failed, UNREACHABLE, Assertions, Signals, Sanitizer crashes
+- Filters: Timeouts (124, 143, 137), Normal errors (exit 1 without crash signature)
+
+RESULTS:
+- Findings Folder: ${FINDINGS_DIR}
+- Report File: ${REPORT_FILE}
+
+================================================================================
+Fuzzing started at: $(date)
+================================================================================
+REPORT_EOF
+
+echo "[runner] Startup report saved to ${REPORT_FILE}"
+cat "${REPORT_FILE}"
 
 # Run kitten (using only standard flags)
 exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC \
