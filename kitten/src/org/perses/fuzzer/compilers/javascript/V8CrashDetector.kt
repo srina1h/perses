@@ -1,43 +1,19 @@
 package org.perses.fuzzer.compilers.javascript
 
 import org.perses.fuzzer.compilers.AbstractCompilerCrashDetector
-import org.perses.fuzzer.compilers.ICompilerCrashDetector
 import org.perses.fuzzer.compilers.SanitizerCrashSignatureExtractor
-import org.perses.util.shell.CmdOutput
 
 class V8CrashDetector : AbstractCompilerCrashDetector() {
     
-    // Override to add stricter filtering: require stderr output for crashes
-    fun detectCrash(stderr: List<String>, exitCodeForCrash: Int): ICompilerCrashDetector.AbstractResult {
-        require(exitCodeForCrash > 0) {
-            "The exit code should be non-zero."
-        }
-        
-        // If stderr is completely empty, this is likely not a real crash
-        // V8 always produces some output when it crashes
+    override fun detectCrashSignatureFromStderr(stderr: List<String>): List<String> {
+        // STRICT FILTERING: Only return signatures if stderr is non-empty
+        // V8 always produces output when it crashes - if stderr is empty, it's not a crash
         val hasStderr = stderr.any { it.isNotBlank() }
         if (!hasStderr) {
-            return ICompilerCrashDetector.AbstractResult.NonCrashResult(javaClass)
+            // Return empty list - base class will treat this as non-crash
+            return emptyList()
         }
         
-        // Use parent class logic but with our strict signature detection
-        val rawSignature = detectCrashSignatureFromStderr(stderr)
-        val isCommonCrashExitCode = CommonCrashExitCodes.isCrashExitCode(exitCodeForCrash)
-        
-        // Only accept as crash if we found a crash signature
-        // Don't accept crashes based on exit code alone - too many false positives
-        if (rawSignature.isEmpty()) {
-            return ICompilerCrashDetector.AbstractResult.NonCrashResult(javaClass)
-        }
-        
-        return ICompilerCrashDetector.AbstractResult.CrashResult.create(
-            javaClass,
-            exitCodeForCrash,
-            rawSignature,
-        )
-    }
-    
-    override fun detectCrashSignatureFromStderr(stderr: List<String>): List<String> {
         val result = ArrayList<String>()
         val sanitizerCrashDetector = SanitizerCrashSignatureExtractor()
         
@@ -69,6 +45,8 @@ class V8CrashDetector : AbstractCompilerCrashDetector() {
         // Also check for sanitizer crashes (ASAN, UBSAN, etc.)
         result.addAll(sanitizerCrashDetector.extractCrashSignatureFromStderr(stderr))
         
+        // Final check: if we found no signatures, return empty to indicate non-crash
+        // This means we won't accept crashes based on exit code alone
         return result.asSequence().filter { it.isNotBlank() }.map { it.trim() }.toList()
     }
 
