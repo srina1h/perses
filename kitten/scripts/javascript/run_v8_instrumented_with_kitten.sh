@@ -81,21 +81,24 @@ seeds_touching_allowlist=0
 seeds_tested=0
 
 if [ "${final_seed_count}" -gt 0 ]; then
+  # Timeout for each seed test (5 seconds)
+  SEED_TIMEOUT=5
+  
   for seed_file in "${SEEDS_DIR}"/*.js; do
     [ -f "$seed_file" ] || continue
     seeds_tested=$((seeds_tested + 1))
     
-    # Run d8 with the seed and capture stderr
-    stderr_output=$("${D8_BIN}" "$seed_file" 2>&1 || true)
+    # Run d8 with the seed and capture stderr (with timeout)
+    stderr_output=$(timeout "${SEED_TIMEOUT}" "${D8_BIN}" "$seed_file" 2>&1 || true)
     
     # Check if ALLOWLIST_HIT marker is present
     if echo "$stderr_output" | grep -q "ALLOWLIST_HIT"; then
       seeds_touching_allowlist=$((seeds_touching_allowlist + 1))
     fi
     
-    # Progress indicator every 10 seeds
-    if [ $((seeds_tested % 10)) -eq 0 ]; then
-      echo "[runner] Validated ${seeds_tested}/${final_seed_count} seeds..." >&2
+    # Progress indicator every 50 seeds (less spam with large corpus)
+    if [ $((seeds_tested % 50)) -eq 0 ]; then
+      echo "[runner] Validated ${seeds_tested}/${final_seed_count} seeds (${seeds_touching_allowlist} touch allowlist)..." >&2
     fi
   done
 fi
