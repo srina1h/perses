@@ -23,7 +23,7 @@ def find_safe_insertion_point(content):
     """
     
     # Strategy: Find the last #include, then skip any blank lines/comments
-    # to find the first line of actual code
+    # and preprocessor directives to find a safe spot
     
     # Find all #include directives
     include_matches = list(re.finditer(r'^\s*#\s*include\s+[<"][^>"]+[>"]', content, re.MULTILINE))
@@ -49,7 +49,8 @@ def find_safe_insertion_point(content):
     if newline_pos == -1:
         return len(content)  # End of file
     
-    # Skip any preprocessor directives (#define, #ifdef, etc.) after includes
+    # Skip any preprocessor directives, blank lines, and comments
+    # Also skip multi-line macros (lines ending with \)
     pos = newline_pos + 1
     while pos < len(content):
         # Find the next line
@@ -58,19 +59,33 @@ def find_safe_insertion_point(content):
         if line_end == -1:
             line_end = len(content)
         
-        line = content[line_start:line_end].strip()
+        line = content[line_start:line_end]
+        stripped = line.strip()
         
-        # If it's a preprocessor directive, skip it
-        if line.startswith('#'):
+        # If it's a preprocessor directive (including multi-line ones), skip it
+        if stripped.startswith('#'):
+            # Check if it continues on next line (ends with \)
+            while stripped.endswith('\\') and line_end < len(content):
+                pos = line_end + 1
+                line_end = content.find('\n', pos)
+                if line_end == -1:
+                    line_end = len(content)
+                line = content[pos:line_end]
+                stripped = line.strip()
             pos = line_end + 1
             continue
         
         # If it's blank or comment, skip it
-        if not line or line.startswith('//') or line.startswith('/*') or line.startswith('*'):
+        if not stripped or stripped.startswith('//') or stripped.startswith('/*') or stripped.startswith('*'):
             pos = line_end + 1
             continue
         
-        # Found first line of actual code
+        # Check if it's a closing brace from an #ifdef or similar
+        if stripped == '}':
+            pos = line_end + 1
+            continue
+        
+        # Found first line of actual code - insert BEFORE it
         return line_start
     
     return pos

@@ -62,7 +62,7 @@ RUN mkdir -p /root/bin \
 
 # Build V8 with manual instrumentation (use all cores)
 # Force rebuild if patching logic changed
-ARG V8_BUILD_VERSION=10
+ARG V8_BUILD_VERSION=11
 RUN WORKDIR=/workspace THREADS=$(($(nproc) * 2)) /root/bin/build_v8_instrumented.sh
 
 ENV JVM_HEAP=8
