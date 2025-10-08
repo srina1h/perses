@@ -100,13 +100,14 @@ RECENTLY MODIFIED FILES (ALLOWLIST):
 - Total V8 source files: ${TOTAL_V8_FILES}
 - Coverage: $(awk "BEGIN {if (${TOTAL_V8_FILES}>0) printf \"%.1f\", (${ALLOWLIST_COUNT}/${TOTAL_V8_FILES}*100); else print \"N/A\"}")%
 - Criteria: Last 6 months, commits with 'fix' or 'bug' in message
-- Note: Allowlist generated but NOT used for guidance (fuzzing all code)
+- Instrumentation: V8 patched to track execution of allowlisted files
+- Detection: Looks for 'ALLOWLIST_HIT' marker in stderr
 
 SEEDS:
 - Initial Seeds Found: ${final_seed_count}
 - Seeds Location: ${SEEDS_DIR}
-- Seed Validation: Disabled (not using allowlist guidance)
-- Note: All seeds will be used for fuzzing
+- Note: Instrumentation tracks which seeds touch allowlisted files
+- Manual validation: Check stderr for 'ALLOWLIST_HIT' marker
 
 CRASH DETECTION:
 - Detector: V8CrashDetector
@@ -115,9 +116,11 @@ CRASH DETECTION:
 - Requires: Non-empty stderr AND crash signature
 
 FUZZING MODE:
-- Mode: Full crash detection (no allowlist guidance)
+- Mode: Instrumented crash detection  
+- V8 Build: Custom build with allowlist execution tracking
 - Strategy: Mutate all seeds, detect crashes anywhere in V8
-- Goal: Find any crashes, not just in recently modified files
+- Tracking: Instrumented V8 will print 'ALLOWLIST_HIT' if allowlisted code runs
+- Goal: Find crashes and track which ones touch recently modified code
 
 RESULTS:
 - Findings Folder: ${FINDINGS_DIR}
@@ -141,7 +144,5 @@ exec java -Xmx${JVM_HEAP}G -Xms1G -XX:+UseG1GC \
   --finding-folder "${WORKDIR}/kitten/findings_v8" \
   --language-model N_DEPTH_TREE_MODEL \
   --generator GUIDED_GENERATOR \
-  --enable-replace-with-generated-node \
-  --allowlist-guidance-strict true \
-  --filter-seeds-by-touch true
+  --enable-replace-with-generated-node
 
