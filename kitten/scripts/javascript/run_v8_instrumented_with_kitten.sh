@@ -21,6 +21,16 @@ fi
 echo "[runner] Using d8: ${D8_BIN}"
 echo "[runner] Threads: ${THREADS}, Heap: ${JVM_HEAP}G"
 
+# Test instrumentation with a simple program
+echo "[runner] Testing instrumentation..."
+test_output=$(echo 'print("test");' | "${D8_BIN}" - 2>&1 || true)
+if echo "$test_output" | grep -q "ALLOWLIST_HIT"; then
+  echo "[runner] ✓ Instrumentation detected! Allowlist tracking is active."
+else
+  echo "[runner] ⚠ Warning: ALLOWLIST_HIT marker not detected in test run"
+  echo "[runner]   This may mean no allowlisted files were loaded, or instrumentation failed"
+fi
+
 # Create runtime config
 KIT_CFG_DIR="${WORKDIR}/kitten_runtime"
 KIT_CFG_FILE="${KIT_CFG_DIR}/v8-instrumented.yaml"

@@ -48,8 +48,8 @@ RUN git clone https://github.com/srina1h/perses.git . \
 # Build kitten
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
-# Prepare seeds (trim to 100 for testing)
-RUN chmod +x /workspace/prepare_seeds.sh && SEED_LIMIT=100 /workspace/prepare_seeds.sh
+# Prepare seeds (full corpus)
+RUN chmod +x /workspace/prepare_seeds.sh && /workspace/prepare_seeds.sh
 
 # Copy scripts to PATH
 ENV PATH=/root/bin:$PATH
@@ -62,7 +62,7 @@ RUN mkdir -p /root/bin \
 
 # Build V8 with manual instrumentation (use all cores)
 # Force rebuild if patching logic changed
-ARG V8_BUILD_VERSION=11
+ARG V8_BUILD_VERSION=12
 RUN WORKDIR=/workspace THREADS=$(($(nproc) * 2)) /root/bin/build_v8_instrumented.sh
 
 ENV JVM_HEAP=8
