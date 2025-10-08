@@ -35,39 +35,38 @@ def add_marker_to_file(filepath, v8_root):
     except:
         rel_path = filepath.name
     
-    # Create marker code that uses a static bool initialized by a lambda
-    # This executes the FIRST TIME this translation unit's code runs
-    marker_code = f'''
-// ALLOWLIST_FILE_MARKER - Tracks when this file is executed
-#include "src/init/allowlist-tracker.h"
-namespace {{
-  static bool __allowlist_marked__ = []() {{
-    v8::internal::MarkAllowlistFile("{rel_path}");
-    return true;
-  }}();
-}}
-'''
+    # Find the position after ALL #include statements
+    # This ensures we're at file/global scope, not inside any namespace/function
+    include_end_pos = 0
+    for match in re.finditer(r'#include\s+[<"][^>"]+[>"]', content):
+        include_end_pos = match.end()
     
-    # Find a safe insertion point - after includes, before any code
-    lines = content.split('\n')
-    insert_idx = 0
-    
-    # Find the position after the last #include
-    for i, line in enumerate(lines):
-        if '#include' in line:
-            insert_idx = i + 1
-    
-    # If no includes found, insert at the beginning (after comments)
-    if insert_idx == 0:
+    # If no includes found, find the first line of actual code (after license header)
+    if include_end_pos == 0:
+        lines = content.split('\n')
         for i, line in enumerate(lines):
             stripped = line.strip()
             if stripped and not stripped.startswith('//') and not stripped.startswith('/*') and not stripped.startswith('*'):
-                insert_idx = i
+                # Find position in original content
+                include_end_pos = content.find(line) - 1
                 break
     
+    # Find the end of the line after the last include
+    next_newline = content.find('\n', include_end_pos)
+    if next_newline == -1:
+        next_newline = len(content)
+    
+    insert_pos = next_newline + 1
+    
+    # Create marker code - must be at global scope
+    marker_code = f'''
+// ALLOWLIST_FILE_MARKER - Auto-generated execution tracker
+#include "src/init/allowlist-tracker.h"
+namespace {{ static bool __allowlist_marked__ = []() {{ v8::internal::MarkAllowlistFile("{rel_path}"); return true; }}(); }}
+'''
+    
     # Insert marker
-    lines.insert(insert_idx, marker_code)
-    new_content = '\n'.join(lines)
+    new_content = content[:insert_pos] + marker_code + content[insert_pos:]
     
     try:
         with open(filepath, 'w', encoding='utf-8') as f:
