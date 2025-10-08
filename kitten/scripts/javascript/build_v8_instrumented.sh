@@ -48,9 +48,10 @@ if [ ! -f "${ALLOWLIST_FILE}" ]; then
     "${WORKDIR}/kitten/scripts/javascript/gen_allowlist_from_git.sh" > "${ALLOWLIST_FILE}"
 fi
 
-# Skip patching - too complex for V8's codebase
-# Just build V8 normally and run without allowlist guidance for now
-echo "[build_v8_instrumented] Skipping source patching (building normal V8)..."
+# Patch V8 source files with static initializers (safe approach)
+echo "[build_v8_instrumented] Patching V8 source files with allowlist tracking..."
+python3 "${WORKDIR}/kitten/scripts/javascript/patch_v8_allowlist.py" \
+  "${V8_DIR}" "${ALLOWLIST_FILE}"
 
 # Create build configuration
 echo "[build_v8_instrumented] Creating build configuration..."
