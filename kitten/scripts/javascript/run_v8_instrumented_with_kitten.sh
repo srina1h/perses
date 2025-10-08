@@ -24,11 +24,34 @@ echo "[runner] Threads: ${THREADS}, Heap: ${JVM_HEAP}G"
 # Test instrumentation with a simple program
 echo "[runner] Testing instrumentation..."
 test_output=$(echo 'print("test");' | "${D8_BIN}" - 2>&1 || true)
+echo "[runner] Test output: $test_output"
 if echo "$test_output" | grep -q "ALLOWLIST_HIT"; then
   echo "[runner] ✓ Instrumentation detected! Allowlist tracking is active."
 else
-  echo "[runner] ⚠ Warning: ALLOWLIST_HIT marker not detected in test run"
-  echo "[runner]   This may mean no allowlisted files were loaded, or instrumentation failed"
+  echo "[runner] ⚠ WARNING: ALLOWLIST_HIT marker NOT detected"
+  echo "[runner]   Possible causes:"
+  echo "[runner]   1. Patching failed during V8 build"
+  echo "[runner]   2. No allowlisted files are loaded during basic JS execution"
+  echo "[runner]   3. Static initializer optimization removed the marker code"
+  echo "[runner]"
+  echo "[runner] Checking if allowlist file exists..."
+  if [ -f "${WORKDIR}/allowlist.txt" ]; then
+    echo "[runner] ✓ Allowlist file exists with $(wc -l < ${WORKDIR}/allowlist.txt) entries"
+    echo "[runner] First 5 allowlisted files:"
+    head -5 "${WORKDIR}/allowlist.txt" | sed 's/^/[runner]   - /'
+  else
+    echo "[runner] ✗ Allowlist file NOT found at ${WORKDIR}/allowlist.txt"
+  fi
+  echo "[runner]"
+  echo "[runner] Checking V8 build output for patching logs..."
+  if [ -f "${WORKDIR}/patch_v8.log" ]; then
+    echo "[runner] Patch log found. Summary:"
+    grep -E "\[SUCCESS\]" "${WORKDIR}/patch_v8.log" || echo "[runner] No SUCCESS marker found"
+    echo "[runner] Sample of patched files:"
+    grep "\[PATCHED\]" "${WORKDIR}/patch_v8.log" | head -5 | sed 's/^/[runner]   /'
+  else
+    echo "[runner] ✗ No patch log found at ${WORKDIR}/patch_v8.log"
+  fi
 fi
 
 # Create runtime config

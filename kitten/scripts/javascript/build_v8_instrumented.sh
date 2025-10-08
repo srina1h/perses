@@ -51,7 +51,10 @@ fi
 # Patch V8 source files with static initializers (safe approach)
 echo "[build_v8_instrumented] Patching V8 source files with allowlist tracking..."
 python3 "${WORKDIR}/kitten/scripts/javascript/patch_v8_allowlist.py" \
-  "${V8_DIR}" "${ALLOWLIST_FILE}"
+  "${V8_DIR}" "${ALLOWLIST_FILE}" 2>&1 | tee "${WORKDIR}/patch_v8.log"
+
+echo "[build_v8_instrumented] Patch summary:"
+grep -E "\[PATCHED\]|\[SUCCESS\]|\[ERROR\]" "${WORKDIR}/patch_v8.log" | tail -20
 
 # Create build configuration
 echo "[build_v8_instrumented] Creating build configuration..."
