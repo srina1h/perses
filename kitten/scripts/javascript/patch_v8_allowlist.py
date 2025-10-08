@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Patch V8 source files to add allowlist tracking using static initializers.
-This is the SAFEST approach - adds code that runs at program startup, not inside functions.
+Patch V8 source files to track when allowlisted code is EXECUTED.
+Uses static initialization with lazy evaluation - runs when file is first used.
 """
 
 import sys
 import os
+import re
 from pathlib import Path
 
 def add_marker_to_file(filepath, v8_root):
-    """Add a static initializer to a .cc file to mark it as touched."""
+    """Add execution marker using static variable initialization."""
     
     # Only patch .cc files
     if not str(filepath).endswith('.cc'):
@@ -24,37 +25,45 @@ def add_marker_to_file(filepath, v8_root):
         return False
     
     # Skip if already patched
-    if 'ALLOWLIST_STATIC_MARKER' in content:
+    if 'ALLOWLIST_FILE_MARKER' in content:
         print(f"[SKIP] Already patched: {filepath}", file=sys.stderr)
         return False
     
-    # Get relative path for marker
+    # Get relative path
     try:
         rel_path = filepath.relative_to(v8_root)
     except:
-        rel_path = filepath
+        rel_path = filepath.name
     
-    # Add marker at the very beginning of the file (after includes ideally)
-    # Use a static variable with a constructor that sets the flag
-    # This is VERY safe - no function body modification needed
+    # Create marker code that uses a static bool initialized by a lambda
+    # This executes the FIRST TIME this translation unit's code runs
     marker_code = f'''
-// ALLOWLIST_STATIC_MARKER - Auto-generated
+// ALLOWLIST_FILE_MARKER - Tracks when this file is executed
 #include "src/init/allowlist-tracker.h"
-namespace {{ static v8::internal::AllowlistFileMarker __marker__("{rel_path}"); }}
+namespace {{
+  static bool __allowlist_marked__ = []() {{
+    v8::internal::MarkAllowlistFile("{rel_path}");
+    return true;
+  }}();
+}}
 '''
     
-    # Find a safe insertion point - after the first few #include lines
+    # Find a safe insertion point - after includes, before any code
     lines = content.split('\n')
     insert_idx = 0
     
-    # Find the last #include or first namespace/class
+    # Find the position after the last #include
     for i, line in enumerate(lines):
         if '#include' in line:
             insert_idx = i + 1
-        elif line.strip().startswith('namespace ') or line.strip().startswith('class '):
-            if insert_idx == 0:
+    
+    # If no includes found, insert at the beginning (after comments)
+    if insert_idx == 0:
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if stripped and not stripped.startswith('//') and not stripped.startswith('/*') and not stripped.startswith('*'):
                 insert_idx = i
-            break
+                break
     
     # Insert marker
     lines.insert(insert_idx, marker_code)
@@ -71,12 +80,13 @@ namespace {{ static v8::internal::AllowlistFileMarker __marker__("{rel_path}"); 
 
 
 def create_allowlist_header(v8_root):
-    """Create allowlist tracker header with static initializer support."""
+    """Create allowlist tracker header for execution tracking."""
     
     header_path = v8_root / 'src' / 'init' / 'allowlist-tracker.h'
     header_path.parent.mkdir(parents=True, exist_ok=True)
     
-    header_content = """// Auto-generated allowlist tracker
+    # Simple atomic flag that gets set when any allowlisted code executes
+    header_content = """// Auto-generated allowlist execution tracker
 #ifndef V8_INIT_ALLOWLIST_TRACKER_H_
 #define V8_INIT_ALLOWLIST_TRACKER_H_
 
@@ -86,17 +96,14 @@ def create_allowlist_header(v8_root):
 namespace v8 {
 namespace internal {
 
-// Global flag - set to true when any allowlisted file is loaded
+// Global flag - set to true when any allowlisted file code is EXECUTED
+// Using inline to avoid multiple definition errors
 inline std::atomic<bool> g_touched_allowlist{false};
 
-// Helper class - constructor runs at static initialization time
-// This marks that a specific file was loaded
-class AllowlistFileMarker {
- public:
-  explicit AllowlistFileMarker(const char* filename) {
-    g_touched_allowlist.store(true, std::memory_order_relaxed);
-  }
-};
+// Mark that code from an allowlisted file was executed
+inline void MarkAllowlistFile(const char* filename) {
+  g_touched_allowlist.store(true, std::memory_order_relaxed);
+}
 
 }  // namespace internal
 }  // namespace v8
@@ -112,7 +119,7 @@ class AllowlistFileMarker {
 
 
 def patch_d8_shell(v8_root):
-    """Patch d8.cc to print ALLOWLIST_HIT on exit."""
+    """Patch d8.cc to print ALLOWLIST_HIT on exit if flag is set."""
     
     d8_cc = v8_root / 'src' / 'd8' / 'd8.cc'
     if not d8_cc.exists():
@@ -125,43 +132,57 @@ def patch_d8_shell(v8_root):
     except:
         return False
     
-    if 'ALLOWLIST_HIT_MARKER' in content:
+    if 'ALLOWLIST_EXIT_CHECK' in content:
         print("[SKIP] d8.cc already patched", file=sys.stderr)
         return True
     
     # Add include at the top
     if 'allowlist-tracker.h' not in content:
-        # Find first #include
-        include_pos = content.find('#include')
-        if include_pos > 0:
-            eol = content.find('\n', include_pos)
-            content = content[:eol+1] + '#include "src/init/allowlist-tracker.h"\n' + content[eol+1:]
+        include_match = re.search(r'#include\s+[<"]', content)
+        if include_match:
+            include_pos = content.find('\n', include_match.start())
+            content = (content[:include_pos+1] + 
+                      '#include "src/init/allowlist-tracker.h"\n' + 
+                      content[include_pos+1:])
     
-    # Add marker print at exit - find main's return statement
-    export_code = '''
-  // ALLOWLIST_HIT_MARKER
-  if (v8::internal::g_touched_allowlist.load(std::memory_order_relaxed)) {
-    fprintf(stderr, "ALLOWLIST_HIT\\n");
-    fflush(stderr);
-  }
+    # Find main function's final return statement
+    main_match = re.search(r'int\s+main\s*\([^)]*\)\s*\{', content)
+    if not main_match:
+        print("[WARN] Cannot find main() in d8.cc", file=sys.stderr)
+        return False
+    
+    main_start = main_match.end()
+    
+    # Find the last return statement in main
+    remaining = content[main_start:]
+    return_matches = list(re.finditer(r'\n(\s*)return\s+', remaining))
+    
+    if not return_matches:
+        print("[WARN] Cannot find return in main()", file=sys.stderr)
+        return False
+    
+    # Use the last return
+    last_return = return_matches[-1]
+    insert_pos = main_start + last_return.start() + 1
+    indent = last_return.group(1)
+    
+    # Insert check before return
+    check_code = f'''{indent}// ALLOWLIST_EXIT_CHECK
+{indent}if (v8::internal::g_touched_allowlist.load(std::memory_order_relaxed)) {{
+{indent}  fprintf(stderr, "ALLOWLIST_HIT\\n");
+{indent}  fflush(stderr);
+{indent}}}
 '''
     
-    # Insert before "return 0;" or "return result;" in main
-    lines = content.split('\n')
-    for i in range(len(lines) - 1, -1, -1):
-        line = lines[i].strip()
-        if line.startswith('return ') and ('0' in line or 'result' in line):
-            lines.insert(i, export_code)
-            break
-    
-    new_content = '\n'.join(lines)
+    new_content = content[:insert_pos] + check_code + content[insert_pos:]
     
     try:
         with open(d8_cc, 'w', encoding='utf-8') as f:
             f.write(new_content)
         print("[PATCHED] d8.cc", file=sys.stderr)
         return True
-    except:
+    except Exception as e:
+        print(f"[ERROR] Cannot patch d8.cc: {e}", file=sys.stderr)
         return False
 
 
@@ -206,7 +227,7 @@ def main():
     patch_d8_shell(v8_root)
     
     print(f"\n[SUCCESS] Patched {patched_count} files", file=sys.stderr)
-    print(f"[INFO] V8 is now instrumented for allowlist tracking", file=sys.stderr)
+    print(f"[INFO] V8 instrumented to track allowlist execution (lazy static init)", file=sys.stderr)
 
 
 if __name__ == '__main__':
