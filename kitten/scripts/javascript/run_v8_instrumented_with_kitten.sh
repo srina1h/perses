@@ -64,6 +64,37 @@ fi
 final_seed_count=$(find "${SEEDS_DIR}" -type f -name '*.js' 2>/dev/null | wc -l)
 echo "[runner] Final seed count in ${SEEDS_DIR}: ${final_seed_count}"
 
+# Validate seeds against allowlist
+echo "[runner] Validating seeds against allowlist..."
+VALIDATION_START=$(date +%s)
+seeds_touching_allowlist=0
+seeds_tested=0
+
+if [ "${final_seed_count}" -gt 0 ]; then
+  for seed_file in "${SEEDS_DIR}"/*.js; do
+    [ -f "$seed_file" ] || continue
+    seeds_tested=$((seeds_tested + 1))
+    
+    # Run d8 with the seed and capture stderr
+    stderr_output=$("${D8_BIN}" "$seed_file" 2>&1 || true)
+    
+    # Check if ALLOWLIST_HIT marker is present
+    if echo "$stderr_output" | grep -q "ALLOWLIST_HIT"; then
+      seeds_touching_allowlist=$((seeds_touching_allowlist + 1))
+    fi
+    
+    # Progress indicator every 10 seeds
+    if [ $((seeds_tested % 10)) -eq 0 ]; then
+      echo "[runner] Validated ${seeds_tested}/${final_seed_count} seeds..." >&2
+    fi
+  done
+fi
+
+VALIDATION_END=$(date +%s)
+VALIDATION_TIME=$((VALIDATION_END - VALIDATION_START))
+
+echo "[runner] Validation complete: ${seeds_touching_allowlist}/${seeds_tested} seeds touch allowlist"
+
 # Create startup report in findings folder
 FINDINGS_DIR="${WORKDIR}/kitten/findings_v8"
 mkdir -p "${FINDINGS_DIR}"
@@ -103,11 +134,14 @@ RECENTLY MODIFIED FILES (ALLOWLIST):
 - Instrumentation: V8 patched to track execution of allowlisted files
 - Detection: Looks for 'ALLOWLIST_HIT' marker in stderr
 
-SEEDS:
-- Initial Seeds Found: ${final_seed_count}
+SEED VALIDATION:
+- Initial Seeds: ${final_seed_count}
 - Seeds Location: ${SEEDS_DIR}
-- Note: Instrumentation tracks which seeds touch allowlisted files
-- Manual validation: Check stderr for 'ALLOWLIST_HIT' marker
+- Validation Time: ${VALIDATION_TIME} seconds
+- Seeds Tested: ${seeds_tested}
+- Seeds Touching Allowlist: ${seeds_touching_allowlist}
+- Proportion: $(awk "BEGIN {if (${seeds_tested}>0) printf \"%.1f\", (${seeds_touching_allowlist}/${seeds_tested}*100); else print \"0.0\"}")%
+- Method: Executed each seed with instrumented d8, checked for ALLOWLIST_HIT marker
 
 CRASH DETECTION:
 - Detector: V8CrashDetector
