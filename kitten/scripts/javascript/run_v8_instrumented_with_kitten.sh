@@ -49,6 +49,25 @@ else
     grep -E "\[SUCCESS\]" "${WORKDIR}/patch_v8.log" || echo "[runner] No SUCCESS marker found"
     echo "[runner] Sample of patched files:"
     grep "\[PATCHED\]" "${WORKDIR}/patch_v8.log" | head -5 | sed 's/^/[runner]   /'
+    echo "[runner]"
+    echo "[runner] Checking if d8.cc was patched:"
+    if grep -q "ALLOWLIST_EXIT_CHECK" "${V8_DIR}/src/d8/d8.cc" 2>/dev/null; then
+      echo "[runner] ✓ d8.cc contains ALLOWLIST_EXIT_CHECK marker"
+    else
+      echo "[runner] ✗ d8.cc does NOT contain ALLOWLIST_EXIT_CHECK marker!"
+      echo "[runner]   The exit check code was not added to d8.cc"
+    fi
+    echo "[runner]"
+    echo "[runner] Checking if header was created:"
+    if [ -f "${V8_DIR}/src/init/allowlist-tracker.h" ]; then
+      echo "[runner] ✓ allowlist-tracker.h exists"
+      echo "[runner]   Checking for g_touched_allowlist..."
+      if grep -q "g_touched_allowlist" "${V8_DIR}/src/init/allowlist-tracker.h"; then
+        echo "[runner]   ✓ Header contains g_touched_allowlist"
+      fi
+    else
+      echo "[runner] ✗ allowlist-tracker.h NOT found"
+    fi
   else
     echo "[runner] ✗ No patch log found at ${WORKDIR}/patch_v8.log"
   fi
