@@ -4,15 +4,7 @@ seedFolders:
     fileExtentions: [".js"]
 
 programsUnderTest:
-  # # Unified ESHOST runner (exits 0 if all engines agree and expected; 1 otherwise)
-  # - command: "eshost"
-  #   flagsToTest:
-  #     - flags: ["-u"]
-  #   versionFlags:
-  #     flags: ["--version"]
-  #   # Use ESHost-specific crash detector that properly handles timeout exit codes
-  #   crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.ESHostCrashDetector"
-  
+  # V8 Engine
   - command: "v8"
     flagsToTest:
       - flags: []

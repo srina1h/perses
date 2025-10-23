@@ -49,8 +49,8 @@ RUN JAVA_HOME=$(update-alternatives --query java | grep 'Value:' | head -1 | awk
     && echo "export JAVA_HOME=$JAVA_HOME" >> /root/.bashrc \
     && export JAVA_HOME=$JAVA_HOME
 
-# Install eshost and JSVU globally
-RUN npm install -g eshost-cli jsvu
+# Install JSVU globally
+RUN npm install -g jsvu
 
 # Install JavaScript engines via JSVU (use correct architecture)
 RUN ARCH=$(uname -m) \
@@ -61,29 +61,24 @@ RUN ARCH=$(uname -m) \
         && echo "Installing available engines on ARM64 (V8 not available)"; \
     fi
 
+# Ensure XS and QuickJS are available on both architectures
+RUN ARCH=$(uname -m) \
+    && if [ "$ARCH" = "x86_64" ]; then \
+        if [ ! -x /root/.jsvu/bin/xs ]; then jsvu --os=linux64 --engines=xs; fi; \
+        if [ ! -x /root/.jsvu/bin/quickjs ]; then jsvu --os=linux64 --engines=quickjs; fi; \
+    fi
+
+# Install JerryScript
+RUN git clone https://github.com/jerryscript-project/jerryscript.git /tmp/jerryscript \
+    && cd /tmp/jerryscript \
+    && python3 tools/build.py \
+    && cp build/bin/jerry /root/.jsvu/bin/jerryscript \
+    && chmod +x /root/.jsvu/bin/jerryscript \
+    && rm -rf /tmp/jerryscript
+
 # Add JSVU bin directory to PATH
 ENV PATH="/root/.jsvu/bin:$PATH"
 
-# Configure eshost hosts using JSVU-installed binaries (only add if present)
-RUN set -eux; \
-    mkdir -p /root/.eshost; \
-    if [ "$SEED_MODE" = "test262" ]; then \
-        echo "Configuring eshost for test262 mode"; \
-        if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs; fi; \
-        if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore; fi; \
-        if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey; fi; \
-        if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8; fi; \
-    elif [ "$SEED_MODE" = "normal" ]; then \
-        echo "Configuring eshost for normal mode with fuzzing harnesses"; \
-        if [ -x /root/.jsvu/bin/graaljs ]; then eshost --add 'GJS' graaljs /root/.jsvu/bin/graaljs -h /workspace/fuzzing_harness/graal.js; fi; \
-        if [ -x /root/.jsvu/bin/javascriptcore ]; then eshost --add 'JSC' jsc /root/.jsvu/bin/javascriptcore -h /workspace/fuzzing_harness/jsc.js; fi; \
-        if [ -x /root/.jsvu/bin/spidermonkey ]; then eshost --add 'SM' jsshell /root/.jsvu/bin/spidermonkey -h /workspace/fuzzing_harness/sm.js; fi; \
-        if [ -x /root/.jsvu/bin/v8 ]; then eshost --add 'V8' d8 /root/.jsvu/bin/v8 -h /workspace/fuzzing_harness/v8.js; fi; \
-    else \
-        echo "Invalid SEED_MODE: $SEED_MODE. Must be 'normal' or 'test262'"; \
-        exit 1; \
-    fi; \
-    eshost --list || true
 
 ARG CACHE_BUST
 
@@ -109,6 +104,9 @@ RUN mkdir -p kitten/temp_testing_campaigns/differential_finding_folder_javascrip
     && mkdir -p kitten/reported_bugs/javascript \
     && mkdir -p kitten/scripts/javascript/seeds
 
+# Test that all JavaScript engines are working
+RUN chmod +x kitten/scripts/javascript/test_engines.sh && kitten/scripts/javascript/test_engines.sh
+
 # Build the project with instrumentation support
 RUN bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar
 
@@ -131,7 +129,7 @@ RUN echo '#!/bin/bash' > /workspace/start.sh && \
     echo '  --threads ${THREADS} \' >> /workspace/start.sh && \
     echo '  --verbosity "FINE" \' >> /workspace/start.sh && \
     echo '  --timeout 1000000000 \' >> /workspace/start.sh && \
-    echo '  --instrumentation-strict-mode false \' >> /workspace/start.sh && \
+    echo '  --instrumentation-strict-mode true \' >> /workspace/start.sh && \
     echo '  --skip-seed-validation false \' >> /workspace/start.sh && \
     echo '  --finding-folder "kitten/temp_testing_campaigns/differential_finding_folder_javascript" \' >> /workspace/start.sh && \
     echo '  ${GUIDANCE_FLAGS}' >> /workspace/start.sh && \

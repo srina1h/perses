@@ -36,6 +36,21 @@ if [ ! -f "$JSVU_PATH/graaljs" ]; then
     echo "You can install it with: jsvu --engines=graaljs"
 fi
 
+if [ ! -f "$JSVU_PATH/xs" ]; then
+    echo "Warning: XS not found at $JSVU_PATH/xs"
+    echo "You can install it with: jsvu --engines=xs"
+fi
+
+if [ ! -f "$JSVU_PATH/quickjs" ]; then
+    echo "Warning: QuickJS not found at $JSVU_PATH/quickjs"
+    echo "You can install it with: jsvu --engines=quickjs"
+fi
+
+if [ ! -f "$JSVU_PATH/jerryscript" ]; then
+    echo "Warning: JerryScript not found at $JSVU_PATH/jerryscript"
+    echo "JerryScript is installed from source in the Dockerfile"
+fi
+
 # Generate the configuration file
 cat > "all-compilers-config.yaml" << EOF
 language: "JAVASCRIPT"
@@ -78,6 +93,27 @@ programsUnderTest:
     versionFlags:
       flags: ["--version"]
     crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.GraalJSCrashDetector"
+
+  - command: "$JSVU_PATH/xs"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.XSCrashDetector"
+
+  - command: "$JSVU_PATH/quickjs"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.QuickJSCrashDetector"
+
+  - command: "$JSVU_PATH/jerryscript"
+    flagsToTest:
+      - flags: []
+    versionFlags:
+      flags: ["--version"]
+    crashDetectorClassName: "org.perses.fuzzer.compilers.javascript.JerryScriptCrashDetector"
 EOF
 
 echo "Configuration file generated successfully!"

@@ -25,7 +25,7 @@ echo "Building kitten with differential testing support..."
 bazel build //kitten/src/org/perses/fuzzer:kitten_deploy.jar || exit 1
 
 echo "Starting differential testing with multiple JavaScript engines..."
-echo "Engines: V8, Hermes, GraalJS, JavaScriptCore"
+echo "Engines: V8, XS, QuickJS, JerryScript"
 echo "Differential findings will be saved to: ${DIFFERENTIAL_FINDING_FOLDER}"
 
 java -Xmx210G -Xms30G -jar bazel-bin/kitten/src/org/perses/fuzzer/kitten_deploy.jar \
